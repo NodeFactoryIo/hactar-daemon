@@ -28,3 +28,8 @@ func ReadTokenFromFile() string {
 	}
 	return base64.StdEncoding.EncodeToString(data)
 }
+
+func DisplayToken() {
+	token := ReadTokenFromFile()
+	fmt.Printf("Token:\n%s\n", token)
+}

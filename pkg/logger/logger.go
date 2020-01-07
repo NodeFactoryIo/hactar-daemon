@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"github.com/NodeFactoryIo/hactar-daemon/internal/util"
+	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"os"

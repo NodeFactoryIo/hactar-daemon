@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/NodeFactoryIo/hactar-daemon/cmd/hactar/commands"
-	"github.com/NodeFactoryIo/hactar-daemon/internal/util"
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/logger"
+	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
 	"github.com/mkideal/cli"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"

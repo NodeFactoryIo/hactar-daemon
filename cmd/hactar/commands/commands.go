@@ -15,8 +15,8 @@ type rootT struct {
 }
 
 var RootCommand = &cli.Command{
-	Desc: "this is root command",
 	Argv: func() interface{} { return new(rootT) },
+	Desc: "Command line interface for Filecoin nodes monitoring deamon app",
 	Fn: func(ctx *cli.Context) error {
 		return nil
 	},
@@ -67,7 +67,7 @@ type tokenT struct {
 var TokenCommand = &cli.Command{
 	Name: "token",
 	Desc: "Show lotus token",
-	Text: "",
+	Text: "Token command bla bla",
 	Fn: func(ctx *cli.Context) error {
 		ctx.String("Token: %s\n", token.ReadTokenFromFile())
 		return nil

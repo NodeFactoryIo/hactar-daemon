@@ -2,13 +2,14 @@ package token
 
 import (
 	"encoding/base64"
+	"fmt"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"io/ioutil"
 )
 
 const (
-	TokenFileDefaultPath = "~/.lotus/token"
+	DefaultPathTokenFile = "~/.lotus/token"
 )
 
 // Read lotus token from file
@@ -17,12 +18,12 @@ func ReadTokenFromFile() string {
 	tokenFile := viper.GetString("jsonrpc.token-address")
 	if tokenFile == "" {
 		// set to default if not defined in config
-		tokenFile = TokenFileDefaultPath
+		tokenFile = DefaultPathTokenFile
 	}
 
 	data, err := ioutil.ReadFile(tokenFile)
 	if err != nil {
-		log.Error("")
+		log.Error(fmt.Sprintf("Error reading token from file: %s", tokenFile))
 		return ""
 	}
 	return base64.StdEncoding.EncodeToString(data)

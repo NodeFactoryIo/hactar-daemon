@@ -1,7 +1,9 @@
 package logger
 
 import (
+	"github.com/NodeFactoryIo/hactar-daemon/internal/util"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 	"os"
 	"path"
 	"runtime"
@@ -9,8 +11,7 @@ import (
 )
 
 func init()  {
-	log.SetFormatter(&log.TextFormatter{})
-	log.SetLevel(log.InfoLevel)
+	// init formatter
 	log.SetFormatter(&log.TextFormatter{
 		DisableTimestamp: false,
 		CallerPrettyfier: func(f *runtime.Frame) (string, string) {
@@ -20,6 +21,9 @@ func init()  {
 			return funcname, filename
 		},
 	})
+	// set log level
+	result, err := log.ParseLevel(util.String(viper.Get("log.level")))
+	log.SetLevel(util.If(err != nil).Level(log.WarnLevel, result))
 	// TODO make logger write to file and change format of logging
 	log.SetOutput(os.Stdout)
 }

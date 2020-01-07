@@ -4,3 +4,5 @@ stats:
 jsonrpc:
   url: "http://167.172.98.186:1234/rpc/v0"
   token-address: "/home/mak/.lotus/token"
+log:
+  level: "Info"

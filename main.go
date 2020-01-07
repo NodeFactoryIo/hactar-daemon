@@ -6,6 +6,7 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/util"
 	_ "github.com/NodeFactoryIo/hactar-daemon/pkg/logger" // initialize logger
 	"github.com/mkideal/cli"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"os"
 	"strconv"
@@ -21,9 +22,9 @@ func main() {
 	util.Must(viper.ReadInConfig(), "Fatal error reading config file")
 
 	// start program
-	fmt.Println("Starting hactar....")
+	log.Info("Starting hactar")
 	interval, _ := strconv.Atoi(viper.GetString("stats.interval"))
-	fmt.Printf("Stats refresh interval is %d minutes.\n", interval / 60)
+	log.Info(fmt.Sprintf("Stats refresh interval is %d minutes.", interval / 60))
 
 	// initialize commands
 	if err := cli.Root(commands.RootCommand,

@@ -10,7 +10,7 @@ import (
 
 func init()  {
 	log.SetFormatter(&log.TextFormatter{})
-	log.SetLevel(log.WarnLevel)
+	log.SetLevel(log.InfoLevel)
 	log.SetFormatter(&log.TextFormatter{
 		DisableTimestamp: false,
 		CallerPrettyfier: func(f *runtime.Frame) (string, string) {

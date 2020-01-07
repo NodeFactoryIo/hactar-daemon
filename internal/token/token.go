@@ -1,11 +1,11 @@
 package token
 
 import (
-	"encoding/base64"
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"io/ioutil"
+	"strings"
 )
 
 const (
@@ -26,7 +26,7 @@ func ReadTokenFromFile() string {
 		log.Error(fmt.Sprintf("Error reading token from file: %s", tokenFile))
 		return ""
 	}
-	return base64.StdEncoding.EncodeToString(data)
+	return strings.TrimSpace(string(data))
 }
 
 func DisplayToken() {

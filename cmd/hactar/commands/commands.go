@@ -49,7 +49,7 @@ var StartCommand = &cli.Command{
 		// save node to backend
 		hactar.SaveNode(hactar.Node{
 			Token:        token.ReadTokenFromFile(),
-			Url:          "",
+			Url:          "temp-url-holder",
 			ActorAddress: actorAddress,
 		})
 		// start stats monitoring

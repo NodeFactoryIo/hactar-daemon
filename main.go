@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/NodeFactoryIo/hactar-daemon/cmd/hactar/commands"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/util"
-	_ "github.com/NodeFactoryIo/hactar-daemon/pkg/logger" // initialize logger
+	"github.com/NodeFactoryIo/hactar-daemon/pkg/logger"
 	"github.com/mkideal/cli"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -20,6 +20,9 @@ func main() {
 	viper.AddConfigPath("$HOME/.appname")  	// call multiple times to add many search paths
 	viper.AddConfigPath(".")               	// optionally look for config in the working directory
 	util.Must(viper.ReadInConfig(), "Fatal error reading config file")
+
+	// initialize logger
+	logger.SetUpLogger()
 
 	// start program
 	log.Info("Starting hactar")

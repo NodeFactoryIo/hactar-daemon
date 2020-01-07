@@ -1,8 +1,8 @@
 stats:
-  interval: 30 #second
+  interval: 5 #second
   api-url: ""
 jsonrpc:
   url: "http://167.172.98.186:1234/rpc/v0"
   token-address: "/home/mak/.lotus/token"
 log:
-  level: "Info"
+  level: "info"

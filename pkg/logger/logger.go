@@ -10,10 +10,10 @@ import (
 	"strings"
 )
 
-func init()  {
+func SetUpLogger()  {
 	// init formatter
 	log.SetFormatter(&log.TextFormatter{
-		DisableTimestamp: false,
+		FullTimestamp: true,
 		CallerPrettyfier: func(f *runtime.Frame) (string, string) {
 			s := strings.Split(f.Function, ".")
 			funcname := s[len(s)-1]

@@ -25,8 +25,8 @@ var RootCommand = &cli.Command{
 // start command
 type startT struct {
 	cli.Helper
-	Username string `cli:"u,username" usage:"github account" prompt:"Enter Lotus account"`
-	Password string `pw:"p,password" usage:"password of github account" prompt:"Enter Lotus password"`
+	Username string `cli:"u,username" usage:"lotus account" prompt:"Enter Lotus account"`
+	Password string `pw:"p,password" usage:"password of lotus account" prompt:"Enter Lotus password"`
 }
 
 var StartCommand = &cli.Command{
@@ -67,7 +67,7 @@ type tokenT struct {
 var TokenCommand = &cli.Command{
 	Name: "token",
 	Desc: "Show lotus token",
-	Text: "Token command bla bla",
+	Text: "",
 	Fn: func(ctx *cli.Context) error {
 		ctx.String("Token: %s\n", token.ReadTokenFromFile())
 		return nil

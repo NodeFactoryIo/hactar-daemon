@@ -1,11 +1,12 @@
 package services
 
 import (
-	"fmt"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/requests/miner"
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/jsonrpc2client"
+	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"github.com/ybbus/jsonrpc"
 )
 
 type LotusService interface {
@@ -40,8 +41,17 @@ func (ls *lotusService) GetMinerAddress() string {
 	response, err := ls.minerClient.Call(miner.ActorAddress)
 	if err != nil {
 		log.Error("Unable to get miner address", err)
-	} else if response != nil && response.Error == nil {
-		return fmt.Sprintf("%v", response.Result)
+		return ""
 	}
-	return "t0101" // TODO tmp
+	return processResult(response)
+}
+
+func processResult(response *jsonrpc.RPCResponse) string {
+	if response != nil {
+		if response.Error == nil {
+			return util.String(response.Result)
+		}
+		log.Error(response.Error)
+	}
+	return ""
 }

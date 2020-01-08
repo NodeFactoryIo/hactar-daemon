@@ -5,10 +5,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func Auth(username, password string) error {
-	return nil
-}
-
 type Node struct {
 	Token        string
 	Url          string
@@ -16,5 +12,11 @@ type Node struct {
 }
 
 func SaveNode(node Node) {
+	// TODO implement
 	log.Info("Saving node information to hactar: ", node)
+}
+
+func Auth(username, password string) error {
+	// TODO implement
+	return nil
 }

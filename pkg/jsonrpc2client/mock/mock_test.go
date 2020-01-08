@@ -9,35 +9,37 @@ import (
 func TestMockResponse(t *testing.T) {
 	c := NewClient()
 
-	c.MockResponse("RPC.Test", "world", "hello")
+	c.MockResponse("RPC.Test", "test-response", "param")
 
-	resp, err := c.Call("RPC.Test", "hello")
+	resp, err := c.Call("RPC.Test", "param")
 
-	assert.Equal(t, "world", resp.Result)
-	assert.Equal(t, nil, err)
+	assert.Equal(t, "test-response", resp.Result)
+	assert.Nil(t, resp.Error)
+	assert.Nil(t, err)
 	c.AssertExpectations(t)
 }
 
 func TestMockResponseWithMultipleParams(t *testing.T) {
 	c := NewClient()
 
-	c.MockResponse("RPC.Test", "world", "hello", "world")
+	c.MockResponse("RPC.Test", "test-response", "param1", "param2")
 
-	resp, err := c.Call("RPC.Test", "hello", "world")
+	resp, err := c.Call("RPC.Test", "param1", "param2")
 
-	assert.Equal(t, "world", resp.Result)
-	assert.Equal(t, nil, err)
+	assert.Equal(t, "test-response", resp.Result)
+	assert.Nil(t, resp.Error)
+	assert.Nil(t, err)
 	c.AssertExpectations(t)
 }
 
 func TestMockError(t *testing.T) {
 	c := NewClient()
 
-	c.MockError("RPC.Test", errors.New("test error"), "hello")
+	c.MockError("RPC.Test", errors.New("test error"), "param1")
 
-	resp, err := c.Call("RPC.Test", "hello")
+	resp, err := c.Call("RPC.Test", "param1")
 
-	assert.Equal(t, nil, resp.Result)
+	assert.Nil(t, resp.Result)
 	if assert.Error(t, err) {
 		assert.Equal(t, errors.New("test error"), err)
 	}

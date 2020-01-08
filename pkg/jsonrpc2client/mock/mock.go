@@ -15,16 +15,16 @@ func NewClient() *JsonRpc2Client {
 
 func (c *JsonRpc2Client) Call(method string, params ...interface{}) (*jsonrpc.RPCResponse, error) {
 	args := c.Called(method, params)
-	resp := &jsonrpc.RPCResponse{
+	response := jsonrpc.RPCResponse{
 		JSONRPC: "2.0",
 		Result:  args.Get(0),
 		Error:   nil,
 		ID:      0,
 	}
-	return resp, args.Error(1)
+	return &response, args.Error(1)
 }
 
-func (c *JsonRpc2Client) MockResponse(method string, response interface{}, params ...interface{}) {
+func (c *JsonRpc2Client) MockResponse(method string, response string, params ...interface{}) {
 	call := c.On("Call", method, params)
 	call.Once()
 	call.Return(response, nil)

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/requests/miner"
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/jsonrpc2client"
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
@@ -37,21 +38,22 @@ func NewLotusService(lClient jsonrpc2client.Client, mClient jsonrpc2client.Clien
 	}
 }
 
-func (ls *lotusService) GetMinerAddress() string {
+func (ls *lotusService) GetMinerAddress() (string, error) {
 	response, err := ls.minerClient.Call(miner.ActorAddress)
 	if err != nil {
 		log.Error("Unable to get miner address", err)
-		return ""
+		return "", err
 	}
 	return processResult(response)
 }
 
-func processResult(response *jsonrpc.RPCResponse) string {
+func processResult(response *jsonrpc.RPCResponse) (string, error) {
 	if response != nil {
 		if response.Error == nil {
-			return util.String(response.Result)
+			return util.String(response.Result), nil
 		}
 		log.Error(response.Error)
+		return "", errors.New(response.Error.Message)
 	}
-	return ""
+	return "", errors.New("unable to process rpc response")
 }

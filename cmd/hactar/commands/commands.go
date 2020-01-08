@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"fmt"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/services"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/stats"
@@ -42,7 +43,11 @@ var StartCommand = &cli.Command{
 		log.Info("Successful authentication.")
 		// detect miners and allow user to choose actor address
 		lotusService := services.NewLotusService(nil, nil)
-		actorAddress := lotusService.GetMinerAddress()
+		actorAddress, err := lotusService.GetMinerAddress()
+		if err != nil {
+			fmt.Print("Worker down!")
+			return nil
+		}
 		log.Info("Actor address: ", actorAddress)
 		// display token and URL
 		token.DisplayToken()

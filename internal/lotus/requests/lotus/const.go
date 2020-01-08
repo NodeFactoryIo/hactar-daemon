@@ -1,5 +1,5 @@
 // Package requests defines jsonrpc method names for communication with lotus
-package requests
+package lotus
 
 // General requests
 const (

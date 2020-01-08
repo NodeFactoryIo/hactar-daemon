@@ -2,9 +2,8 @@ package services
 
 import (
 	"fmt"
-	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/requests"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/requests/miner"
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/jsonrpc2client"
-	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -14,32 +13,31 @@ type LotusService interface {
 }
 
 type lotusService struct {
-	rpcClient jsonrpc2client.Client
+	lotusClient jsonrpc2client.Client
+	minerClient jsonrpc2client.Client
 }
 
-func NewLotusService(client jsonrpc2client.Client) *lotusService {
-	jsonrpcClient := client
-	if jsonrpcClient == nil {
-		// if client not provided
-		url := viper.Get("jsonrpc.url")
-		jsonrpcClient = jsonrpc2client.NewClient(util.String(url))
+func NewLotusService(lClient jsonrpc2client.Client, mClient jsonrpc2client.Client) *lotusService {
+	lotusClient := lClient
+	if lotusClient == nil {
+		url := viper.GetString("jsonrpc.lotus.url")
+		lotusClient = jsonrpc2client.NewClient(url)
+	}
+
+	minerClient := mClient
+	if minerClient == nil {
+		url := viper.GetString("jsonrpc.miner.url")
+		minerClient = jsonrpc2client.NewClient(url)
 	}
 
 	return &lotusService{
-		rpcClient: jsonrpcClient,
+		lotusClient: lotusClient,
+		minerClient: minerClient,
 	}
 }
 
-func (ls *lotusService) SetJsonRpcClient(c jsonrpc2client.Client)  {
-	ls.rpcClient = c
-}
-
-func (ls *lotusService) GetJsonRpcClient() jsonrpc2client.Client   {
-	return ls.rpcClient
-}
-
 func (ls *lotusService) GetMinerAddress() string {
-	response, err := ls.GetJsonRpcClient().Call(requests.ActorAddress)
+	response, err := ls.minerClient.Call(miner.ActorAddress)
 	if err != nil {
 		log.Error("Unable to get miner address", err)
 	} else if response != nil && response.Error == nil {

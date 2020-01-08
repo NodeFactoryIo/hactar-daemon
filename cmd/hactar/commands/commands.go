@@ -41,7 +41,7 @@ var StartCommand = &cli.Command{
 		}
 		log.Info("Successful authentication.")
 		// detect miners and allow user to choose actor address
-		lotusService := services.NewLotusService(nil)
+		lotusService := services.NewLotusService(nil, nil)
 		actorAddress := lotusService.GetMinerAddress()
 		log.Info("Actor address: ", actorAddress)
 		// display token and URL

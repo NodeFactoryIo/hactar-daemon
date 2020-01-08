@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/requests"
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/jsonrpc2client"
+	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -12,12 +13,21 @@ type LotusService interface {
 	GetMinerAddress() string
 }
 
-func NewLotusService() *lotusService {
-	return &lotusService{}
-}
-
 type lotusService struct {
 	rpcClient jsonrpc2client.Client
+}
+
+func NewLotusService(client jsonrpc2client.Client) *lotusService {
+	jsonrpcClient := client
+	if jsonrpcClient == nil {
+		// if client not provided
+		url := viper.Get("jsonrpc.url")
+		jsonrpcClient = jsonrpc2client.NewClient(util.String(url))
+	}
+
+	return &lotusService{
+		rpcClient: jsonrpcClient,
+	}
 }
 
 func (ls *lotusService) SetJsonRpcClient(c jsonrpc2client.Client)  {
@@ -25,12 +35,6 @@ func (ls *lotusService) SetJsonRpcClient(c jsonrpc2client.Client)  {
 }
 
 func (ls *lotusService) GetJsonRpcClient() jsonrpc2client.Client   {
-	if ls.rpcClient != nil {
-		return ls.rpcClient
-	}
-
-	url := viper.GetString("jsonrpc.url")
-	ls.rpcClient = jsonrpc2client.NewClient(url)
 	return ls.rpcClient
 }
 

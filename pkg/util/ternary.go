@@ -1,6 +1,8 @@
 package util
 
-import "github.com/sirupsen/logrus"
+import (
+	"github.com/sirupsen/logrus"
+)
 
 // Kind of ternary operator, used for conditional initialization
 type If bool

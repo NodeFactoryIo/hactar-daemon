@@ -5,11 +5,12 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"io/ioutil"
+	"os/user"
 	"strings"
 )
 
 const (
-	DefaultPathTokenFile = "~/.lotus/token"
+	DefaultPathTokenFile = "/.lotus/token"
 )
 
 // Read lotus token from file
@@ -18,7 +19,9 @@ func ReadTokenFromFile() string {
 	tokenFile := viper.GetString("jsonrpc.token-address")
 	if tokenFile == "" {
 		// set to default if not defined in config
-		tokenFile = DefaultPathTokenFile
+		usr, _ := user.Current()
+		dir := usr.HomeDir
+		tokenFile = dir + DefaultPathTokenFile
 	}
 
 	data, err := ioutil.ReadFile(tokenFile)

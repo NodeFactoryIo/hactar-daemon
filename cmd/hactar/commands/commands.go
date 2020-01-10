@@ -6,6 +6,7 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/services"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/stats"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/token"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
 	"github.com/mkideal/cli"
 	log "github.com/sirupsen/logrus"
 )
@@ -26,8 +27,8 @@ var RootCommand = &cli.Command{
 // start command
 type startT struct {
 	cli.Helper
-	Username string `cli:"u,username" usage:"lotus account" prompt:"Enter Lotus account"`
-	Password string `pw:"p,password" usage:"password of lotus account" prompt:"Enter Lotus password"`
+	Email    string `cli:"e,email" usage:"hactar account email" prompt:"Enter your email address"`
+	Password string `pw:"p,password" usage:"hactar account password" prompt:"Enter your password"`
 }
 
 var StartCommand = &cli.Command{
@@ -37,7 +38,7 @@ var StartCommand = &cli.Command{
 	Fn: func(ctx *cli.Context) error {
 		argv := ctx.Argv().(*startT)
 		// authenticate
-		if err := hactar.Auth(argv.Username, argv.Password); err != nil {
+		if err := hactar.Auth(argv.Email, argv.Password); err != nil {
 			log.Error("Failed to authenticate to Lotus service.")
 		}
 		log.Info("Successful authentication.")
@@ -51,10 +52,11 @@ var StartCommand = &cli.Command{
 		log.Info("Actor address: ", actorAddress)
 		// display token and URL
 		token.DisplayToken()
+		url.DisplayUrl()
 		// save node to backend
 		hactar.SaveNode(hactar.Node{
 			Token:        token.ReadTokenFromFile(),
-			Url:          "temp-url-holder",
+			Url:          url.GetUrl(),
 			ActorAddress: actorAddress,
 		})
 		// start stats monitoring

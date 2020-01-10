@@ -16,7 +16,7 @@ func SaveNode(node Node) {
 	log.Info("Saving node information to hactar: ", node)
 }
 
-func Auth(username, password string) error {
+func Auth(email, password string) error {
 	// TODO implement
 	return nil
 }

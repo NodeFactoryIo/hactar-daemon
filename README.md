@@ -5,7 +5,7 @@
 This repository contains deamon application for monitoring Filecoin nodes using [Hactar]().
 
 ## Installation
-1. Install [Golang](https://golang.org/doc/install)
+1. Install [Golang](https://golang.org/doc/install) **1.13 or greater**
 2. Run the command below
 ```
 go get github.com/NodeFactoryIo/hactar-daemon

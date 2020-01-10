@@ -6,6 +6,6 @@ jsonrpc:
     url: "http://167.172.98.186:2345/rpc/v0"
   lotus:
     url: "http://167.172.98.186:1234/rpc/v0"
-  token-address: "/home/mak/.lotus/token"
+  token-address: ""
 log:
   level: "info"

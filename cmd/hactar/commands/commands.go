@@ -48,7 +48,7 @@ var StartCommand = &cli.Command{
 		actorAddress, err := lotusService.GetMinerAddress()
 		if err != nil {
 			fmt.Print("Worker down!")
-			// return nil
+			return nil
 		}
 		log.Info("Actor address: ", actorAddress)
 		// display token and URL

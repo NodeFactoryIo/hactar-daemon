@@ -37,6 +37,7 @@ var StartCommand = &cli.Command{
 	Text: "",
 	Fn: func(ctx *cli.Context) error {
 		argv := ctx.Argv().(*startT)
+		client := hactar.NewClient(nil)
 		// authenticate
 		if err := hactar.Auth(argv.Email, argv.Password); err != nil {
 			log.Error("Failed to authenticate to Lotus service.")
@@ -47,18 +48,21 @@ var StartCommand = &cli.Command{
 		actorAddress, err := lotusService.GetMinerAddress()
 		if err != nil {
 			fmt.Print("Worker down!")
-			return nil
+			// return nil
 		}
 		log.Info("Actor address: ", actorAddress)
 		// display token and URL
 		token.DisplayToken()
 		url.DisplayUrl()
 		// save node to backend
-		hactar.SaveNode(hactar.Node{
+		n, r, e := client.Nodes.Add(hactar.Node{
 			Token:        token.ReadTokenFromFile(),
 			Url:          url.GetUrl(),
 			ActorAddress: actorAddress,
 		})
+		fmt.Println(n)
+		fmt.Println(r)
+		fmt.Println(e)
 		// start stats monitoring
 		stats.StartMonitoringStats()
 		select {}

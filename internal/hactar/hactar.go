@@ -2,9 +2,9 @@ package hactar
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/spf13/viper"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -12,13 +12,17 @@ import (
 )
 
 const (
-	defaultBaseURL = "https://api.digitalocean.com/"
-	mediaType      = "application/json"
+	mediaType = "application/json"
 )
 
 type Client struct {
+	// HTTP client used to communicate
 	client *http.Client
+	// Base URL for API requests.
 	BaseURL *url.URL
+	// Services used for communicating with the API
+	Nodes    NodesService
+	DiskInfo DiskInfoService
 }
 
 func NewClient(httpClient *http.Client) *Client {
@@ -26,9 +30,13 @@ func NewClient(httpClient *http.Client) *Client {
 		httpClient = http.DefaultClient
 	}
 
-	baseURL, _ := url.Parse(defaultBaseURL)
+	baseUrl := viper.GetString("hactar.api-url")
+	baseURL, _ := url.Parse(baseUrl)
 
 	c := &Client{client: httpClient, BaseURL: baseURL}
+
+	c.Nodes = &nodesServices{client: c}
+	c.DiskInfo = &diskInfoService{client: c}
 
 	return c
 }
@@ -36,7 +44,7 @@ func NewClient(httpClient *http.Client) *Client {
 // NewRequest creates an API request. A relative URL can be provided in urlStr, which will be resolved to the
 // BaseURL of the Client. Relative URLS should always be specified without a preceding slash. If specified, the
 // value pointed to by body is JSON encoded and included in as the request body.
-func (c *Client) NewRequest(ctx context.Context, method, urlStr string, body interface{}) (*http.Request, error) {
+func (c *Client) NewRequest(method, urlStr string, body interface{}) (*http.Request, error) {
 	u, err := c.BaseURL.Parse(urlStr)
 	if err != nil {
 		return nil, err
@@ -63,8 +71,8 @@ func (c *Client) NewRequest(ctx context.Context, method, urlStr string, body int
 // Do sends an API request and returns the API response. The API response is JSON decoded and stored in the value
 // pointed to by v, or returned as an error if an API error has occurred. If v implements the io.Writer interface,
 // the raw response will be written to v, without attempting to decode it.
-func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
-	resp, err := DoRequestWithClient(ctx, c.client, req)
+func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
+	resp, err := DoRequestWithClient(c.client, req)
 	if err != nil {
 		return nil, err
 	}
@@ -98,13 +106,12 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 }
 
 // DoRequest submits an HTTP request.
-func DoRequest(ctx context.Context, req *http.Request) (*http.Response, error) {
-	return DoRequestWithClient(ctx, http.DefaultClient, req)
+func DoRequest(req *http.Request) (*http.Response, error) {
+	return DoRequestWithClient(http.DefaultClient, req)
 }
 
 // DoRequestWithClient submits an HTTP request using the specified client.
-func DoRequestWithClient(ctx context.Context, client *http.Client, req *http.Request) (*http.Response, error) {
-	req = req.WithContext(ctx)
+func DoRequestWithClient(client *http.Client, req *http.Request) (*http.Response, error) {
 	return client.Do(req)
 }
 

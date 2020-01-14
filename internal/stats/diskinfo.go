@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/sys/unix"
 	"net/http"
-	"syscall"
 )
 
 type DiskStatus struct {
@@ -14,8 +14,8 @@ type DiskStatus struct {
 	Free uint64
 }
 
-func SendDiskInfoStats(client *hactar.Client, actorAddress string, nodeUrl string) {
-	usage := diskUsage("/")
+func SendDiskInfoStats(client *hactar.Client, actorAddress string, nodeUrl string) bool {
+	usage := DiskUsage("/")
 
 	response, err := client.DiskInfo.SendDiskInfo(hactar.DiskInfo{
 		FreeSpace:    string(usage.Free),
@@ -24,19 +24,19 @@ func SendDiskInfoStats(client *hactar.Client, actorAddress string, nodeUrl strin
 		ActorAddress: actorAddress,
 	})
 
-	if err != nil {
-		log.Error("Unable to send disk information statistics. ", err)
-	}
-
 	if response != nil && response.StatusCode == http.StatusOK {
 		log.Info(fmt.Sprintf("Disk stats: %d (free) %d (used)", usage.Free, usage.Used))
+		return true
 	}
+
+	log.Error("Unable to send disk information statistics. ", err)
+	return false
 }
 
 // calculates disk usage of path/disk
-func diskUsage(path string) (disk DiskStatus) {
-	fs := syscall.Statfs_t{}
-	err := syscall.Statfs(path, &fs)
+func DiskUsage(path string) (disk DiskStatus) {
+	fs := unix.Statfs_t{}
+	err := unix.Statfs(path, &fs)
 	if err != nil {
 		return
 	}

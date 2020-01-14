@@ -105,11 +105,6 @@ func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 	return resp, err
 }
 
-// DoRequest submits an HTTP request.
-func DoRequest(req *http.Request) (*http.Response, error) {
-	return DoRequestWithClient(http.DefaultClient, req)
-}
-
 // DoRequestWithClient submits an HTTP request using the specified client.
 func DoRequestWithClient(client *http.Client, req *http.Request) (*http.Response, error) {
 	return client.Do(req)

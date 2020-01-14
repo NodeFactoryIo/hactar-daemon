@@ -42,8 +42,7 @@ func NewClient(httpClient *http.Client) *Client {
 }
 
 // NewRequest creates an API request. A relative URL can be provided in urlStr, which will be resolved to the
-// BaseURL of the Client. Relative URLS should always be specified without a preceding slash. If specified, the
-// value pointed to by body is JSON encoded and included in as the request body.
+// BaseURL of the Client.
 func (c *Client) NewRequest(method, urlStr string, body interface{}) (*http.Request, error) {
 	u, err := c.BaseURL.Parse(urlStr)
 	if err != nil {
@@ -72,7 +71,7 @@ func (c *Client) NewRequest(method, urlStr string, body interface{}) (*http.Requ
 // pointed to by v, or returned as an error if an API error has occurred. If v implements the io.Writer interface,
 // the raw response will be written to v, without attempting to decode it.
 func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
-	resp, err := DoRequestWithClient(c.client, req)
+	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -103,11 +102,6 @@ func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 	}
 
 	return resp, err
-}
-
-// DoRequestWithClient submits an HTTP request using the specified client.
-func DoRequestWithClient(client *http.Client, req *http.Request) (*http.Response, error) {
-	return client.Do(req)
 }
 
 // An ErrorResponse reports the error caused by an API request

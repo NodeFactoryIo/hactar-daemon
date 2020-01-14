@@ -9,6 +9,7 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
 	"github.com/mkideal/cli"
 	log "github.com/sirupsen/logrus"
+	"net/http"
 )
 
 // root command
@@ -55,14 +56,17 @@ var StartCommand = &cli.Command{
 		token.DisplayToken()
 		url.DisplayUrl()
 		// save node to backend
-		n, r, e := client.Nodes.Add(hactar.Node{
+		node, resp, err := client.Nodes.Add(hactar.Node{
 			Token:        token.ReadTokenFromFile(),
 			Url:          url.GetUrl(),
 			ActorAddress: actorAddress,
 		})
-		fmt.Println(n)
-		fmt.Println(r)
-		fmt.Println(e)
+		if err != nil {
+			log.Error("Adding new node failed.", err)
+			return nil
+		} else if resp != nil && resp.StatusCode == http.StatusOK {
+			log.Info(fmt.Sprintf("New node added, url: %s address: %s", node.Url, node.ActorAddress))
+		}
 		// start stats monitoring
 		stats.StartMonitoringStats()
 		select {}

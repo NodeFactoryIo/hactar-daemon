@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"io"
 	"io/ioutil"
@@ -39,6 +40,23 @@ func NewClient(httpClient *http.Client) *Client {
 	c.DiskInfo = &diskInfoService{client: c}
 
 	return c
+}
+
+func (c *Client) IsActive() bool {
+	request, err := c.NewRequest(http.MethodGet, "/health", nil)
+	if err != nil {
+		log.Error("Unable to create health check request", err)
+		return false
+	}
+
+	response, err := c.Do(request, nil)
+	if response != nil && response.StatusCode == http.StatusOK {
+		log.Info("Hactar health check succesfull")
+		return true
+	}
+
+	log.Error("Hactar health check failed")
+	return false
 }
 
 // NewRequest creates an API request. A relative URL can be provided in urlStr, which will be resolved to the

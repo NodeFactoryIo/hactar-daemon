@@ -2,6 +2,7 @@ package stats
 
 import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/services"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
 	log "github.com/sirupsen/logrus"
@@ -15,7 +16,7 @@ func SubmitNewStatsReport() bool  {
 	lotusService := services.NewLotusService(nil, nil)
 
 	nodeUrl := url.GetUrl()
-	actorAddress, err := lotusService.GetMinerAddress()
+	actorAddress, err := lotus.CheckForActorAddress(lotusService)
 	if err != nil {
 		log.Error("Unable to send stats report because worker is down.")
 		return false

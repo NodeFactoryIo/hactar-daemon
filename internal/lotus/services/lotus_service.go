@@ -11,7 +11,7 @@ import (
 )
 
 type LotusService interface {
-	GetMinerAddress() string
+	GetMinerAddress() (string, error)
 }
 
 type lotusService struct {

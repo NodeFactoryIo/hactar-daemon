@@ -1,7 +1,10 @@
 package stats
 
 import (
-	"fmt"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/services"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"strconv"
@@ -9,8 +12,25 @@ import (
 )
 
 func SubmitNewStatsReport() bool  {
-	// TODO collect all statistic and send it to backend
-	fmt.Println("Collecting stats and sending report....")
+	client := hactar.NewClient(nil)
+	lotusService := services.NewLotusService(nil, nil)
+
+	nodeUrl := url.GetUrl()
+	actorAddress, err := lotus.CheckForActorAddress(lotusService)
+	if err != nil {
+		log.Error("Unable to send stats report because worker is down.")
+		return false
+	}
+
+	if !client.IsActive() {
+		log.Error("Unable to send stats report because Hactar is not responding.")
+		return false
+	}
+
+	// send all statistics
+	log.Info("Collecting stats and sending report.")
+	SendDiskInfoStats(client, actorAddress, nodeUrl)
+
 	return true
 }
 
@@ -25,7 +45,7 @@ func StartMonitoringStats() {
 			case <-done:
 				return
 			case <-ticker.C:
-				log.Info("Stats monitor ticked")
+				log.Info("Stats monitor ticked.")
 				SubmitNewStatsReport()
 			}
 		}

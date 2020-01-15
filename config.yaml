@@ -1,11 +1,12 @@
 stats:
   interval: 5 #second
-  api-url: ""
 jsonrpc:
   miner:
     url: "http://167.172.98.186:2345/rpc/v0"
   lotus:
     url: "http://167.172.98.186:1234/rpc/v0"
   token-address: ""
+hactar:
+  api-url: "http://127.0.0.1:3000"
 log:
   level: "info"

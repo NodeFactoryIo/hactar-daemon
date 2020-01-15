@@ -11,7 +11,7 @@ import (
 )
 
 type LotusService interface {
-	GetMinerAddress() string
+	GetMinerAddress() (string, error)
 }
 
 type lotusService struct {
@@ -45,6 +45,7 @@ func (ls *lotusService) GetMinerAddress() (string, error) {
 		return "", err
 	}
 	return processResult(response)
+	// return "miner-address", nil
 }
 
 func processResult(response *jsonrpc.RPCResponse) (string, error) {

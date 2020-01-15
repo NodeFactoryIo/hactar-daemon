@@ -9,6 +9,7 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
 	"github.com/mkideal/cli"
 	log "github.com/sirupsen/logrus"
+	"net/http"
 )
 
 // root command
@@ -37,6 +38,7 @@ var StartCommand = &cli.Command{
 	Text: "",
 	Fn: func(ctx *cli.Context) error {
 		argv := ctx.Argv().(*startT)
+		client := hactar.NewClient(nil)
 		// authenticate
 		if err := hactar.Auth(argv.Email, argv.Password); err != nil {
 			log.Error("Failed to authenticate to Lotus service.")
@@ -54,11 +56,21 @@ var StartCommand = &cli.Command{
 		token.DisplayToken()
 		url.DisplayUrl()
 		// save node to backend
-		hactar.SaveNode(hactar.Node{
+		if !client.IsActive() {
+			log.Error("Hactar not responding")
+			return nil
+		}
+		node, resp, err := client.Nodes.Add(hactar.Node{
 			Token:        token.ReadTokenFromFile(),
 			Url:          url.GetUrl(),
 			ActorAddress: actorAddress,
 		})
+		if err != nil {
+			log.Error("Adding new node failed.", err)
+			return nil
+		} else if resp != nil && resp.StatusCode == http.StatusOK {
+			log.Info(fmt.Sprintf("New node added, url: %s address: %s", node.Url, node.ActorAddress))
+		}
 		// start stats monitoring
 		stats.StartMonitoringStats()
 		select {}

@@ -5,17 +5,18 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/magefile/mage/sh"
 	"github.com/magefile/mage/mg"
-	"strings"
-	"sync"
+	"github.com/magefile/mage/sh"
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
+	"sync"
+	"time"
 )
 
 const (
-	packageName  = "github.com/NodeFactoryIo/hactar-deamon"
+	packageName = "github.com/NodeFactoryIo/hactar-deamon"
 )
 
 var goexe = "go"
@@ -24,36 +25,71 @@ func init() {
 	if exe := os.Getenv("GOEXE"); exe != "" {
 		goexe = exe
 	}
-	fmt.Println(goexe)
 
 	// We want to use Go 1.11 modules even if the source lives inside GOPATH.
-	// The default is "auto".
 	os.Setenv("GO111MODULE", "on")
 }
 
+// mage build
 func Build() error {
-	return sh.Run("go", "install", "./...")
+	return sh.Run(goexe, "build", "./...")
 }
 
+// mage buildall
+func BuildAll() error {
+	mg.Deps(Test)
+
+	platforms := [...]string{"linux", "darwin"}
+	archs := [...]string{"386", "amd64"}
+
+	for _, os := range platforms {
+		for _, a := range archs {
+			build(os, a)
+		}
+	}
+
+	return nil
+}
+
+func build(os string, arch string) error {
+	env := map[string]string{
+		"GOOS":   os,
+		"GOARCH": arch,
+	}
+	timeStamp := time.Now().Format("2006-01-02")
+	fileName := fmt.Sprintf("./builds/%s/hactar-%s-%s-%s", os, os[:3], arch, timeStamp)
+
+	return sh.RunWith(env, goexe, "build", "-o", fileName)
+}
+
+// mage install
 func Install() error {
-	return sh.Run("go", "build", "./...")
+	return sh.Run(goexe, "install", "./...")
 }
 
-// Run tests
+// mage test
 func Test() error {
 	mg.Deps(Lint, Vet)
 
-	fmt.Println("Tests")
+	fmt.Println("Run tests:")
 	env := map[string]string{"GOFLAGS": testGoFlags()}
-	return runCmd(env, "go", "test", "./...")
+	return runCmd(env, goexe, "test", "./...")
+}
+
+func testGoFlags() string {
+	// long tests can be skipped when running on CI
+	if isCI() {
+		return "-test.short"
+	}
+	return ""
 }
 
 //  Run go vet linter
 func Vet() error {
-	if err := sh.Run("go", "vet", "./..."); err != nil {
-		return fmt.Errorf("error running go vet: %v", err)
+	if err := runCmd(nil, goexe, "vet", "./..."); err != nil {
+		return fmt.Errorf("Error running go vet: %v", err)
 	} else {
-		fmt.Println("Linter vet")
+		fmt.Println("Linter vet finished")
 	}
 	return nil
 }
@@ -122,8 +158,10 @@ func Lint() error {
 	return nil
 }
 
+// Util functions
+
 var (
-	pkgPrefixLen = len("github.com/gohugoio/hugo")
+	pkgPrefixLen = len("github.com/NodeFactoryIo/hactar-deamon")
 	pkgs         []string
 	pkgsInit     sync.Once
 )
@@ -144,14 +182,6 @@ func hactarPackages() ([]string, error) {
 	return pkgs, err
 }
 
-func testGoFlags() string {
-	if isCI() {
-		return ""
-	}
-
-	return "-test.short"
-}
-
 func isCI() bool {
 	return os.Getenv("CI") != ""
 }
@@ -160,11 +190,11 @@ func isGoLatest() bool {
 	return strings.Contains(runtime.Version(), "1.13")
 }
 
-
 func runCmd(env map[string]string, cmd string, args ...string) error {
 	if mg.Verbose() {
 		return sh.RunWith(env, cmd, args...)
 	}
+
 	output, err := sh.OutputWith(env, cmd, args...)
 	if err != nil {
 		fmt.Fprint(os.Stderr, output)

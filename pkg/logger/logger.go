@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func SetUpLogger()  {
+func SetUpLogger() {
 	// init formatter
 	log.SetFormatter(&log.TextFormatter{
 		FullTimestamp: true,

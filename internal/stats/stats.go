@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func SubmitNewStatsReport() bool  {
+func SubmitNewStatsReport() bool {
 	client := hactar.NewClient(nil)
 	lotusService := services.NewLotusService(nil, nil)
 

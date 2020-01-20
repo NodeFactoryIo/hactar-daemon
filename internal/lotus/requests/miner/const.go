@@ -1,5 +1,5 @@
 package miner
 
 const (
-	ActorAddress  = "Filecoin.ActorAddress"
+	ActorAddress = "Filecoin.ActorAddress"
 )

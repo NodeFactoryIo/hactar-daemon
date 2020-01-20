@@ -21,7 +21,7 @@ const (
 	DiskInfoPath = "/diskinfo"
 )
 
-func (dis *diskInfoService) SendDiskInfo(diskInfo DiskInfo) (*http.Response, error)  {
+func (dis *diskInfoService) SendDiskInfo(diskInfo DiskInfo) (*http.Response, error) {
 	request, err := dis.client.NewRequest(http.MethodPost, DiskInfoPath, diskInfo)
 
 	if err != nil {
@@ -36,6 +36,3 @@ func (dis *diskInfoService) SendDiskInfo(diskInfo DiskInfo) (*http.Response, err
 
 	return response, err
 }
-
-
-

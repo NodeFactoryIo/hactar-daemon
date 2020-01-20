@@ -4,6 +4,7 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/services"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/stats/diskinfo"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -29,7 +30,7 @@ func SubmitNewStatsReport() bool  {
 
 	// send all statistics
 	log.Info("Collecting stats and sending report.")
-	SendDiskInfoStats(client, actorAddress, nodeUrl)
+	diskinfo.SendDiskInfoStats(client, actorAddress, nodeUrl)
 
 	return true
 }

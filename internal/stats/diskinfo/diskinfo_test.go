@@ -1,4 +1,4 @@
-package stats
+package diskinfo
 
 import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"

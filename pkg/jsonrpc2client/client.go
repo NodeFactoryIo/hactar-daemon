@@ -10,7 +10,7 @@ type Client interface {
 }
 
 type client struct {
-	baseURL string
+	baseURL   string
 	rpcClient jsonrpc.RPCClient
 }
 
@@ -28,5 +28,3 @@ func NewClient(rpcurl string) *client {
 func (c *client) Call(method string, params ...interface{}) (*jsonrpc.RPCResponse, error) {
 	return c.rpcClient.Call(method, params)
 }
-
-

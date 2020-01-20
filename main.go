@@ -15,8 +15,8 @@ import (
 // Load configuration and initialize commands
 func main() {
 	// load config file
-	viper.SetConfigName("config") 			// name of config file (without extension)
-	viper.AddConfigPath(".")               	// look for config in the working directory
+	viper.SetConfigName("config") // name of config file (without extension)
+	viper.AddConfigPath(".")      // look for config in the working directory
 	util.Must(viper.ReadInConfig(), "Fatal error reading config file")
 
 	// initialize logger
@@ -25,7 +25,7 @@ func main() {
 	// start program
 	log.Info("Starting hactar")
 	interval, _ := strconv.Atoi(viper.GetString("stats.interval"))
-	log.Info(fmt.Sprintf("Stats refresh interval is %d minutes.", interval / 60))
+	log.Info(fmt.Sprintf("Stats refresh interval is %d minutes.", interval/60))
 
 	if len(os.Args) <= 2 {
 		fmt.Println("Please enter your hactar credentials.")
@@ -41,5 +41,3 @@ func main() {
 		os.Exit(1)
 	}
 }
-
-

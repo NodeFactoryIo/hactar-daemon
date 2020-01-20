@@ -23,7 +23,9 @@ require (
 	github.com/stretchr/testify v1.4.0
 	github.com/vektra/mockery v0.0.0-20181123154057-e78b021dcbb5 // indirect
 	github.com/ybbus/jsonrpc v2.1.2+incompatible
+	golang.org/x/lint v0.0.0-20191125180803-fdd1cda4f05f // indirect
 	golang.org/x/sys v0.0.0-20191220220014-0732a990476f
 	golang.org/x/text v0.3.2 // indirect
+	golang.org/x/tools v0.0.0-20200115145821-98c82cf1f420 // indirect
 	gopkg.in/yaml.v2 v2.2.7 // indirect
 )

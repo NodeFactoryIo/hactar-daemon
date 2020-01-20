@@ -4,6 +4,7 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/services"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/stats/diskinfo"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -11,7 +12,7 @@ import (
 	"time"
 )
 
-func SubmitNewStatsReport() bool  {
+func SubmitNewStatsReport() bool {
 	client := hactar.NewClient(nil)
 	lotusService := services.NewLotusService(nil, nil)
 
@@ -29,7 +30,7 @@ func SubmitNewStatsReport() bool  {
 
 	// send all statistics
 	log.Info("Collecting stats and sending report.")
-	SendDiskInfoStats(client, actorAddress, nodeUrl)
+	diskinfo.SendDiskInfoStats(client, actorAddress, nodeUrl)
 
 	return true
 }

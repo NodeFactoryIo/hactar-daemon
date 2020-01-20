@@ -18,7 +18,7 @@ const (
 
 // Payment channels requests
 const (
-	PayChannels = "Filecoin.PaychList"
-	PayChannel  = "Filecoin.PaychStatus"
+	PayChannels        = "Filecoin.PaychList"
+	PayChannel         = "Filecoin.PaychStatus"
 	PayChannelVouchers = "Filecoin.PaychVoucherList"
 )

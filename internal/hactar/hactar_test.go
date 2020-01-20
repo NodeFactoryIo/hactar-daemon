@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	mux *http.ServeMux
+	mux    *http.ServeMux
 	client *Client
 	server *httptest.Server
 )
@@ -65,8 +65,8 @@ func TestNewRequest(t *testing.T) {
 		NodeUrl:      "node-url",
 		ActorAddress: "actor-address",
 	},
-	`{"freeSpace":"1000","takenSpace":"1000",`+
-		`"url":"node-url","address":"actor-address"}` + "\n"
+		`{"freeSpace":"1000","takenSpace":"1000",`+
+			`"url":"node-url","address":"actor-address"}`+"\n"
 
 	req, _ := c.NewRequest(http.MethodGet, inURL, inBody)
 
@@ -98,7 +98,7 @@ func TestDo(t *testing.T) {
 		fmt.Fprint(w, `{"A":"a"}`)
 	})
 
-	req, _ := client.NewRequest( http.MethodGet, "/", nil)
+	req, _ := client.NewRequest(http.MethodGet, "/", nil)
 	body := new(foo)
 	_, err := client.Do(req, body)
 	assert.Nil(t, err)
@@ -116,7 +116,7 @@ func TestDo_HttpError(t *testing.T) {
 	})
 
 	req, _ := client.NewRequest(http.MethodGet, "/", nil)
-	_, err := client.Do( req, nil)
+	_, err := client.Do(req, nil)
 
 	assert.NotNil(t, err)
 }

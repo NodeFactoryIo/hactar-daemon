@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/services"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/session"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/stats"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/token"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
@@ -38,12 +39,15 @@ var StartCommand = &cli.Command{
 	Text: "",
 	Fn: func(ctx *cli.Context) error {
 		argv := ctx.Argv().(*startT)
-		client := hactar.NewClient(nil)
+		client, err := hactar.NewAuthClient(argv.Email, argv.Password)
 		// authenticate
-		if err := hactar.Auth(argv.Email, argv.Password); err != nil {
+		if err != nil {
 			log.Error("Failed to authenticate to Lotus service.")
+			return err
 		}
 		log.Info("Successful authentication.")
+		// save jwt token for current session
+		session.CurrentUser.Token = client.Token
 		// detect miners and allow user to choose actor address
 		lotusService := services.NewLotusService(nil, nil)
 		actorAddress, err := lotusService.GetMinerAddress()

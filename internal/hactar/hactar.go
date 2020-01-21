@@ -3,7 +3,9 @@ package hactar
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"io"
@@ -13,7 +15,9 @@ import (
 )
 
 const (
-	mediaType = "application/json"
+	mediaType      = "application/json"
+	authEndpoint   = "/auth"
+	healthEndpoint = "/health"
 )
 
 type Client struct {
@@ -21,15 +25,27 @@ type Client struct {
 	client *http.Client
 	// Base URL for API requests.
 	BaseURL *url.URL
+	// JWT token
+	Token string
 	// Services used for communicating with the API
 	Nodes    NodesService
 	DiskInfo DiskInfoService
 }
 
-func NewClient(httpClient *http.Client) *Client {
-	if httpClient == nil {
-		httpClient = http.DefaultClient
+func NewAuthClient(email string, password string) (*Client, error) {
+	c := NewClient(nil)
+	// call auth endpoint for jwt token
+	token, err := c.Auth(email, password)
+	if err != nil {
+		// failed on auth
+		return nil, err
 	}
+	c.Token = token
+	return c, nil
+}
+
+func NewClient(token interface{}) *Client {
+	httpClient := http.DefaultClient
 
 	baseUrl := viper.GetString("hactar.api-url")
 	baseURL, _ := url.Parse(baseUrl)
@@ -39,11 +55,15 @@ func NewClient(httpClient *http.Client) *Client {
 	c.Nodes = &nodesServices{client: c}
 	c.DiskInfo = &diskInfoService{client: c}
 
+	if token != nil {
+		c.Token = util.String(token)
+	}
+
 	return c
 }
 
 func (c *Client) IsActive() bool {
-	request, err := c.NewRequest(http.MethodGet, "/health", nil)
+	request, err := c.NewRequest(http.MethodGet, healthEndpoint, nil)
 	if err != nil {
 		log.Error("Unable to create health check request", err)
 		return false
@@ -57,6 +77,38 @@ func (c *Client) IsActive() bool {
 
 	log.Error("Hactar health check failed")
 	return false
+}
+
+type TokenResponse struct {
+	Token string `json:"token"`
+}
+
+func (c *Client) Auth(email string, password string) (string, error) {
+	body := struct {
+		email    string
+		password string
+	}{
+		email,
+		password,
+	}
+	request, err := c.NewRequest(http.MethodPost, authEndpoint, body)
+
+	if err != nil {
+		return "", err
+	}
+
+	tokenResponse := new(TokenResponse)
+	response, err := c.Do(request, tokenResponse)
+
+	if err != nil {
+		return "", err
+	}
+
+	if response != nil && response.StatusCode != http.StatusOK {
+		return "", errors.New(fmt.Sprintf("Unable to authorize, server returned http status %s", response.Status))
+	}
+
+	return tokenResponse.Token, err
 }
 
 // NewRequest creates an API request. A relative URL can be provided in urlStr, which will be resolved to the
@@ -82,6 +134,9 @@ func (c *Client) NewRequest(method, urlStr string, body interface{}) (*http.Requ
 
 	req.Header.Add("Content-Type", mediaType)
 	req.Header.Add("Accept", mediaType)
+	if c.Token != "" {
+		req.Header.Add("Authentication", fmt.Sprintf("Berier %s", c.Token))
+	}
 	return req, nil
 }
 

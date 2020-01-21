@@ -35,9 +35,13 @@ func Build() error {
 	return sh.Run(goexe, "build", "./...")
 }
 
+func CleanAll() {
+	os.RemoveAll("./builds/")
+}
+
 // mage buildall
 func BuildAll() error {
-	mg.Deps(Test)
+	mg.Deps(Test, CleanAll)
 
 	platforms := [...]string{"linux", "darwin"}
 	archs := [...]string{"386", "amd64"}

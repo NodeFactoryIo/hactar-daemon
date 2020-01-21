@@ -8,6 +8,6 @@ jsonrpc:
     url: "http://167.172.98.186:1234/rpc/v0"
     token: ""
 hactar:
-  api-url: "http://127.0.0.1:3000"
+  api-url: "http://127.0.0.1:3000/api"
 log:
   level: "info"

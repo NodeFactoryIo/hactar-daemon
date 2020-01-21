@@ -15,7 +15,7 @@ import (
 
 const (
 	mediaType      = "application/json"
-	authEndpoint   = "/auth"
+	authEndpoint   = "/user/login"
 	healthEndpoint = "/health"
 )
 
@@ -61,17 +61,15 @@ func NewClient(token interface{}) *Client {
 	return c
 }
 
-type TokenResponse struct {
-	Token string `json:"token"`
+type TokenRequest struct {
+	Email string `json:"email"`
+	Password string `json:"password"`
 }
 
 func (c *Client) Auth(email string, password string) (string, error) {
-	body := struct {
-		email    string
-		password string
-	}{
-		email,
-		password,
+	body := &TokenRequest{
+		Email:    email,
+		Password: password,
 	}
 	request, err := c.NewRequest(http.MethodPost, authEndpoint, body)
 
@@ -79,8 +77,7 @@ func (c *Client) Auth(email string, password string) (string, error) {
 		return "", err
 	}
 
-	tokenResponse := new(TokenResponse)
-	response, err := c.Do(request, tokenResponse)
+	response, err := c.Do(request, nil)
 
 	if err != nil {
 		return "", err
@@ -90,13 +87,17 @@ func (c *Client) Auth(email string, password string) (string, error) {
 		return "", errors.New(fmt.Sprintf("Unable to authorize, server returned http status %s", response.Status))
 	}
 
-	return tokenResponse.Token, err
+	buf := new(bytes.Buffer)
+	_, _ = buf.ReadFrom(response.Body)
+	token := buf.String()
+
+	return token, err
 }
 
 // NewRequest creates an API request. A relative URL can be provided in urlStr, which will be resolved to the
 // BaseURL of the Client.
 func (c *Client) NewRequest(method, urlStr string, body interface{}) (*http.Request, error) {
-	u, err := c.BaseURL.Parse(urlStr)
+	u, err := c.BaseURL.Parse(c.BaseURL.Path + urlStr)
 	if err != nil {
 		return nil, err
 	}

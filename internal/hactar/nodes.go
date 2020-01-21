@@ -19,7 +19,7 @@ type Node struct {
 }
 
 const (
-	NodePath = "/node"
+	NodePath = "/user/node"
 )
 
 func (ns *nodesServices) Add(node Node) (*Node, *http.Response, error) {

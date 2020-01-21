@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"io"
 	"io/ioutil"
@@ -60,23 +59,6 @@ func NewClient(token interface{}) *Client {
 	}
 
 	return c
-}
-
-func (c *Client) IsActive() bool {
-	request, err := c.NewRequest(http.MethodGet, healthEndpoint, nil)
-	if err != nil {
-		log.Error("Unable to create health check request", err)
-		return false
-	}
-
-	response, err := c.Do(request, nil)
-	if response != nil && response.StatusCode == http.StatusOK {
-		log.Info("Hactar health check succesfull")
-		return true
-	}
-
-	log.Error("Hactar health check failed")
-	return false
 }
 
 type TokenResponse struct {
@@ -135,7 +117,7 @@ func (c *Client) NewRequest(method, urlStr string, body interface{}) (*http.Requ
 	req.Header.Add("Content-Type", mediaType)
 	req.Header.Add("Accept", mediaType)
 	if c.Token != "" {
-		req.Header.Add("Authentication", fmt.Sprintf("Berier %s", c.Token))
+		req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", c.Token))
 	}
 	return req, nil
 }

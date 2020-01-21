@@ -76,6 +76,29 @@ func TestNewRequest(t *testing.T) {
 	assert.Equal(t, outBody, string(body))
 }
 
+func TestNewAuthRequest(t *testing.T) {
+	c := NewClient("test-token")
+
+	inURL, outURL := "/foo", "/foo"
+	inBody, outBody := &DiskInfo{
+		FreeSpace:    "1000",
+		TakenSpace:   "1000",
+		NodeUrl:      "node-url",
+		ActorAddress: "actor-address",
+	},
+		`{"freeSpace":"1000","takenSpace":"1000",`+
+			`"url":"node-url","address":"actor-address"}`+"\n"
+
+	req, _ := c.NewRequest(http.MethodGet, inURL, inBody)
+
+	assert.Equal(t, outURL, req.URL.String())
+
+	body, _ := ioutil.ReadAll(req.Body)
+	assert.Equal(t, outBody, string(body))
+
+	assert.Equal(t, "Bearer test-token", req.Header.Get("Authorization"))
+}
+
 func TestNewRequest_BadURL(t *testing.T) {
 	c := NewClient(nil)
 	_, err := c.NewRequest(http.MethodGet, ":", nil)

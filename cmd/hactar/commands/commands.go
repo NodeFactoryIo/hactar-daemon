@@ -60,10 +60,6 @@ var StartCommand = &cli.Command{
 		token.DisplayToken()
 		url.DisplayUrl()
 		// save node to backend
-		if !client.IsActive() {
-			log.Error("Hactar not responding")
-			return nil
-		}
 		node, resp, err := client.Nodes.Add(hactar.Node{
 			Token:        token.ReadTokenFromFile(),
 			Url:          url.GetUrl(),

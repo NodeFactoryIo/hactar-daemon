@@ -24,11 +24,6 @@ func SubmitNewStatsReport() bool {
 		return false
 	}
 
-	if !client.IsActive() {
-		log.Error("Unable to send stats report because Hactar is not responding.")
-		return false
-	}
-
 	// send all statistics
 	log.Info("Collecting stats and sending report.")
 	diskinfo.SendDiskInfoStats(client, actorAddress, nodeUrl)

@@ -14,7 +14,12 @@ import (
 
 func SubmitNewStatsReport() bool {
 	client := hactar.NewClient(session.CurrentUser.Token)
-	lotusService := services.NewLotusService(nil, nil)
+	lotusService, err := services.NewLotusService(nil, nil)
+
+	if err != nil {
+		log.Error("Unable to initialize lotus service", err)
+		return false
+	}
 
 	nodeUrl := url.GetUrl()
 	actorAddress, err := lotusService.GetMinerAddress()

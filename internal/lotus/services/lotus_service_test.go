@@ -15,7 +15,7 @@ func TestLotusService_GetMinerAddress_ValidResponse(t *testing.T) {
 
 	minerMockClient.MockResponse(miner.ActorAddress, "t0101")
 
-	lotusService := services.NewLotusService(lotusMockClient, minerMockClient)
+	lotusService, _ := services.NewLotusService(lotusMockClient, minerMockClient)
 
 	address, err := lotusService.GetMinerAddress()
 
@@ -28,7 +28,7 @@ func TestLotusService_GetMinerAddress_ErrorResponse(t *testing.T) {
 
 	minerMockClient.MockError(miner.ActorAddress, errors.New("test-error"))
 
-	lotusService := services.NewLotusService(lotusMockClient, minerMockClient)
+	lotusService, _ := services.NewLotusService(lotusMockClient, minerMockClient)
 
 	address, err := lotusService.GetMinerAddress()
 

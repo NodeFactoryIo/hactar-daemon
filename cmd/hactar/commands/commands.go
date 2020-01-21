@@ -49,10 +49,14 @@ var StartCommand = &cli.Command{
 		// save jwt token for current session
 		session.CurrentUser.Token = client.Token
 		// detect miners and allow user to choose actor address
-		lotusService := services.NewLotusService(nil, nil)
+		lotusService, err := services.NewLotusService(nil, nil)
+		if err != nil {
+			log.Error("Failed to initialize lotus service")
+			return nil
+		}
 		actorAddress, err := lotusService.GetMinerAddress()
 		if err != nil {
-			fmt.Print("Worker down!")
+			log.Error("Actor down!")
 			return nil
 		}
 		log.Info("Actor address: ", actorAddress)

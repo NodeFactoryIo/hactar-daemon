@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	DefaultPathNodeTokenFile = "/.lotus/token"
+	DefaultPathNodeTokenFile  = "/.lotus/token"
 	DefaultPathMinerTokenFile = "/.lotusstorage/token"
 )
 

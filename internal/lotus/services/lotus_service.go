@@ -20,23 +20,38 @@ type lotusService struct {
 	minerClient jsonrpc2client.Client
 }
 
-func NewLotusService(lClient jsonrpc2client.Client, mClient jsonrpc2client.Client) *lotusService {
+func initClient(url, token string) (jsonrpc2client.Client, error) {
+	if token == "" || url == ""{
+		return nil, errors.New("unable to initialize rpc client")
+	}
+	return jsonrpc2client.NewClient(url, token), nil
+}
+
+func NewLotusService(lClient jsonrpc2client.Client, mClient jsonrpc2client.Client) (*lotusService, error) {
 	lotusClient := lClient
 	if lotusClient == nil {
-		url := viper.GetString("jsonrpc.lotus-node.url")
-		lotusClient = jsonrpc2client.NewClient(url, token.ReadNodeTokenFromFile())
+		c, err := initClient(viper.GetString("jsonrpc.lotus-node.url"), token.ReadNodeTokenFromFile())
+		if err != nil {
+			// unable to initialize lotus node client
+			return nil, err
+		}
+		lotusClient = c
 	}
 
 	minerClient := mClient
 	if minerClient == nil {
-		url := viper.GetString("jsonrpc.lotus-miner.url")
-		minerClient = jsonrpc2client.NewClient(url, token.ReadMinerTokenFromFile())
+		c, err := initClient(viper.GetString("jsonrpc.lotus-miner.url"), token.ReadMinerTokenFromFile())
+		if err != nil {
+			// unable to initialize lotus node client
+			return nil, err
+		}
+		minerClient = c
 	}
 
 	return &lotusService{
 		lotusClient: lotusClient,
 		minerClient: minerClient,
-	}
+	}, nil
 }
 
 func (ls *lotusService) GetMinerAddress() (string, error) {

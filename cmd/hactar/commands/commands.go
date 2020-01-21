@@ -42,7 +42,7 @@ var StartCommand = &cli.Command{
 		client, err := hactar.NewAuthClient(argv.Email, argv.Password)
 		// authenticate
 		if err != nil {
-			log.Error("Failed to authenticate to Lotus service.")
+			log.Error("Failed to authenticate to Hactar service.")
 			return err
 		}
 		log.Info("Successful authentication.")

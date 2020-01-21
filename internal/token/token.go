@@ -14,33 +14,26 @@ const (
 	DefaultPathMinerTokenFile = "/.lotusstorage/token"
 )
 
-// Read lotus token from file
+// Read lotus node token from file
 // If token file address is not provided in configuration, default path will be used.
 func ReadNodeTokenFromFile() string {
-	tokenFile := viper.GetString("jsonrpc.lotus-node.token")
-	if tokenFile == "" {
-		// set to default if not defined in config
-		usr, _ := user.Current()
-		dir := usr.HomeDir
-		tokenFile = dir + DefaultPathNodeTokenFile
-	}
-
-	return readTokenFromFile(tokenFile)
+	return readTokenFromFile(viper.GetString("jsonrpc.lotus-node.token"), DefaultPathNodeTokenFile)
 }
 
+// Read lotus miner token from file
+// If token file address is not provided in configuration, default path will be used.
 func ReadMinerTokenFromFile() string {
-	tokenFile := viper.GetString("jsonrpc.lotus-miner.token")
+	return readTokenFromFile(viper.GetString("jsonrpc.lotus-miner.token"), DefaultPathMinerTokenFile)
+}
+
+func readTokenFromFile(tokenFile string, defaultPath string) string {
 	if tokenFile == "" {
 		// set to default if not defined in config
 		usr, _ := user.Current()
 		dir := usr.HomeDir
-		tokenFile = dir + DefaultPathMinerTokenFile
+		tokenFile = dir + defaultPath
 	}
 
-	return readTokenFromFile(tokenFile)
-}
-
-func readTokenFromFile(tokenFile string) string {
 	data, err := ioutil.ReadFile(tokenFile)
 	if err != nil {
 		log.Error(fmt.Sprintf("Error reading token from file: %s", tokenFile))

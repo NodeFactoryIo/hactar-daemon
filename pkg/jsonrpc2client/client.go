@@ -1,7 +1,6 @@
 package jsonrpc2client
 
 import (
-	"github.com/NodeFactoryIo/hactar-daemon/internal/token"
 	"github.com/ybbus/jsonrpc"
 )
 
@@ -14,12 +13,12 @@ type client struct {
 	rpcClient jsonrpc.RPCClient
 }
 
-func NewClient(rpcurl string) *client {
+func NewClient(rpcurl string, token string) *client {
 	c := &client{}
 	c.baseURL = rpcurl
 	c.rpcClient = jsonrpc.NewClientWithOpts(c.baseURL, &jsonrpc.RPCClientOpts{
 		CustomHeaders: map[string]string{
-			"Authorization": "Bearer " + token.ReadTokenFromFile(),
+			"Authorization": "Bearer " + token,
 		},
 	})
 	return c

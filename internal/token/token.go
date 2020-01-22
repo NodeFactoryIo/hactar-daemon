@@ -10,18 +10,28 @@ import (
 )
 
 const (
-	DefaultPathTokenFile = "/.lotus/token"
+	DefaultPathNodeTokenFile  = "/.lotus/token"
+	DefaultPathMinerTokenFile = "/.lotusstorage/token"
 )
 
-// Read lotus token from file
+// Read lotus node token from file
 // If token file address is not provided in configuration, default path will be used.
-func ReadTokenFromFile() string {
-	tokenFile := viper.GetString("jsonrpc.token-address")
+func ReadNodeTokenFromFile() string {
+	return readTokenFromFile(viper.GetString("jsonrpc.lotus-node.token"), DefaultPathNodeTokenFile)
+}
+
+// Read lotus miner token from file
+// If token file address is not provided in configuration, default path will be used.
+func ReadMinerTokenFromFile() string {
+	return readTokenFromFile(viper.GetString("jsonrpc.lotus-miner.token"), DefaultPathMinerTokenFile)
+}
+
+func readTokenFromFile(tokenFile string, defaultPath string) string {
 	if tokenFile == "" {
 		// set to default if not defined in config
 		usr, _ := user.Current()
 		dir := usr.HomeDir
-		tokenFile = dir + DefaultPathTokenFile
+		tokenFile = dir + defaultPath
 	}
 
 	data, err := ioutil.ReadFile(tokenFile)
@@ -32,7 +42,7 @@ func ReadTokenFromFile() string {
 	return strings.TrimSpace(string(data))
 }
 
-func DisplayToken() {
-	token := ReadTokenFromFile()
-	fmt.Printf("Token:\n%s\n", token)
+func DisplayTokens() {
+	fmt.Printf("Node token:\n%s\n", ReadNodeTokenFromFile())
+	fmt.Printf("Miner token:\n%s\n", ReadMinerTokenFromFile())
 }

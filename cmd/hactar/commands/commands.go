@@ -49,19 +49,23 @@ var StartCommand = &cli.Command{
 		// save jwt token for current session
 		session.CurrentUser.Token = client.Token
 		// detect miners and allow user to choose actor address
-		lotusService := services.NewLotusService(nil, nil)
+		lotusService, err := services.NewLotusService(nil, nil)
+		if err != nil {
+			log.Error("Failed to initialize lotus service")
+			return nil
+		}
 		actorAddress, err := lotusService.GetMinerAddress()
 		if err != nil {
-			fmt.Print("Worker down!")
+			log.Error("Worker down!")
 			return nil
 		}
 		log.Info("Actor address: ", actorAddress)
 		// display token and URL
-		token.DisplayToken()
+		token.DisplayTokens()
 		url.DisplayUrl()
 		// save node to backend
 		node, resp, err := client.Nodes.Add(hactar.Node{
-			Token:        token.ReadTokenFromFile(),
+			Token:        token.ReadNodeTokenFromFile(),
 			Url:          url.GetUrl(),
 			ActorAddress: actorAddress,
 		})
@@ -88,7 +92,11 @@ var TokenCommand = &cli.Command{
 	Desc: "Show lotus token",
 	Text: "",
 	Fn: func(ctx *cli.Context) error {
-		ctx.String("Token: %s\n", token.ReadTokenFromFile())
+		ctx.String(
+			"Node token:\n%s\nMiner token:\n%s\n",
+			token.ReadNodeTokenFromFile(),
+			token.ReadMinerTokenFromFile(),
+		)
 		return nil
 	},
 	Argv: func() interface{} { return new(tokenT) },

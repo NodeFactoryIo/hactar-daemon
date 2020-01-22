@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/requests/miner"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/token"
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/jsonrpc2client"
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
 	log "github.com/sirupsen/logrus"
@@ -19,23 +20,38 @@ type lotusService struct {
 	minerClient jsonrpc2client.Client
 }
 
-func NewLotusService(lClient jsonrpc2client.Client, mClient jsonrpc2client.Client) *lotusService {
+func initClient(url, token string) (jsonrpc2client.Client, error) {
+	if token == "" || url == ""{
+		return nil, errors.New("unable to initialize rpc client")
+	}
+	return jsonrpc2client.NewClient(url, token), nil
+}
+
+func NewLotusService(lClient jsonrpc2client.Client, mClient jsonrpc2client.Client) (*lotusService, error) {
 	lotusClient := lClient
 	if lotusClient == nil {
-		url := viper.GetString("jsonrpc.lotus.url")
-		lotusClient = jsonrpc2client.NewClient(url)
+		c, err := initClient(viper.GetString("jsonrpc.lotus-node.url"), token.ReadNodeTokenFromFile())
+		if err != nil {
+			// unable to initialize lotus node client
+			return nil, err
+		}
+		lotusClient = c
 	}
 
 	minerClient := mClient
 	if minerClient == nil {
-		url := viper.GetString("jsonrpc.miner.url")
-		minerClient = jsonrpc2client.NewClient(url)
+		c, err := initClient(viper.GetString("jsonrpc.lotus-miner.url"), token.ReadMinerTokenFromFile())
+		if err != nil {
+			// unable to initialize lotus node client
+			return nil, err
+		}
+		minerClient = c
 	}
 
 	return &lotusService{
 		lotusClient: lotusClient,
 		minerClient: minerClient,
-	}
+	}, nil
 }
 
 func (ls *lotusService) GetMinerAddress() (string, error) {

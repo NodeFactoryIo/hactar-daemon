@@ -2,7 +2,6 @@ package stats
 
 import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
-	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/services"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/session"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/stats/diskinfo"
@@ -15,10 +14,15 @@ import (
 
 func SubmitNewStatsReport() bool {
 	client := hactar.NewClient(session.CurrentUser.Token)
-	lotusService := services.NewLotusService(nil, nil)
+	lotusService, err := services.NewLotusService(nil, nil)
+
+	if err != nil {
+		log.Error("Unable to initialize lotus service", err)
+		return false
+	}
 
 	nodeUrl := url.GetUrl()
-	actorAddress, err := lotus.CheckForActorAddress(lotusService)
+	actorAddress, err := lotusService.GetMinerAddress()
 	if err != nil {
 		log.Error("Unable to send stats report because worker is down.")
 		return false

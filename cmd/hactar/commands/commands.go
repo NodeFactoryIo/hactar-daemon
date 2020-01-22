@@ -77,6 +77,7 @@ var StartCommand = &cli.Command{
 		}
 		// start stats monitoring
 		stats.StartMonitoringStats()
+		stats.StartMonitoringBlocks()
 		select {}
 	},
 	Argv: func() interface{} { return new(startT) },

@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/requests/lotus"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/requests/miner"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/token"
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/jsonrpc2client"
@@ -61,7 +62,22 @@ func (ls *lotusService) GetMinerAddress() (string, error) {
 		return "", err
 	}
 	return processResult(response)
-	// return "miner-address", nil
+}
+
+type res struct {
+	Cids struct {
+		 string
+	}
+}
+
+func (ls *lotusService) GetLastBlock() (string, error)  {
+	response, err := ls.lotusClient.Call(lotus.HeadBlock)
+	if err != nil {
+		log.Error("Unable to get last block details", err)
+		return "", err
+	}
+	// mapstructure.Decode(response.Result, )
+	return processResult(response)
 }
 
 func processResult(response *jsonrpc.RPCResponse) (string, error) {

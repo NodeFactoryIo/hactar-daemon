@@ -66,6 +66,10 @@ type TokenRequest struct {
 	Password string `json:"password"`
 }
 
+type TokenResponse struct {
+	Token string `json:"token"`
+}
+
 func (c *Client) Auth(email string, password string) (string, error) {
 	body := &TokenRequest{
 		Email:    email,
@@ -77,7 +81,8 @@ func (c *Client) Auth(email string, password string) (string, error) {
 		return "", err
 	}
 
-	response, err := c.Do(request, nil)
+	tokenResponse := new(TokenResponse)
+	response, err := c.Do(request, tokenResponse)
 
 	if err != nil {
 		return "", err
@@ -87,11 +92,7 @@ func (c *Client) Auth(email string, password string) (string, error) {
 		return "", errors.New(fmt.Sprintf("Unable to authorize, server returned http status %s", response.Status))
 	}
 
-	buf := new(bytes.Buffer)
-	_, _ = buf.ReadFrom(response.Body)
-	token := buf.String()
-
-	return token, err
+	return tokenResponse.Token, err
 }
 
 // NewRequest creates an API request. A relative URL can be provided in urlStr, which will be resolved to the

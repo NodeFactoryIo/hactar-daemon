@@ -29,6 +29,7 @@ type Client struct {
 	// Services used for communicating with the API
 	Nodes    NodesService
 	DiskInfo DiskInfoService
+	Blocks   BlocksService
 }
 
 func NewAuthClient(email string, password string) (*Client, error) {
@@ -53,6 +54,7 @@ func NewClient(token interface{}) *Client {
 
 	c.Nodes = &nodesServices{client: c}
 	c.DiskInfo = &diskInfoService{client: c}
+	c.Blocks = &blocksService{client: c}
 
 	if token != nil {
 		c.Token = util.String(token)
@@ -62,7 +64,7 @@ func NewClient(token interface{}) *Client {
 }
 
 type TokenRequest struct {
-	Email string `json:"email"`
+	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 

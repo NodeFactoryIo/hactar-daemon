@@ -39,7 +39,7 @@ var StartCommand = &cli.Command{
 	Text: "",
 	Fn: func(ctx *cli.Context) error {
 		argv := ctx.Argv().(*startT)
-		client, err := hactar.NewAuthClient(argv.Email, argv.Password)
+		hactarClient, err := hactar.NewAuthClient(argv.Email, argv.Password)
 		// authenticate
 		if err != nil {
 			log.Error("Failed to authenticate to Hactar service.")
@@ -47,7 +47,7 @@ var StartCommand = &cli.Command{
 		}
 		log.Info("Successful authentication.")
 		// save jwt token for current session
-		session.CurrentUser.Token = client.Token
+		session.CurrentUser.Token = hactarClient.Token
 		// detect miners and allow user to choose actor address
 		lotusClient, err := lotus.NewClient(nil, nil)
 		if err != nil {
@@ -64,7 +64,7 @@ var StartCommand = &cli.Command{
 		token.DisplayTokens()
 		url.DisplayUrl()
 		// save node to backend
-		node, resp, err := client.Nodes.Add(hactar.Node{
+		node, resp, err := hactarClient.Nodes.Add(hactar.Node{
 			Token:        token.ReadNodeTokenFromFile(),
 			Url:          url.GetUrl(),
 			ActorAddress: actorAddress,
@@ -76,8 +76,8 @@ var StartCommand = &cli.Command{
 			log.Info(fmt.Sprintf("New node added, url: %s address: %s", node.Url, node.ActorAddress))
 		}
 		// start stats monitoring
-		stats.StartMonitoringStats()
-		stats.StartMonitoringBlocks()
+		stats.StartMonitoringStats(hactarClient, lotusClient)
+		stats.StartMonitoringBlocks(hactarClient, lotusClient)
 		select {}
 	},
 	Argv: func() interface{} { return new(startT) },

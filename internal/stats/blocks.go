@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
-	"github.com/NodeFactoryIo/hactar-daemon/internal/session"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"net/http"
@@ -12,13 +11,7 @@ import (
 	"time"
 )
 
-func SubmitNewBlockReport() bool {
-	lotusClient, err := lotus.NewClient(nil, nil)
-	if err != nil {
-		log.Error("Unable to initialize lotus client", err)
-		return false
-	}
-
+func SubmitNewBlockReport(hactarClient *hactar.Client, lotusClient *lotus.Client) bool {
 	lastBlock, err := lotusClient.Blocks.GetLastBlock()
 	if err != nil {
 		log.Error("Unable to get last block", err)
@@ -34,7 +27,6 @@ func SubmitNewBlockReport() bool {
 
 	// if miner finished last block
 	if miner == lastBlockMiner {
-		hactarClient := hactar.NewClient(session.CurrentUser.Token)
 		lastBlockCid := lastBlock.Cids[0].Root
 		block := &hactar.Block{
 			Cid: lastBlockCid  ,
@@ -53,7 +45,7 @@ func SubmitNewBlockReport() bool {
 	return true
 }
 
-func StartMonitoringBlocks() {
+func StartMonitoringBlocks(hactarClient *hactar.Client, lotusClient *lotus.Client) {
 	interval, _ := strconv.Atoi(viper.GetString("stats.blocks.interval"))
 	ticker := time.NewTicker(time.Duration(interval) * time.Second)
 	done := make(chan bool)
@@ -65,7 +57,7 @@ func StartMonitoringBlocks() {
 				return
 			case <-ticker.C:
 				log.Info("Block monitor ticked.")
-				SubmitNewBlockReport()
+				SubmitNewBlockReport(hactarClient, lotusClient)
 			}
 		}
 	}()

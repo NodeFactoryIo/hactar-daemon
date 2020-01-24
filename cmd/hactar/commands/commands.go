@@ -3,7 +3,7 @@ package commands
 import (
 	"fmt"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
-	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/services"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/session"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/stats"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/token"
@@ -49,12 +49,12 @@ var StartCommand = &cli.Command{
 		// save jwt token for current session
 		session.CurrentUser.Token = client.Token
 		// detect miners and allow user to choose actor address
-		lotusService, err := services.NewLotusService(nil, nil)
+		lotusClient, err := lotus.NewClient(nil, nil)
 		if err != nil {
 			log.Error("Failed to initialize lotus service")
 			return nil
 		}
-		actorAddress, err := lotusService.GetMinerAddress()
+		actorAddress, err := lotusClient.Miner.GetMinerAddress()
 		if err != nil {
 			log.Error("Worker down!")
 			return nil

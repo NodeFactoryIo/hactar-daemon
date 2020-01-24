@@ -1,7 +1,7 @@
 package stats
 
 import (
-	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/services"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"strconv"
@@ -9,25 +9,31 @@ import (
 )
 
 func SubmitNewBlockReport() bool {
-	lotusService, err := services.NewLotusService(nil, nil)
+	lotusClient, err := lotus.NewClient(nil, nil)
+	if err != nil {
+		log.Error("Unable to initialize lotus client", err)
+		return false
+	}
+
+	lastBlock, err := lotusClient.Blocks.GetLastBlock()
+	if err != nil {
+		log.Error("Unable to get last block")
+		return false
+	}
+	lastBlockMiner := lastBlock.Blocks[0].Miner
+
+	miner, err := lotusClient.Miner.GetMinerAddress()
 	if err != nil {
 		// TODO
 	}
 
-	if err != nil {
-		log.Error("Unable to initialize lotus service", err)
-		return false
+	if miner == lastBlockMiner {
+		log.Info("I collected prize")
+		// hactarClient := hactar.NewClient(session.CurrentUser.Token)
+		// nodeUrl := url.GetUrl()
 	}
-
-	log.Info(lotusService.GetLastBlock())
 	return true
 
-	//nodeUrl := url.GetUrl()
-	//actorAddress, err := lotusService.GetMinerAddress()
-	//if err != nil {
-	//	log.Error("Unable to send block report because worker is down.")
-	//	return false
-	//}
 }
 
 func StartMonitoringBlocks() {

@@ -15,10 +15,11 @@ const (
 )
 
 type Block struct {
-	Cid string `json:"cid"`
+	Cid   string `json:"cid"`
+	Miner string `json:"miner"`
 }
 
-func (bs *blocksService) AddMiningReward(block Block) (*http.Response, error)  {
+func (bs *blocksService) AddMiningReward(block Block) (*http.Response, error) {
 	request, err := bs.client.NewRequest(http.MethodPost, AddBlockRewardPath, block)
 
 	if err != nil {

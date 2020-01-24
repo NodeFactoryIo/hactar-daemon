@@ -1,9 +1,13 @@
 package stats
 
 import (
+	"fmt"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/session"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"net/http"
 	"strconv"
 	"time"
 )
@@ -17,23 +21,36 @@ func SubmitNewBlockReport() bool {
 
 	lastBlock, err := lotusClient.Blocks.GetLastBlock()
 	if err != nil {
-		log.Error("Unable to get last block")
+		log.Error("Unable to get last block", err)
 		return false
 	}
 	lastBlockMiner := lastBlock.Blocks[0].Miner
 
 	miner, err := lotusClient.Miner.GetMinerAddress()
 	if err != nil {
-		// TODO
+		log.Error("Unable to get miner address", err)
+		return false
 	}
 
+	// if miner finished last block
 	if miner == lastBlockMiner {
-		log.Info("I collected prize")
-		// hactarClient := hactar.NewClient(session.CurrentUser.Token)
-		// nodeUrl := url.GetUrl()
+		hactarClient := hactar.NewClient(session.CurrentUser.Token)
+		lastBlockCid := lastBlock.Cids[0].Root
+		block := &hactar.Block{
+			Cid: lastBlockCid  ,
+			Miner: miner,
+		}
+		response, err := hactarClient.Blocks.AddMiningReward(*block)
+
+		if response != nil && response.StatusCode == http.StatusOK {
+			log.Info(fmt.Sprintf("Miner reward for block %s sent", lastBlockCid))
+			return true
+		}
+
+		log.Error(fmt.Sprintf("Unable to send miner reward status for block %s", lastBlockCid), err)
+		return false
 	}
 	return true
-
 }
 
 func StartMonitoringBlocks() {

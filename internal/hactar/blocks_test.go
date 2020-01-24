@@ -14,6 +14,7 @@ func TestBlocksService_AddMiningReward(t *testing.T) {
 
 	addRequest := &Block{
 		Cid:"test-cid",
+		Miner:"t0101",
 	}
 
 	mux.HandleFunc(AddBlockRewardPath, func(w http.ResponseWriter, r *http.Request) {

@@ -29,7 +29,7 @@ func SubmitNewBlockReport(hactarClient *hactar.Client, lotusClient *lotus.Client
 	if miner == lastBlockMiner {
 		lastBlockCid := lastBlock.Cids[0].Root
 		block := &hactar.Block{
-			Cid: lastBlockCid  ,
+			Cid:   lastBlockCid,
 			Miner: miner,
 		}
 		response, err := hactarClient.Blocks.AddMiningReward(*block)

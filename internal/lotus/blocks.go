@@ -58,8 +58,7 @@ type LastBlockResponse struct {
 	Height int `json:"Height"`
 }
 
-
-func (bs *blocksService) GetLastBlock() (*LastBlockResponse, error)  {
+func (bs *blocksService) GetLastBlock() (*LastBlockResponse, error) {
 	response, err := bs.client.lotusNodeClient.Call(lotus.HeadBlock)
 	if err = ValidResponse(response, err, lotus.HeadBlock); err != nil {
 		return nil, err

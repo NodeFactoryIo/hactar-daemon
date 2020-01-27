@@ -1,6 +1,8 @@
 package session
 
-import "github.com/spf13/viper"
+import (
+	"github.com/spf13/viper"
+)
 
 type UserSession struct {
 	Token            string
@@ -17,6 +19,8 @@ func LoadSession(viper *viper.Viper) {
 }
 
 func SaveSession() error {
-	err := CurrentUser.viper.SafeWriteConfig()
+	CurrentUser.viper.Set("lotus.block.last-checked", CurrentUser.LastCheckedBlock)
+	CurrentUser.viper.Set("hactar.token", CurrentUser.Token)
+	err := CurrentUser.viper.WriteConfig()
 	return err
 }

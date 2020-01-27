@@ -24,6 +24,7 @@ func main() {
 	status := viper.New()
 	status.SetConfigName("status") // name of config file (without extension)
 	status.AddConfigPath(".")      // look for config in the working directory
+	status.SetConfigType("yaml")
 	util.Must(status.ReadInConfig(), "Fatal error reading status file")
 	session.LoadSession(status)
 

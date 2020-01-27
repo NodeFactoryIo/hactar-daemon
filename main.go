@@ -25,7 +25,7 @@ func main() {
 	status.SetConfigName("status") // name of config file (without extension)
 	status.AddConfigPath(".")      // look for config in the working directory
 	util.Must(status.ReadInConfig(), "Fatal error reading status file")
-	session.LinkViper(status)
+	session.LoadSession(status)
 
 	command := os.Args[1:]
 	// special handling needed if start command called
@@ -33,9 +33,7 @@ func main() {
 		// if new username and password are not provided
 		if len(os.Args) != 6 {
 			// check for token in status file
-			token := status.GetString("hactar.token")
-			if token != "" {
-				session.CurrentUser.Token = token
+			if session.CurrentUser.Token != "" {
 				command = append(command, "-e", "token", "-p", "token")
 				fmt.Println("Successfully found saved hactar token.")
 			}

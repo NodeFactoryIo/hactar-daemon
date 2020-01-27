@@ -1,2 +1,5 @@
 hactar:
-  token: "test-toke"
+  token: "test-token"
+lotus:
+  block:
+    last-checked: ""

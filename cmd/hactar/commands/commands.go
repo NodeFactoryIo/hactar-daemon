@@ -39,15 +39,28 @@ var StartCommand = &cli.Command{
 	Text: "",
 	Fn: func(ctx *cli.Context) error {
 		argv := ctx.Argv().(*startT)
-		hactarClient, err := hactar.NewAuthClient(argv.Email, argv.Password)
-		// authenticate
-		if err != nil {
-			log.Error("Failed to authenticate to Hactar service.")
-			return err
+
+		hactarClient := new(hactar.Client)
+		if session.CurrentUser.Token != "" {
+			// create client with saved token
+			hactarClient = hactar.NewClient(session.CurrentUser.Token)
+		} else {
+			// create client with provided email and password
+			c, err := hactar.NewAuthClient(argv.Email, argv.Password)
+			if err != nil {
+				log.Error("Failed to authenticate to Hactar service.")
+				return err
+			}
+			hactarClient = c
+			// save jwt token for current session
+			session.CurrentUser.Token = hactarClient.Token
+			err = session.SaveSession()
+			if err != nil {
+				log.Error("Unable to save hactar token.", err)
+			}
 		}
 		log.Info("Successful authentication.")
-		// save jwt token for current session
-		session.CurrentUser.Token = hactarClient.Token
+
 		// detect miners and allow user to choose actor address
 		lotusClient, err := lotus.NewClient(nil, nil)
 		if err != nil {

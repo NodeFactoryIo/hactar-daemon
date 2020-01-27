@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/Bowery/prompt v0.0.0-20190916142128-fa8279994f75 // indirect
+	github.com/boltdb/bolt v1.3.1 // indirect
 	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/magefile/mage v1.9.0
 	github.com/magiconair/properties v1.8.1
@@ -13,6 +14,7 @@ require (
 	github.com/mkideal/pkg v0.0.0-20170503154153-3e188c9e7ecc // indirect
 	github.com/onsi/gomega v1.8.1 // indirect
 	github.com/pelletier/go-toml v1.6.0 // indirect
+	github.com/rapidloop/skv v0.0.0-20180909015525-9def2caac4cc // indirect
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cast v1.3.1 // indirect

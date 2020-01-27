@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/session"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"net/http"
@@ -18,29 +19,36 @@ func SubmitNewBlockReport(hactarClient *hactar.Client, lotusClient *lotus.Client
 		return false
 	}
 	lastBlockMiner := lastBlock.Blocks[0].Miner
+	lastBlockCid := lastBlock.Cids[0].Root
 
-	miner, err := lotusClient.Miner.GetMinerAddress()
-	if err != nil {
-		log.Error("Unable to get miner address", err)
-		return false
-	}
-
-	// if miner finished last block
-	if miner == lastBlockMiner {
-		lastBlockCid := lastBlock.Cids[0].Root
-		block := &hactar.Block{
-			Cid:   lastBlockCid,
-			Miner: miner,
+	if session.CurrentUser.LastCheckedBlock != lastBlockCid {
+		// get miner address
+		miner, err := lotusClient.Miner.GetMinerAddress()
+		if err != nil {
+			log.Error("Unable to get miner address", err)
+			return false
 		}
-		response, err := hactarClient.Blocks.AddMiningReward(*block)
-
-		if response != nil && response.StatusCode == http.StatusOK {
-			log.Info(fmt.Sprintf("Miner reward for block %s sent", lastBlockCid))
-			return true
+		// save block as processed
+		session.CurrentUser.LastCheckedBlock = lastBlockCid
+		err = session.SaveSession()
+		if err != nil {
+			log.Error("Unable to save last block processed information.", err)
+		}
+		// if miner finished last block
+		if miner == lastBlockMiner {
+			block := &hactar.Block{
+				Cid:   lastBlockCid,
+				Miner: miner,
+			}
+			response, err := hactarClient.Blocks.AddMiningReward(*block)
+			if response != nil && response.StatusCode == http.StatusOK {
+				log.Info(fmt.Sprintf("Miner reward for block %s sent", lastBlockCid))
+				return true
+			}
+			log.Error(fmt.Sprintf("Unable to send miner reward status for block %s", lastBlockCid), err)
+			return false
 		}
 
-		log.Error(fmt.Sprintf("Unable to send miner reward status for block %s", lastBlockCid), err)
-		return false
 	}
 	return true
 }

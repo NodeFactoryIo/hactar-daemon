@@ -1,7 +1,7 @@
 stats:
-  interval: 50 #second
+  interval: 10 #second
   blocks:
-    interval: 10 #secon
+    interval: 50 #secon
 jsonrpc:
   lotus-miner:
     url: "http://167.172.98.186:2345/rpc/v0"

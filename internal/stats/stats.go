@@ -4,6 +4,7 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/stats/diskinfo"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/stats/minerinfo"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -22,7 +23,7 @@ func SubmitNewStatsReport(hactarClient *hactar.Client, lotusClient *lotus.Client
 	// send all statistics
 	log.Info("Collecting stats and sending report.")
 	diskinfo.SendDiskInfoStats(hactarClient, actorAddress, nodeUrl)
-
+	minerinfo.SendMinerInfoStats(hactarClient, lotusClient)
 	return true
 }
 

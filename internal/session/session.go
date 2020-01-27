@@ -1,11 +1,11 @@
 package session
 
-import 	"github.com/spf13/viper"
+import "github.com/spf13/viper"
 
 type UserSession struct {
-	Token string
+	Token            string
 	LastCheckedBlock string
-	viper *viper.Viper
+	viper            *viper.Viper
 }
 
 var CurrentUser = &UserSession{}

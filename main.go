@@ -44,7 +44,6 @@ func main() {
 		}
 	}
 
-
 	// initialize logger
 	logger.SetUpLogger()
 

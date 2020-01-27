@@ -34,13 +34,13 @@ func main() {
 		// if new username and password are not provided
 		if len(os.Args) != 6 {
 			// check for token in status file
-			if session.CurrentUser.Token != "" {
+			if session.CurrentUser.HactarToken != "" {
 				command = append(command, "-e", "token", "-p", "token")
 				fmt.Println("Successfully found saved hactar token.")
 			}
 		}
 		// show before credentials prompt
-		if len(os.Args) <= 2 && session.CurrentUser.Token == "" {
+		if len(os.Args) <= 2 && session.CurrentUser.HactarToken == "" {
 			fmt.Println("Please enter your hactar credentials.")
 		}
 	}

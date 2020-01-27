@@ -41,9 +41,9 @@ var StartCommand = &cli.Command{
 		argv := ctx.Argv().(*startT)
 
 		hactarClient := new(hactar.Client)
-		if session.CurrentUser.Token != "" {
+		if session.CurrentUser.HactarToken != "" {
 			// create client with saved token
-			hactarClient = hactar.NewClient(session.CurrentUser.Token)
+			hactarClient = hactar.NewClient(session.CurrentUser.HactarToken)
 		} else {
 			// create client with provided email and password
 			c, err := hactar.NewAuthClient(argv.Email, argv.Password)
@@ -53,7 +53,7 @@ var StartCommand = &cli.Command{
 			}
 			hactarClient = c
 			// save jwt token for current session
-			session.CurrentUser.Token = hactarClient.Token
+			session.CurrentUser.HactarToken = hactarClient.Token
 			err = session.SaveSession()
 			if err != nil {
 				log.Error("Unable to save hactar token.", err)

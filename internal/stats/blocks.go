@@ -13,40 +13,45 @@ import (
 )
 
 func SubmitNewBlockReport(hactarClient *hactar.Client, lotusClient *lotus.Client) bool {
-	lastBlock, err := lotusClient.Blocks.GetLastBlock()
+	lastHeight, err := lotusClient.Blocks.GetLastHeight()
 	if err != nil {
-		log.Error("Unable to get last block", err)
+		log.Error("Unable to get last typset", err)
 		return false
 	}
-	lastBlockMiner := lastBlock.Blocks[0].Miner
-	lastBlockCid := lastBlock.Cids[0].Root
 
-	if session.CurrentUser.LastCheckedBlock != lastBlockCid {
+	// for all unchecked typsets
+	for h := session.CurrentUser.LastCheckedHeight; h < lastHeight; h++ {
 		// get miner address
 		miner, err := lotusClient.Miner.GetMinerAddress()
 		if err != nil {
 			log.Error("Unable to get miner address", err)
 			return false
 		}
+		typset, err := lotusClient.Blocks.GetTypsetByHeight(h)
 		// save block as processed
-		session.CurrentUser.LastCheckedBlock = lastBlockCid
+		beforeLastCheckedHeight := session.CurrentUser.LastCheckedHeight
+		session.CurrentUser.LastCheckedHeight = h
 		err = session.SaveSession()
 		if err != nil {
 			log.Error("Unable to save last block processed information.", err)
-		}
-		// if miner finished last block
-		if miner == lastBlockMiner {
-			block := &hactar.Block{
-				Cid:   lastBlockCid,
-				Miner: miner,
-			}
-			response, err := hactarClient.Blocks.AddMiningReward(*block)
-			if response != nil && response.StatusCode == http.StatusOK {
-				log.Info(fmt.Sprintf("Miner reward for block %s sent", lastBlockCid))
-				return true
-			}
-			log.Error(fmt.Sprintf("Unable to send miner reward status for block %s", lastBlockCid), err)
 			return false
+		}
+		for i, block := range typset.Blocks {
+			if miner == block.Miner {
+				block := &hactar.Block{
+					Cid:   typset.Cids[i],
+					Miner: block.Miner,
+				}
+				response, err := hactarClient.Blocks.AddMiningReward(*block)
+				if response != nil && response.StatusCode == http.StatusOK {
+					log.Info(fmt.Sprintf("Miner reward for block %s sent", typset.Cids[i]))
+					return true
+				}
+				log.Error(fmt.Sprintf("Unable to send miner reward status for block %s", typset.Cids[i]), err)
+				session.CurrentUser.LastCheckedHeight = beforeLastCheckedHeight
+				_ = session.SaveSession()
+				return false
+			}
 		}
 
 	}

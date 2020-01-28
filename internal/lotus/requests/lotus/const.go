@@ -14,6 +14,7 @@ const (
 	DealDetails   = "Filecoin.ClientGetDealInfo"
 	HeadBlock     = "Filecoin.ChainHead"
 	Block         = "Filecoin.ChainGetBlock"
+	TipSetByHeight = "Filecoin.ChainGetTipSetByHeight"
 )
 
 // Payment channels requests

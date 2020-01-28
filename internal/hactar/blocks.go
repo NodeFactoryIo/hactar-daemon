@@ -3,7 +3,7 @@ package hactar
 import "net/http"
 
 type BlocksService interface {
-	AddMiningReward(block Block) (*http.Response, error)
+	AddMiningReward(blocks []Block) (*http.Response, error)
 }
 
 type blocksService struct {
@@ -19,8 +19,8 @@ type Block struct {
 	Miner string `json:"miner"`
 }
 
-func (bs *blocksService) AddMiningReward(block Block) (*http.Response, error) {
-	request, err := bs.client.NewRequest(http.MethodPost, AddBlockRewardPath, block)
+func (bs *blocksService) AddMiningReward(blocks []Block) (*http.Response, error) {
+	request, err := bs.client.NewRequest(http.MethodPost, AddBlockRewardPath, blocks)
 
 	if err != nil {
 		return nil, err

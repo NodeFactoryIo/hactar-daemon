@@ -26,7 +26,8 @@ func main() {
 	status.AddConfigPath(".")      // look for config in the working directory
 	status.SetConfigType("yaml")
 	util.Must(status.ReadInConfig(), "Fatal error reading status file")
-	session.LoadSession(status)
+
+	session.InitSession(status)
 
 	command := os.Args[1:]
 	// special handling needed if start command called
@@ -34,13 +35,13 @@ func main() {
 		// if new username and password are not provided
 		if len(os.Args) != 6 {
 			// check for token in status file
-			if session.CurrentUser.HactarToken != "" {
+			if session.CurrentSession.GetHactarToken() != "" {
 				command = append(command, "-e", "token", "-p", "token")
 				fmt.Println("Successfully found saved hactar token.")
 			}
 		}
 		// show before credentials prompt
-		if len(os.Args) <= 2 && session.CurrentUser.HactarToken == "" {
+		if len(os.Args) <= 2 && session.CurrentSession.GetHactarToken() == "" {
 			fmt.Println("Please enter your hactar credentials.")
 		}
 	}

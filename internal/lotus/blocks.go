@@ -51,7 +51,7 @@ func (bs *blocksService) GetLastHeight() (int64, error) {
 }
 
 func (bs *blocksService) GetTypsetByHeight(height int64) (*TypsetResponse, error) {
-	response, err := bs.client.lotusNodeClient.Call(lotus.TipSetByHeight, height)
+	response, err := bs.client.lotusNodeClient.Call(lotus.TipSetByHeight, height, nil)
 	if err = ValidResponse(response, err, lotus.TipSetByHeight); err != nil {
 		return nil, err
 	}

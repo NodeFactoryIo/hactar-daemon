@@ -40,10 +40,12 @@ var StartCommand = &cli.Command{
 	Fn: func(ctx *cli.Context) error {
 		argv := ctx.Argv().(*startT)
 
+		currentSession := session.CurrentSession
+
 		hactarClient := new(hactar.Client)
-		if session.CurrentUser.HactarToken != "" {
+		if currentSession.GetHactarToken() != "" {
 			// create client with saved token
-			hactarClient = hactar.NewClient(session.CurrentUser.HactarToken)
+			hactarClient = hactar.NewClient(currentSession.GetHactarToken())
 		} else {
 			// create client with provided email and password
 			c, err := hactar.NewAuthClient(argv.Email, argv.Password)
@@ -53,8 +55,8 @@ var StartCommand = &cli.Command{
 			}
 			hactarClient = c
 			// save jwt token for current session
-			session.CurrentUser.HactarToken = hactarClient.Token
-			err = session.SaveSession()
+			currentSession.SetHactarToken(hactarClient.Token)
+			err = currentSession.SaveSession()
 			if err != nil {
 				log.Error("Unable to save hactar token.", err)
 			}
@@ -90,7 +92,7 @@ var StartCommand = &cli.Command{
 		}
 		// start stats monitoring
 		stats.StartMonitoringStats(hactarClient, lotusClient)
-		stats.StartMonitoringBlocks(hactarClient, lotusClient)
+		stats.StartMonitoringBlocks(hactarClient, lotusClient, currentSession)
 		select {}
 	},
 	Argv: func() interface{} { return new(startT) },

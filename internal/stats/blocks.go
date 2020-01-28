@@ -5,6 +5,7 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/session"
+	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"net/http"
@@ -12,53 +13,61 @@ import (
 	"time"
 )
 
-func SubmitNewBlockReport(hactarClient *hactar.Client, lotusClient *lotus.Client) bool {
+func SubmitNewBlockReport(hactarClient *hactar.Client, lotusClient *lotus.Client, currentSession session.UserSession) bool {
+	// get last typset height
 	lastHeight, err := lotusClient.Blocks.GetLastHeight()
 	if err != nil {
-		log.Error("Unable to get last typset", err)
+		log.Error("Unable to get last typset height", err)
 		return false
 	}
-
-	// for all unchecked typsets
-	for h := session.CurrentUser.LastCheckedHeight; h < lastHeight; h++ {
-		// get miner address
-		miner, err := lotusClient.Miner.GetMinerAddress()
-		if err != nil {
-			log.Error("Unable to get miner address", err)
-			return false
-		}
+	// get miner address
+	miner, err := lotusClient.Miner.GetMinerAddress()
+	if err != nil {
+		log.Error("Unable to get miner address", err)
+		return false
+	}
+	// iterate over all unchecked typsets
+	for h := currentSession.GetLastCheckedHeight() + 1; h <= lastHeight; h++ {
+		// get typset for height h
 		typset, err := lotusClient.Blocks.GetTypsetByHeight(h)
-		// save block as processed
-		beforeLastCheckedHeight := session.CurrentUser.LastCheckedHeight
-		session.CurrentUser.LastCheckedHeight = h
-		err = session.SaveSession()
 		if err != nil {
-			log.Error("Unable to save last block processed information.", err)
+			log.Error(fmt.Sprintf("Unable to get typset of height %d", h))
 			return false
 		}
+		// check for all blocks
+		var blocks []hactar.Block
 		for i, block := range typset.Blocks {
 			if miner == block.Miner {
 				block := &hactar.Block{
 					Cid:   typset.Cids[i],
 					Miner: block.Miner,
 				}
-				response, err := hactarClient.Blocks.AddMiningReward(*block)
-				if response != nil && response.StatusCode == http.StatusOK {
-					log.Info(fmt.Sprintf("Miner reward for block %s sent", typset.Cids[i]))
-					return true
-				}
-				log.Error(fmt.Sprintf("Unable to send miner reward status for block %s", typset.Cids[i]), err)
-				session.CurrentUser.LastCheckedHeight = beforeLastCheckedHeight
-				_ = session.SaveSession()
-				return false
+				blocks = append(blocks, *block)
 			}
 		}
-
+		// if mining reward present
+		if len(blocks) > 0 {
+			// send mining reward for this typset
+			response, err := hactarClient.Blocks.AddMiningReward(blocks)
+			if err != nil {
+				log.Error(
+					fmt.Sprintf("Unable to send miner reward status for typset of height %d", typset.Height),
+					err,
+				)
+				return false
+			}
+			if response != nil && response.StatusCode == http.StatusOK {
+				log.Info(fmt.Sprintf("Miner reward for typset of height %d sent", typset.Height))
+			}
+		}
+		currentSession.SetLastCheckedHeight(h)
+		err = currentSession.SaveSession()
+		util.Must(err, "Unable to save last block processed information.")
 	}
 	return true
 }
 
-func StartMonitoringBlocks(hactarClient *hactar.Client, lotusClient *lotus.Client) {
+func StartMonitoringBlocks(hactarClient *hactar.Client, lotusClient *lotus.Client, currentSession session.UserSession) {
 	interval, _ := strconv.Atoi(viper.GetString("stats.blocks.interval"))
 	ticker := time.NewTicker(time.Duration(interval) * time.Second)
 	done := make(chan bool)
@@ -70,7 +79,7 @@ func StartMonitoringBlocks(hactarClient *hactar.Client, lotusClient *lotus.Clien
 				return
 			case <-ticker.C:
 				log.Info("Block monitor ticked.")
-				SubmitNewBlockReport(hactarClient, lotusClient)
+				SubmitNewBlockReport(hactarClient, lotusClient, currentSession)
 			}
 		}
 	}()

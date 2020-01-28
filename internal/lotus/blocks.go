@@ -16,12 +16,6 @@ type blocksService struct {
 	client *Client
 }
 
-type RawTypsetResponse struct {
-	Cids   []interface{} `json:"Cids"`
-	Blocks []interface{} `json:"Blocks"`
-	Height int64         `json:"Height"`
-}
-
 type TypsetResponse struct {
 	Cids   []string
 	Blocks []BlockStruct
@@ -30,6 +24,12 @@ type TypsetResponse struct {
 
 type BlockStruct struct {
 	Miner string
+}
+
+type rawTypsetResponse struct {
+	Cids   []interface{} `json:"Cids"`
+	Blocks []interface{} `json:"Blocks"`
+	Height int64         `json:"Height"`
 }
 
 func (bs *blocksService) GetLastTypset() (*TypsetResponse, error) {
@@ -56,44 +56,42 @@ func (bs *blocksService) GetTypsetByHeight(height int64) (*TypsetResponse, error
 		return nil, err
 	}
 
-	var responseObject *RawTypsetResponse
+	var responseObject *rawTypsetResponse
 	err = response.GetObject(&responseObject)
 
 	return convertFromRawTypset(responseObject)
 }
 
-func (bs *blocksService) getLastTypsetRaw() (*RawTypsetResponse, error) {
+func (bs *blocksService) getLastTypsetRaw() (*rawTypsetResponse, error) {
 	response, err := bs.client.lotusNodeClient.Call(lotus.HeadBlock)
 	if err = ValidResponse(response, err, lotus.HeadBlock); err != nil {
 		return nil, err
 	}
 
-	var responseObject *RawTypsetResponse
+	var responseObject *rawTypsetResponse
 	err = response.GetObject(&responseObject)
 
 	return responseObject, err
 }
 
-func convertFromRawTypset(typsetRaw *RawTypsetResponse) (*TypsetResponse, error) {
+func convertFromRawTypset(typsetRaw *rawTypsetResponse) (*TypsetResponse, error) {
 	// get all cids
 	var cids []string
 	for i := 0; i < len(typsetRaw.Cids); i++ {
 		c := util.String(typsetRaw.Cids[i].(map[string]interface{})["/"])
 		cids = append(cids, c)
 	}
-
 	// get all miners
 	var miners []BlockStruct
 	for i := 0; i < len(typsetRaw.Blocks); i++ {
 		m := util.String(typsetRaw.Blocks[i].(map[string]interface{})["Miner"])
 		miners = append(miners, *(&BlockStruct{Miner: m}))
 	}
-
+	// create TypsetResponse
 	typsetResponse := &TypsetResponse{
 		Cids:   cids,
 		Blocks: miners,
 		Height: typsetRaw.Height,
 	}
-
 	return typsetResponse, nil
 }

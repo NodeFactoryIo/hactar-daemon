@@ -19,7 +19,7 @@ type blocksService struct {
 type RawTypsetResponse struct {
 	Cids   []interface{} `json:"Cids"`
 	Blocks []interface{} `json:"Blocks"`
-	Height int64           `json:"Height"`
+	Height int64         `json:"Height"`
 }
 
 type TypsetResponse struct {
@@ -41,7 +41,7 @@ func (bs *blocksService) GetLastTypset() (*TypsetResponse, error) {
 	return convertFromRawTypset(typsetRaw)
 }
 
-func (bs *blocksService) GetLastHeight() (int64, error)  {
+func (bs *blocksService) GetLastHeight() (int64, error) {
 	typsetRaw, err := bs.getLastTypsetRaw()
 	if err != nil {
 		log.Error()
@@ -50,7 +50,7 @@ func (bs *blocksService) GetLastHeight() (int64, error)  {
 	return typsetRaw.Height, nil
 }
 
-func (bs *blocksService) GetTypsetByHeight(height int64) (*TypsetResponse, error)  {
+func (bs *blocksService) GetTypsetByHeight(height int64) (*TypsetResponse, error) {
 	response, err := bs.client.lotusNodeClient.Call(lotus.TipSetByHeight, height)
 	if err = ValidResponse(response, err, lotus.TipSetByHeight); err != nil {
 		return nil, err

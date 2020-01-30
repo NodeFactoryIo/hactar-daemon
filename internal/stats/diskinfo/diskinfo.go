@@ -1,7 +1,6 @@
 package diskinfo
 
 import (
-	"fmt"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -24,10 +23,10 @@ func SendDiskInfoStats(client *hactar.Client, actorAddress string, nodeUrl strin
 	})
 
 	if response != nil && response.StatusCode == http.StatusOK {
-		log.Info(fmt.Sprintf("Disk stats: %d (free) %d (used)", usage.Free, usage.Used))
+		log.Info("Disk info successfully sent to hactar")
 		return true
 	}
 
-	log.Error("Unable to send disk information statistics. ", err)
+	log.Error("Unable to send disk information statistics ", err)
 	return false
 }

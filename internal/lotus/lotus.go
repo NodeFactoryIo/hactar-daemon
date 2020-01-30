@@ -14,6 +14,8 @@ type Client struct {
 	lotusMinerClient jsonrpc2client.Client
 	Blocks           BlocksService
 	Miner            MinerService
+	Sectors          SectorService
+	Client           ClientService
 }
 
 func NewClient(lClient jsonrpc2client.Client, mClient jsonrpc2client.Client) (*Client, error) {
@@ -44,6 +46,8 @@ func NewClient(lClient jsonrpc2client.Client, mClient jsonrpc2client.Client) (*C
 
 	client.Blocks = &blocksService{client: client}
 	client.Miner = &minerService{client: client}
+	client.Sectors = &sectorService{client: client}
+	client.Client = &clientService{client: client}
 
 	return client, nil
 }

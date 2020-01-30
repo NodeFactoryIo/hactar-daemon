@@ -30,6 +30,7 @@ type Client struct {
 	Nodes    NodesService
 	DiskInfo DiskInfoService
 	Blocks   BlocksService
+	Miner    MinerService
 }
 
 func NewAuthClient(email string, password string) (*Client, error) {
@@ -55,6 +56,7 @@ func NewClient(token interface{}) *Client {
 	c.Nodes = &nodesServices{client: c}
 	c.DiskInfo = &diskInfoService{client: c}
 	c.Blocks = &blocksService{client: c}
+	c.Miner = &minerService{client: c}
 
 	if token != nil {
 		c.Token = util.String(token)

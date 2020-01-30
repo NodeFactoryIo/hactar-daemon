@@ -31,10 +31,10 @@ func TestSendMinerInfoStats(t *testing.T) {
 	lotusClientServiceMock.On("GetClientVersion").Return(clientVersionResponse, nil)
 
 	lotusMockedClient := &lotus.Client{
-		Miner:  lotusMinerServiceMock,
-		Blocks:nil,
-		Client:lotusClientServiceMock,
-		Sectors:lotusSectorServiceMock,
+		Miner:   lotusMinerServiceMock,
+		Blocks:  nil,
+		Client:  lotusClientServiceMock,
+		Sectors: lotusSectorServiceMock,
 	}
 
 	minerInfoRequest := &hactar.MinerInfo{
@@ -54,7 +54,7 @@ func TestSendMinerInfoStats(t *testing.T) {
 		Nodes:    nil,
 		DiskInfo: nil,
 		Blocks:   nil,
-		Miner:hactarMinerServiceMock,
+		Miner:    hactarMinerServiceMock,
 	}
 
 	success := SendMinerInfoStats(hactarMockedClient, lotusMockedClient)

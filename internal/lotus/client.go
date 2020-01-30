@@ -14,12 +14,12 @@ type clientService struct {
 }
 
 type ClientVersionResponse struct {
-	Version string `json:"Version"`
-	APIVersion int `json:"APIVersion"`
-	BlockDelay int `json:"BlockDelay"`
+	Version    string `json:"Version"`
+	APIVersion int    `json:"APIVersion"`
+	BlockDelay int    `json:"BlockDelay"`
 }
 
-func (cs *clientService) GetClientVersion() (*ClientVersionResponse, error)  {
+func (cs *clientService) GetClientVersion() (*ClientVersionResponse, error) {
 	response, err := cs.client.lotusNodeClient.Call(lotus.Version)
 	if err = ValidResponse(response, err, lotus.Version); err != nil {
 		return nil, err

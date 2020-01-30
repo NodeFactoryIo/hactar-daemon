@@ -15,9 +15,9 @@ func TestMinerService_SendMinerInfo(t *testing.T) {
 	minerInfoRequest := &MinerInfo{
 		Miner:      "t0101",
 		Version:    "test-version",
-		SectorSize: "1000",
-		MinerPower: "100",
-		TotalPower: "200",
+		SectorSize: 1000,
+		MinerPower: 100,
+		TotalPower: 200,
 	}
 
 	mux.HandleFunc(SendMinerInfoPath, func(w http.ResponseWriter, r *http.Request) {

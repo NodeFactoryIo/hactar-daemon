@@ -19,9 +19,9 @@ const (
 type MinerInfo struct {
 	Miner      string `json:"miner"`
 	Version    string `json:"version"`
-	SectorSize string `json:"sector_size"`
-	MinerPower string `json:"miner_power"`
-	TotalPower string `json:"total_power"`
+	SectorSize int64 `json:"sector_size"`
+	MinerPower int64 `json:"miner_power"`
+	TotalPower int64 `json:"total_power"`
 }
 
 func (ms *minerService) SendMinerInfo(info MinerInfo) (*http.Response, error) {

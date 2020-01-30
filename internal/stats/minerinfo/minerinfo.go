@@ -5,6 +5,7 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
 	log "github.com/sirupsen/logrus"
 	"net/http"
+	"strconv"
 )
 
 func SendMinerInfoStats(hactarClient *hactar.Client, lotusClient *lotus.Client) bool {
@@ -20,9 +21,14 @@ func SendMinerInfoStats(hactarClient *hactar.Client, lotusClient *lotus.Client) 
 		return false
 	}
 
-	sectorSize, err := lotusClient.Sectors.GetSectorSize(minerAddress)
+	sectorSizeString, err := lotusClient.Sectors.GetSectorSize(minerAddress)
 	if err != nil {
 		log.Error("Unable to get sector size ", err)
+		return false
+	}
+	sectorSize, err := strconv.ParseInt(sectorSizeString, 10, 64)
+	if err != nil {
+		log.Error("Unable to parse sector size ", err)
 		return false
 	}
 

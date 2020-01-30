@@ -26,8 +26,8 @@ func (ms *minerService) GetMinerAddress() (string, error) {
 }
 
 type MinerPowerResponse struct {
-	MinerPower string `json:"MinerPower"`
-	TotalPower string `json:"TotalPower"`
+	MinerPower int64 `json:"MinerPower"`
+	TotalPower int64 `json:"TotalPower"`
 }
 
 func (ms *minerService) GetMinerPower(miner string) (*MinerPowerResponse, error) {

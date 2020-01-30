@@ -14,10 +14,10 @@ import (
 )
 
 func SubmitNewBlockReport(hactarClient *hactar.Client, lotusClient *lotus.Client, currentSession session.UserSession) bool {
-	// get last typset height
+	// get last tipset height
 	lastHeight, err := lotusClient.Blocks.GetLastHeight()
 	if err != nil {
-		log.Error("Unable to get last typset height", err)
+		log.Error("Unable to get last tipset height", err)
 		return false
 	}
 	// get miner address
@@ -26,7 +26,7 @@ func SubmitNewBlockReport(hactarClient *hactar.Client, lotusClient *lotus.Client
 		log.Error("Unable to get miner address", err)
 		return false
 	}
-	// iterate over all unchecked typsets
+	// iterate over all unchecked tipsets
 	for h := currentSession.GetLastCheckedHeight() + 1; h <= lastHeight; h++ {
 		// get tipset for height h
 		tipset, err := lotusClient.Blocks.GetTipsetByHeight(h)

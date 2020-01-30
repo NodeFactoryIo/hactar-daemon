@@ -19,7 +19,7 @@ func TestDiskInfoService_SendDiskInfo(t *testing.T) {
 		ActorAddress: "test-address",
 	}
 
-	mux.HandleFunc("/diskinfo", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(DiskInfoPath, func(w http.ResponseWriter, r *http.Request) {
 		v := new(DiskInfo)
 		err := json.NewDecoder(r.Body).Decode(v)
 		// assert valid request
@@ -28,7 +28,7 @@ func TestDiskInfoService_SendDiskInfo(t *testing.T) {
 		assert.Equal(t, createRequest, v)
 
 		resp, _ := json.Marshal(createRequest)
-		fmt.Fprintf(w, fmt.Sprintf(`%s`, string(resp)))
+		_, _ = fmt.Fprintf(w, fmt.Sprintf(`%s`, string(resp)))
 	})
 	response, err := client.DiskInfo.SendDiskInfo(*createRequest)
 	// assert valid response

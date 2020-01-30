@@ -8,31 +8,36 @@ import (
 	"testing"
 )
 
-func TestNodesServices_Add(t *testing.T) {
+func TestBlocksService_AddMiningReward(t *testing.T) {
 	setup()
 	defer teardown()
 
-	createRequest := &Node{
-		Token:        "test-token",
-		Url:          "test-url",
-		ActorAddress: "test-address",
+	addRequest := []Block{
+		*(&Block{
+			Cid:   "test-cid-1",
+			Miner: "t0101",
+		}),
+		*(&Block{
+			Cid:   "test-cid-2",
+			Miner: "t0101",
+		}),
 	}
 
-	mux.HandleFunc(NodePath, func(w http.ResponseWriter, r *http.Request) {
-		v := new(Node)
+	mux.HandleFunc(AddBlockRewardPath, func(w http.ResponseWriter, r *http.Request) {
+		v := new([]Block)
 		err := json.NewDecoder(r.Body).Decode(v)
 		// assert valid request
 		assert.Nil(t, err)
 		assert.Equal(t, http.MethodPost, r.Method)
-		assert.Equal(t, createRequest, v)
+		assert.Equal(t, addRequest, *v)
 
-		resp, _ := json.Marshal(createRequest)
+		resp, _ := json.Marshal(addRequest)
 		_, _ = fmt.Fprintf(w, fmt.Sprintf(`%s`, string(resp)))
 	})
-	node, response, err := client.Nodes.Add(*createRequest)
+
+	response, err := client.Blocks.AddMiningReward(addRequest)
 	// assert valid response
 	assert.NotNil(t, response)
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
-	assert.Equal(t, createRequest, node)
 }

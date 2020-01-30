@@ -20,6 +20,16 @@ func SendMinerInfoStats(hactarClient *hactar.Client, lotusClient *lotus.Client) 
 		log.Error("Unable to get miner power ", err)
 		return false
 	}
+	minerPower, err := strconv.ParseInt(minerStats.MinerPower, 10, 64)
+	if err != nil {
+		log.Error("Unable to parse miner power ", err)
+		return false
+	}
+	totalPower, err := strconv.ParseInt(minerStats.TotalPower, 10, 64)
+	if err != nil {
+		log.Error("Unable to parse total power ", err)
+		return false
+	}
 
 	sectorSizeString, err := lotusClient.Sectors.GetSectorSize(minerAddress)
 	if err != nil {
@@ -42,8 +52,8 @@ func SendMinerInfoStats(hactarClient *hactar.Client, lotusClient *lotus.Client) 
 		Miner:      minerAddress,
 		Version:    clientVersion.Version,
 		SectorSize: sectorSize,
-		MinerPower: minerStats.MinerPower,
-		TotalPower: minerStats.TotalPower,
+		MinerPower: minerPower,
+		TotalPower: totalPower,
 	}
 	response, err := hactarClient.Miner.SendMinerInfo(*minerInfo)
 

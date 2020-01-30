@@ -14,8 +14,8 @@ func TestSendMinerInfoStats(t *testing.T) {
 	lotusMinerServiceMock := &mocksLotus.MinerService{}
 	lotusMinerServiceMock.On("GetMinerAddress").Return("t0101", nil)
 	minerPowerResponse := &lotus.MinerPowerResponse{
-		MinerPower: 100,
-		TotalPower: 200,
+		MinerPower: "100",
+		TotalPower: "200",
 	}
 	lotusMinerServiceMock.On("GetMinerPower", "t0101").Return(minerPowerResponse, nil)
 

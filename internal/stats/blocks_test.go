@@ -11,7 +11,7 @@ import (
 	"testing"
 )
 
-func TestSubmitNewBlockReport_OneValidTypsetWithReward_Success(t *testing.T) {
+func TestSubmitNewBlockReport_OneValidTipsetWithReward_Success(t *testing.T) {
 	hactarBlockServiceMock := &mocksHactar.BlocksService{}
 	hactarBlockServiceMock.On("AddMiningReward", []hactar.Block{
 		*(&hactar.Block{
@@ -29,7 +29,7 @@ func TestSubmitNewBlockReport_OneValidTypsetWithReward_Success(t *testing.T) {
 
 	lotusBlockServiceMock := &mocksLotus.BlocksService{}
 	lotusBlockServiceMock.On("GetLastHeight").Return(int64(2), nil)
-	t2 := &lotus.TypsetResponse{
+	t2 := &lotus.TipsetResponse{
 		Cids: []string{
 			"bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo6jnk",
 			"bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo7jnk",
@@ -40,7 +40,7 @@ func TestSubmitNewBlockReport_OneValidTypsetWithReward_Success(t *testing.T) {
 		},
 		Height: 2,
 	}
-	lotusBlockServiceMock.On("GetTypsetByHeight", int64(2)).Return(t2, nil)
+	lotusBlockServiceMock.On("GetTipsetByHeight", int64(2)).Return(t2, nil)
 	lotusMinerServiceMock := &mocksLotus.MinerService{}
 	lotusMinerServiceMock.On("GetMinerAddress").Return("t0101", nil)
 	lotusMockedClient := &lotus.Client{
@@ -59,8 +59,8 @@ func TestSubmitNewBlockReport_OneValidTypsetWithReward_Success(t *testing.T) {
 	assert.True(t, success)
 	hactarBlockServiceMock.AssertNumberOfCalls(t, "AddMiningReward", 1)
 	hactarBlockServiceMock.AssertExpectations(t)
-	lotusBlockServiceMock.AssertNumberOfCalls(t, "GetTypsetByHeight", 1)
-	lotusBlockServiceMock.AssertNumberOfCalls(t, "GetTypsetByHeight", 1)
+	lotusBlockServiceMock.AssertNumberOfCalls(t, "GetTipsetByHeight", 1)
+	lotusBlockServiceMock.AssertNumberOfCalls(t, "GetTipsetByHeight", 1)
 	lotusBlockServiceMock.AssertExpectations(t)
 	lotusMinerServiceMock.AssertNumberOfCalls(t, "GetMinerAddress", 1)
 	lotusMinerServiceMock.AssertExpectations(t)
@@ -70,7 +70,7 @@ func TestSubmitNewBlockReport_OneValidTypsetWithReward_Success(t *testing.T) {
 	sessionMock.AssertExpectations(t)
 }
 
-func TestSubmitNewBlockReport_MultipleValidTypsetsWithRewards_Success(t *testing.T) {
+func TestSubmitNewBlockReport_MultipleValidTipsetsWithRewards_Success(t *testing.T) {
 	hactarBlockServiceMock := &mocksHactar.BlocksService{}
 	// call for height 2
 	hactarBlockServiceMock.On("AddMiningReward", []hactar.Block{
@@ -108,7 +108,7 @@ func TestSubmitNewBlockReport_MultipleValidTypsetsWithRewards_Success(t *testing
 	lotusBlockServiceMock := &mocksLotus.BlocksService{}
 	lotusBlockServiceMock.On("GetLastHeight").Return(int64(4), nil)
 	// call for height 2
-	t2 := &lotus.TypsetResponse{
+	t2 := &lotus.TipsetResponse{
 		Cids: []string{
 			"bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo6jnk",
 			"bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo7jnk",
@@ -119,9 +119,9 @@ func TestSubmitNewBlockReport_MultipleValidTypsetsWithRewards_Success(t *testing
 		},
 		Height: 2,
 	}
-	lotusBlockServiceMock.On("GetTypsetByHeight", int64(2)).Return(t2, nil)
+	lotusBlockServiceMock.On("GetTipsetByHeight", int64(2)).Return(t2, nil)
 	// call for height 3
-	t3 := &lotus.TypsetResponse{
+	t3 := &lotus.TipsetResponse{
 		Cids: []string{
 			"bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo8jnk",
 			"bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo9jnk",
@@ -132,9 +132,9 @@ func TestSubmitNewBlockReport_MultipleValidTypsetsWithRewards_Success(t *testing
 		},
 		Height: 3,
 	}
-	lotusBlockServiceMock.On("GetTypsetByHeight", int64(3)).Return(t3, nil)
+	lotusBlockServiceMock.On("GetTipsetByHeight", int64(3)).Return(t3, nil)
 	// call for height 4
-	t4 := &lotus.TypsetResponse{
+	t4 := &lotus.TipsetResponse{
 		Cids: []string{
 			"bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo0jnk",
 		},
@@ -143,7 +143,7 @@ func TestSubmitNewBlockReport_MultipleValidTypsetsWithRewards_Success(t *testing
 		},
 		Height: 4,
 	}
-	lotusBlockServiceMock.On("GetTypsetByHeight", int64(4)).Return(t4, nil)
+	lotusBlockServiceMock.On("GetTipsetByHeight", int64(4)).Return(t4, nil)
 
 	lotusMinerServiceMock := &mocksLotus.MinerService{}
 	lotusMinerServiceMock.On("GetMinerAddress").Return("t0101", nil)
@@ -165,7 +165,7 @@ func TestSubmitNewBlockReport_MultipleValidTypsetsWithRewards_Success(t *testing
 	assert.True(t, success)
 	hactarBlockServiceMock.AssertNumberOfCalls(t, "AddMiningReward", 3)
 	hactarBlockServiceMock.AssertExpectations(t)
-	lotusBlockServiceMock.AssertNumberOfCalls(t, "GetTypsetByHeight", 3)
+	lotusBlockServiceMock.AssertNumberOfCalls(t, "GetTipsetByHeight", 3)
 	lotusBlockServiceMock.AssertExpectations(t)
 	lotusMinerServiceMock.AssertNumberOfCalls(t, "GetMinerAddress", 1)
 	lotusMinerServiceMock.AssertExpectations(t)
@@ -175,7 +175,7 @@ func TestSubmitNewBlockReport_MultipleValidTypsetsWithRewards_Success(t *testing
 	sessionMock.AssertExpectations(t)
 }
 
-func TestSubmitNewBlockReport_ValidTypsetWithoutReward_Success(t *testing.T) {
+func TestSubmitNewBlockReport_ValidTipsetWithoutReward_Success(t *testing.T) {
 	hactarMockedClient := &hactar.Client{
 		BaseURL:  nil,
 		Token:    "",
@@ -186,7 +186,7 @@ func TestSubmitNewBlockReport_ValidTypsetWithoutReward_Success(t *testing.T) {
 
 	lotusBlockServiceMock := &mocksLotus.BlocksService{}
 	lotusBlockServiceMock.On("GetLastHeight").Return(int64(2), nil)
-	t2 := &lotus.TypsetResponse{
+	t2 := &lotus.TipsetResponse{
 		Cids: []string{
 			"bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo6jnk",
 			"bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo7jnk",
@@ -198,7 +198,7 @@ func TestSubmitNewBlockReport_ValidTypsetWithoutReward_Success(t *testing.T) {
 		Height: 2,
 	}
 
-	lotusBlockServiceMock.On("GetTypsetByHeight", int64(2)).Return(t2, nil)
+	lotusBlockServiceMock.On("GetTipsetByHeight", int64(2)).Return(t2, nil)
 	lotusMinerServiceMock := &mocksLotus.MinerService{}
 	lotusMinerServiceMock.On("GetMinerAddress").Return("t0101", nil)
 	lotusMockedClient := &lotus.Client{
@@ -215,8 +215,8 @@ func TestSubmitNewBlockReport_ValidTypsetWithoutReward_Success(t *testing.T) {
 
 	// assertions
 	assert.True(t, success)
-	lotusBlockServiceMock.AssertNumberOfCalls(t, "GetTypsetByHeight", 1)
-	lotusBlockServiceMock.AssertNumberOfCalls(t, "GetTypsetByHeight", 1)
+	lotusBlockServiceMock.AssertNumberOfCalls(t, "GetTipsetByHeight", 1)
+	lotusBlockServiceMock.AssertNumberOfCalls(t, "GetTipsetByHeight", 1)
 	lotusBlockServiceMock.AssertExpectations(t)
 	lotusMinerServiceMock.AssertNumberOfCalls(t, "GetMinerAddress", 1)
 	lotusMinerServiceMock.AssertExpectations(t)

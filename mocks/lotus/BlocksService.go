@@ -31,16 +31,16 @@ func (_m *BlocksService) GetLastHeight() (int64, error) {
 	return r0, r1
 }
 
-// GetLastTypset provides a mock function with given fields:
-func (_m *BlocksService) GetLastTypset() (*lotus.TypsetResponse, error) {
+// GetLastTipset provides a mock function with given fields:
+func (_m *BlocksService) GetLastTipset() (*lotus.TipsetResponse, error) {
 	ret := _m.Called()
 
-	var r0 *lotus.TypsetResponse
-	if rf, ok := ret.Get(0).(func() *lotus.TypsetResponse); ok {
+	var r0 *lotus.TipsetResponse
+	if rf, ok := ret.Get(0).(func() *lotus.TipsetResponse); ok {
 		r0 = rf()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*lotus.TypsetResponse)
+			r0 = ret.Get(0).(*lotus.TipsetResponse)
 		}
 	}
 
@@ -54,16 +54,16 @@ func (_m *BlocksService) GetLastTypset() (*lotus.TypsetResponse, error) {
 	return r0, r1
 }
 
-// GetTypsetByHeight provides a mock function with given fields: height
-func (_m *BlocksService) GetTypsetByHeight(height int64) (*lotus.TypsetResponse, error) {
+// GetTipsetByHeight provides a mock function with given fields: height
+func (_m *BlocksService) GetTipsetByHeight(height int64) (*lotus.TipsetResponse, error) {
 	ret := _m.Called(height)
 
-	var r0 *lotus.TypsetResponse
-	if rf, ok := ret.Get(0).(func(int64) *lotus.TypsetResponse); ok {
+	var r0 *lotus.TipsetResponse
+	if rf, ok := ret.Get(0).(func(int64) *lotus.TipsetResponse); ok {
 		r0 = rf(height)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*lotus.TypsetResponse)
+			r0 = ret.Get(0).(*lotus.TipsetResponse)
 		}
 	}
 

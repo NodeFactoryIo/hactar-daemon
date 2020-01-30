@@ -28,18 +28,18 @@ func SubmitNewBlockReport(hactarClient *hactar.Client, lotusClient *lotus.Client
 	}
 	// iterate over all unchecked typsets
 	for h := currentSession.GetLastCheckedHeight() + 1; h <= lastHeight; h++ {
-		// get typset for height h
-		typset, err := lotusClient.Blocks.GetTypsetByHeight(h)
+		// get tipset for height h
+		tipset, err := lotusClient.Blocks.GetTipsetByHeight(h)
 		if err != nil {
-			log.Error(fmt.Sprintf("Unable to get typset of height %d", h))
+			log.Error(fmt.Sprintf("Unable to get tipset of height %d", h))
 			return false
 		}
 		// check for all blocks
 		var blocks []hactar.Block
-		for i, block := range typset.Blocks {
+		for i, block := range tipset.Blocks {
 			if miner == block.Miner {
 				block := &hactar.Block{
-					Cid:   typset.Cids[i],
+					Cid:   tipset.Cids[i],
 					Miner: block.Miner,
 				}
 				blocks = append(blocks, *block)
@@ -47,17 +47,17 @@ func SubmitNewBlockReport(hactarClient *hactar.Client, lotusClient *lotus.Client
 		}
 		// if mining reward present
 		if len(blocks) > 0 {
-			// send mining reward for this typset
+			// send mining reward for this tipset
 			response, err := hactarClient.Blocks.AddMiningReward(blocks)
 			if err != nil {
 				log.Error(
-					fmt.Sprintf("Unable to send miner reward status for typset of height %d", typset.Height),
+					fmt.Sprintf("Unable to send miner reward status for tipset of height %d", tipset.Height),
 					err,
 				)
 				return false
 			}
 			if response != nil && response.StatusCode == http.StatusOK {
-				log.Info(fmt.Sprintf("Miner reward for typset of height %d sent", typset.Height))
+				log.Info(fmt.Sprintf("Miner reward for tipset of height %d sent", tipset.Height))
 			}
 		}
 		currentSession.SetLastCheckedHeight(h)

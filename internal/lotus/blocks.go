@@ -7,16 +7,16 @@ import (
 )
 
 type BlocksService interface {
-	GetLastTypset() (*TypsetResponse, error)
+	GetLastTipset() (*TipsetResponse, error)
 	GetLastHeight() (int64, error)
-	GetTypsetByHeight(height int64) (*TypsetResponse, error)
+	GetTipsetByHeight(height int64) (*TipsetResponse, error)
 }
 
 type blocksService struct {
 	client *Client
 }
 
-type TypsetResponse struct {
+type TipsetResponse struct {
 	Cids   []string
 	Blocks []BlockStruct
 	Height int64
@@ -26,72 +26,72 @@ type BlockStruct struct {
 	Miner string
 }
 
-type rawTypsetResponse struct {
+type rawTipsetResponse struct {
 	Cids   []interface{} `json:"Cids"`
 	Blocks []interface{} `json:"Blocks"`
 	Height int64         `json:"Height"`
 }
 
-func (bs *blocksService) GetLastTypset() (*TypsetResponse, error) {
-	typsetRaw, err := bs.getLastTypsetRaw()
+func (bs *blocksService) GetLastTipset() (*TipsetResponse, error) {
+	tipsetRaw, err := bs.getLastTipsetRaw()
 	if err != nil {
 		log.Error()
 		return nil, err
 	}
-	return convertFromRawTypset(typsetRaw)
+	return convertFromRawTipset(tipsetRaw)
 }
 
 func (bs *blocksService) GetLastHeight() (int64, error) {
-	typsetRaw, err := bs.getLastTypsetRaw()
+	tipsetRaw, err := bs.getLastTipsetRaw()
 	if err != nil {
 		log.Error()
 		return -1, err
 	}
-	return typsetRaw.Height, nil
+	return tipsetRaw.Height, nil
 }
 
-func (bs *blocksService) GetTypsetByHeight(height int64) (*TypsetResponse, error) {
+func (bs *blocksService) GetTipsetByHeight(height int64) (*TipsetResponse, error) {
 	response, err := bs.client.lotusNodeClient.Call(lotus.TipSetByHeight, height, nil)
 	if err = ValidResponse(response, err, lotus.TipSetByHeight); err != nil {
 		return nil, err
 	}
 
-	var responseObject *rawTypsetResponse
+	var responseObject *rawTipsetResponse
 	err = response.GetObject(&responseObject)
 
-	return convertFromRawTypset(responseObject)
+	return convertFromRawTipset(responseObject)
 }
 
-func (bs *blocksService) getLastTypsetRaw() (*rawTypsetResponse, error) {
+func (bs *blocksService) getLastTipsetRaw() (*rawTipsetResponse, error) {
 	response, err := bs.client.lotusNodeClient.Call(lotus.HeadBlock)
 	if err = ValidResponse(response, err, lotus.HeadBlock); err != nil {
 		return nil, err
 	}
 
-	var responseObject *rawTypsetResponse
+	var responseObject *rawTipsetResponse
 	err = response.GetObject(&responseObject)
 
 	return responseObject, err
 }
 
-func convertFromRawTypset(typsetRaw *rawTypsetResponse) (*TypsetResponse, error) {
+func convertFromRawTipset(tipsetResponse *rawTipsetResponse) (*TipsetResponse, error) {
 	// get all cids
 	var cids []string
-	for i := 0; i < len(typsetRaw.Cids); i++ {
-		c := util.String(typsetRaw.Cids[i].(map[string]interface{})["/"])
+	for i := 0; i < len(tipsetResponse.Cids); i++ {
+		c := util.String(tipsetResponse.Cids[i].(map[string]interface{})["/"])
 		cids = append(cids, c)
 	}
 	// get all miners
 	var miners []BlockStruct
-	for i := 0; i < len(typsetRaw.Blocks); i++ {
-		m := util.String(typsetRaw.Blocks[i].(map[string]interface{})["Miner"])
+	for i := 0; i < len(tipsetResponse.Blocks); i++ {
+		m := util.String(tipsetResponse.Blocks[i].(map[string]interface{})["Miner"])
 		miners = append(miners, *(&BlockStruct{Miner: m}))
 	}
-	// create TypsetResponse
-	typsetResponse := &TypsetResponse{
+	// create TipsetResponse
+	response := &TipsetResponse{
 		Cids:   cids,
 		Blocks: miners,
-		Height: typsetRaw.Height,
+		Height: tipsetResponse.Height,
 	}
-	return typsetResponse, nil
+	return response, nil
 }

@@ -2,7 +2,7 @@ package diskinfo
 
 import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
-	"github.com/NodeFactoryIo/hactar-daemon/mocks"
+	"github.com/NodeFactoryIo/hactar-daemon/mocks/hactar"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"net/http"

@@ -16,8 +16,8 @@ func SendDiskInfoStats(client *hactar.Client, actorAddress string, nodeUrl strin
 	usage := DiskUsage("/")
 
 	response, err := client.DiskInfo.SendDiskInfo(hactar.DiskInfo{
-		FreeSpace:    string(usage.Free),
-		TakenSpace:   string(usage.Used),
+		FreeSpace:  string(usage.Free),
+		TakenSpace: string(usage.Used),
 		Node: hactar.NodeInfo{
 			Address: actorAddress,
 			Url:     nodeUrl,

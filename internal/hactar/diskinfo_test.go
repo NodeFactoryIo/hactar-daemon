@@ -13,8 +13,8 @@ func TestDiskInfoService_SendDiskInfo(t *testing.T) {
 	defer teardown()
 
 	createRequest := &DiskInfo{
-		FreeSpace:    "1000",
-		TakenSpace:   "2000",
+		FreeSpace:  "1000",
+		TakenSpace: "2000",
 		Node: NodeInfo{
 			Address: "test-url",
 			Url:     "test-address",

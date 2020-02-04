@@ -13,8 +13,8 @@ type nodesServices struct {
 }
 
 type Node struct {
-	Token        string `json:"token"`
-	Node NodeInfo `json:"nodeInfo"`
+	Token string   `json:"token"`
+	Node  NodeInfo `json:"nodeInfo"`
 }
 
 const (

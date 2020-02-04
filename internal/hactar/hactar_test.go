@@ -60,8 +60,8 @@ func TestNewRequest(t *testing.T) {
 
 	inURL, outURL := "/foo", "/foo"
 	inBody, outBody := &DiskInfo{
-		FreeSpace:    "1000",
-		TakenSpace:   "1000",
+		FreeSpace:  "1000",
+		TakenSpace: "1000",
 		Node: NodeInfo{
 			Address: "test-url",
 			Url:     "test-address",
@@ -83,8 +83,8 @@ func TestNewAuthRequest(t *testing.T) {
 
 	inURL, outURL := "/foo", "/foo"
 	inBody, outBody := &DiskInfo{
-		FreeSpace:    "1000",
-		TakenSpace:   "1000",
+		FreeSpace:  "1000",
+		TakenSpace: "1000",
 		Node: NodeInfo{
 			Address: "test-url",
 			Url:     "test-address",

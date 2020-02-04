@@ -80,7 +80,7 @@ var StartCommand = &cli.Command{
 		url.DisplayUrl()
 		// save node to backend
 		node, resp, err := hactarClient.Nodes.Add(hactar.Node{
-			Token:        token.ReadNodeTokenFromFile(),
+			Token: token.ReadNodeTokenFromFile(),
 			Node: hactar.NodeInfo{
 				Address: actorAddress,
 				Url:     url.GetUrl(),

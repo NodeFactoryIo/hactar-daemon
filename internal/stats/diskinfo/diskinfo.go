@@ -18,8 +18,10 @@ func SendDiskInfoStats(client *hactar.Client, actorAddress string, nodeUrl strin
 	response, err := client.DiskInfo.SendDiskInfo(hactar.DiskInfo{
 		FreeSpace:    string(usage.Free),
 		TakenSpace:   string(usage.Used),
-		NodeUrl:      nodeUrl,
-		ActorAddress: actorAddress,
+		Node: hactar.NodeInfo{
+			Address: actorAddress,
+			Url:     nodeUrl,
+		},
 	})
 
 	if response != nil && response.StatusCode == http.StatusOK {

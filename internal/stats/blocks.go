@@ -5,6 +5,7 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/session"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -41,6 +42,10 @@ func SubmitNewBlockReport(hactarClient *hactar.Client, lotusClient *lotus.Client
 				block := &hactar.Block{
 					Cid:   tipset.Cids[i],
 					Miner: block.Miner,
+					Node: hactar.NodeInfo{
+						Address: miner,
+						Url:     url.GetUrl(),
+					},
 				}
 				blocks = append(blocks, *block)
 			}

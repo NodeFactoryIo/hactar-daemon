@@ -3,6 +3,7 @@ package minerinfo
 import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
 	mocksHactar "github.com/NodeFactoryIo/hactar-daemon/mocks/hactar"
 	mocksLotus "github.com/NodeFactoryIo/hactar-daemon/mocks/lotus"
 	"github.com/stretchr/testify/assert"
@@ -38,11 +39,14 @@ func TestSendMinerInfoStats(t *testing.T) {
 	}
 
 	minerInfoRequest := &hactar.MinerInfo{
-		Miner:      "t0101",
 		Version:    "test-version",
 		SectorSize: 12345678,
 		MinerPower: 100,
 		TotalPower: 200,
+		Node: hactar.NodeInfo{
+			Address: "t0101",
+			Url:     url.GetUrl(),
+		},
 	}
 
 	hactarMinerServiceMock := &mocksHactar.MinerService{}

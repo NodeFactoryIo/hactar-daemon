@@ -17,7 +17,7 @@ type DiskInfo struct {
 }
 
 const (
-	DiskInfoPath = "/diskinfo"
+	DiskInfoPath = "/user/node/diskinformation"
 )
 
 func (dis *diskInfoService) SendDiskInfo(diskInfo DiskInfo) (*http.Response, error) {

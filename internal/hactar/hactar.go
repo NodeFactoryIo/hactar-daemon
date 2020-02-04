@@ -16,7 +16,6 @@ import (
 const (
 	mediaType      = "application/json"
 	authEndpoint   = "/user/login"
-	healthEndpoint = "/health"
 )
 
 type Client struct {

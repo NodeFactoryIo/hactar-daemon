@@ -33,6 +33,11 @@ type Client struct {
 	Miner    MinerService
 }
 
+type NodeInfo struct {
+	Address string `json:"address"`
+	Url     string `json:"url"`
+}
+
 func NewAuthClient(email string, password string) (*Client, error) {
 	c := NewClient(nil)
 	// call auth endpoint for jwt token

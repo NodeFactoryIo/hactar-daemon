@@ -13,9 +13,11 @@ func TestNodesServices_Add(t *testing.T) {
 	defer teardown()
 
 	createRequest := &Node{
-		Token:        "test-token",
-		Url:          "test-url",
-		ActorAddress: "test-address",
+		Token: "test-token",
+		Node: NodeInfo{
+			Address: "test-url",
+			Url:     "test-address",
+		},
 	}
 
 	mux.HandleFunc(NodePath, func(w http.ResponseWriter, r *http.Request) {

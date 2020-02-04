@@ -14,8 +14,7 @@ type nodesServices struct {
 
 type Node struct {
 	Token        string `json:"token"`
-	Url          string `json:"url"`
-	ActorAddress string `json:"address"`
+	Node NodeInfo `json:"node"`
 }
 
 const (

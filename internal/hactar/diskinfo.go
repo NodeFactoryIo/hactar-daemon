@@ -13,8 +13,7 @@ type diskInfoService struct {
 type DiskInfo struct {
 	FreeSpace    string `json:"freeSpace"`
 	TakenSpace   string `json:"takenSpace"`
-	NodeUrl      string `json:"url"`
-	ActorAddress string `json:"address"`
+	Node NodeInfo `json:"node"`
 }
 
 const (

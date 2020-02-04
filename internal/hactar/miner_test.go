@@ -13,11 +13,14 @@ func TestMinerService_SendMinerInfo(t *testing.T) {
 	defer teardown()
 
 	minerInfoRequest := &MinerInfo{
-		Miner:      "t0101",
 		Version:    "test-version",
 		SectorSize: 1000,
 		MinerPower: 100,
 		TotalPower: 200,
+		Node: NodeInfo{
+			Address: "test-url",
+			Url:     "test-address",
+		},
 	}
 
 	mux.HandleFunc(SendMinerInfoPath, func(w http.ResponseWriter, r *http.Request) {

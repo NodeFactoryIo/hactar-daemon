@@ -3,6 +3,7 @@ package minerinfo
 import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
@@ -49,11 +50,14 @@ func SendMinerInfoStats(hactarClient *hactar.Client, lotusClient *lotus.Client) 
 	}
 
 	minerInfo := &hactar.MinerInfo{
-		Miner:      minerAddress,
 		Version:    clientVersion.Version,
 		SectorSize: sectorSize,
 		MinerPower: minerPower,
 		TotalPower: totalPower,
+		Node: hactar.NodeInfo{
+			Address: minerAddress,
+			Url:     url.GetUrl(),
+		},
 	}
 	response, err := hactarClient.Miner.SendMinerInfo(*minerInfo)
 

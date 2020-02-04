@@ -3,6 +3,7 @@ package stats
 import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
+	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
 	mocksHactar "github.com/NodeFactoryIo/hactar-daemon/mocks/hactar"
 	mocksLotus "github.com/NodeFactoryIo/hactar-daemon/mocks/lotus"
 	mocks "github.com/NodeFactoryIo/hactar-daemon/mocks/session"
@@ -17,6 +18,10 @@ func TestSubmitNewBlockReport_OneValidTipsetWithReward_Success(t *testing.T) {
 		*(&hactar.Block{
 			Cid:   "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo6jnk",
 			Miner: "t0101",
+			Node: hactar.NodeInfo{
+				Address: "t0101",
+				Url:     url.GetUrl(),
+			},
 		}),
 	}).Return(&http.Response{StatusCode: 200}, nil)
 	hactarMockedClient := &hactar.Client{
@@ -77,6 +82,10 @@ func TestSubmitNewBlockReport_MultipleValidTipsetsWithRewards_Success(t *testing
 		*(&hactar.Block{
 			Cid:   "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo6jnk",
 			Miner: "t0101",
+			Node: hactar.NodeInfo{
+				Address: "t0101",
+				Url:     url.GetUrl(),
+			},
 		}),
 	}).Return(&http.Response{StatusCode: 200}, nil)
 	// call for height 3
@@ -84,10 +93,18 @@ func TestSubmitNewBlockReport_MultipleValidTipsetsWithRewards_Success(t *testing
 		*(&hactar.Block{
 			Cid:   "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo8jnk",
 			Miner: "t0101",
+			Node: hactar.NodeInfo{
+				Address: "t0101",
+				Url:     url.GetUrl(),
+			},
 		}),
 		*(&hactar.Block{
 			Cid:   "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo9jnk",
 			Miner: "t0101",
+			Node: hactar.NodeInfo{
+				Address: "t0101",
+				Url:     url.GetUrl(),
+			},
 		}),
 	}).Return(&http.Response{StatusCode: 200}, nil)
 	// call for height 4
@@ -95,6 +112,10 @@ func TestSubmitNewBlockReport_MultipleValidTipsetsWithRewards_Success(t *testing
 		*(&hactar.Block{
 			Cid:   "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo0jnk",
 			Miner: "t0101",
+			Node: hactar.NodeInfo{
+				Address: "t0101",
+				Url:     url.GetUrl(),
+			},
 		}),
 	}).Return(&http.Response{StatusCode: 200}, nil)
 	hactarMockedClient := &hactar.Client{

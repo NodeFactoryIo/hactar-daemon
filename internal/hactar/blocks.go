@@ -15,8 +15,9 @@ const (
 )
 
 type Block struct {
-	Cid   string `json:"cid"`
-	Miner string `json:"miner"`
+	Cid   string   `json:"cid"`
+	Miner string   `json:"miner"`
+	Node  NodeInfo `json:"nodeInfo"`
 }
 
 func (bs *blocksService) AddMiningReward(blocks []Block) (*http.Response, error) {

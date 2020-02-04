@@ -13,15 +13,15 @@ type minerService struct {
 }
 
 const (
-	SendMinerInfoPath = "/user/miner"
+	SendMinerInfoPath = "/user/node/generalminerinfo"
 )
 
 type MinerInfo struct {
-	Miner      string `json:"miner"`
-	Version    string `json:"version"`
-	SectorSize int64 `json:"sector_size"`
-	MinerPower int64 `json:"miner_power"`
-	TotalPower int64 `json:"total_power"`
+	Version    string   `json:"version"`
+	SectorSize int64    `json:"sectorSize"`
+	MinerPower int64    `json:"minerPower"`
+	TotalPower int64    `json:"totalPower"`
+	Node       NodeInfo `json:"nodeInfo"`
 }
 
 func (ms *minerService) SendMinerInfo(info MinerInfo) (*http.Response, error) {

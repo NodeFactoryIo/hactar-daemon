@@ -80,15 +80,17 @@ var StartCommand = &cli.Command{
 		url.DisplayUrl()
 		// save node to backend
 		node, resp, err := hactarClient.Nodes.Add(hactar.Node{
-			Token:        token.ReadNodeTokenFromFile(),
-			Url:          url.GetUrl(),
-			ActorAddress: actorAddress,
+			Token: token.ReadNodeTokenFromFile(),
+			Node: hactar.NodeInfo{
+				Address: actorAddress,
+				Url:     url.GetUrl(),
+			},
 		})
 		if err != nil {
 			log.Error("Adding new node failed.", err)
 			return nil
 		} else if resp != nil && resp.StatusCode == http.StatusOK {
-			log.Info(fmt.Sprintf("New node added, url: %s address: %s", node.Url, node.ActorAddress))
+			log.Info(fmt.Sprintf("New node added, url: %s address: %s", node.Node.Url, node.Node.Address))
 		}
 		// start stats monitoring
 		stats.StartMonitoringStats(hactarClient, lotusClient)

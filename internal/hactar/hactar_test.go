@@ -60,13 +60,15 @@ func TestNewRequest(t *testing.T) {
 
 	inURL, outURL := "/foo", "/foo"
 	inBody, outBody := &DiskInfo{
-		FreeSpace:    "1000",
-		TakenSpace:   "1000",
-		NodeUrl:      "node-url",
-		ActorAddress: "actor-address",
+		FreeSpace:  "1000",
+		TakenSpace: "1000",
+		Node: NodeInfo{
+			Address: "test-url",
+			Url:     "test-address",
+		},
 	},
 		`{"freeSpace":"1000","takenSpace":"1000",`+
-			`"url":"node-url","address":"actor-address"}`+"\n"
+			`"nodeInfo":{"address":"test-url","url":"test-address"}}`+"\n"
 
 	req, _ := c.NewRequest(http.MethodGet, inURL, inBody)
 
@@ -81,13 +83,15 @@ func TestNewAuthRequest(t *testing.T) {
 
 	inURL, outURL := "/foo", "/foo"
 	inBody, outBody := &DiskInfo{
-		FreeSpace:    "1000",
-		TakenSpace:   "1000",
-		NodeUrl:      "node-url",
-		ActorAddress: "actor-address",
+		FreeSpace:  "1000",
+		TakenSpace: "1000",
+		Node: NodeInfo{
+			Address: "test-url",
+			Url:     "test-address",
+		},
 	},
 		`{"freeSpace":"1000","takenSpace":"1000",`+
-			`"url":"node-url","address":"actor-address"}`+"\n"
+			`"nodeInfo":{"address":"test-url","url":"test-address"}}`+"\n"
 
 	req, _ := c.NewRequest(http.MethodGet, inURL, inBody)
 

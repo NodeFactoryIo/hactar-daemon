@@ -11,14 +11,13 @@ type diskInfoService struct {
 }
 
 type DiskInfo struct {
-	FreeSpace    string `json:"freeSpace"`
-	TakenSpace   string `json:"takenSpace"`
-	NodeUrl      string `json:"url"`
-	ActorAddress string `json:"address"`
+	FreeSpace  string   `json:"freeSpace"`
+	TakenSpace string   `json:"takenSpace"`
+	Node       NodeInfo `json:"nodeInfo"`
 }
 
 const (
-	DiskInfoPath = "/diskinfo"
+	DiskInfoPath = "/user/node/diskinformation"
 )
 
 func (dis *diskInfoService) SendDiskInfo(diskInfo DiskInfo) (*http.Response, error) {

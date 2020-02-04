@@ -14,9 +14,8 @@ import (
 )
 
 const (
-	mediaType      = "application/json"
-	authEndpoint   = "/user/login"
-	healthEndpoint = "/health"
+	mediaType    = "application/json"
+	authEndpoint = "/user/login"
 )
 
 type Client struct {
@@ -31,6 +30,11 @@ type Client struct {
 	DiskInfo DiskInfoService
 	Blocks   BlocksService
 	Miner    MinerService
+}
+
+type NodeInfo struct {
+	Address string `json:"address"`
+	Url     string `json:"url"`
 }
 
 func NewAuthClient(email string, password string) (*Client, error) {

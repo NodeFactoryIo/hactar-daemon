@@ -68,7 +68,7 @@ func TestNewRequest(t *testing.T) {
 		},
 	},
 		`{"freeSpace":"1000","takenSpace":"1000",`+
-			`"node":{"address":"test-url","url":"test-address"}}`+"\n"
+			`"nodeInfo":{"address":"test-url","url":"test-address"}}`+"\n"
 
 	req, _ := c.NewRequest(http.MethodGet, inURL, inBody)
 
@@ -91,7 +91,7 @@ func TestNewAuthRequest(t *testing.T) {
 		},
 	},
 		`{"freeSpace":"1000","takenSpace":"1000",`+
-			`"node":{"address":"test-url","url":"test-address"}}`+"\n"
+			`"nodeInfo":{"address":"test-url","url":"test-address"}}`+"\n"
 
 	req, _ := c.NewRequest(http.MethodGet, inURL, inBody)
 

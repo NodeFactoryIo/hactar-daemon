@@ -13,7 +13,7 @@ type diskInfoService struct {
 type DiskInfo struct {
 	FreeSpace    string `json:"freeSpace"`
 	TakenSpace   string `json:"takenSpace"`
-	Node NodeInfo `json:"node"`
+	Node NodeInfo `json:"nodeInfo"`
 }
 
 const (

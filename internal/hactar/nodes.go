@@ -14,7 +14,7 @@ type nodesServices struct {
 
 type Node struct {
 	Token        string `json:"token"`
-	Node NodeInfo `json:"node"`
+	Node NodeInfo `json:"nodeInfo"`
 }
 
 const (

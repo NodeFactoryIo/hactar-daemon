@@ -5,9 +5,9 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/session"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
-	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"net/http"
 	"strconv"
 	"time"
 )
@@ -29,7 +29,7 @@ func SubmitNewNodeUptimeReport(hactarClient *hactar.Client, lotusClient *lotus.C
 		return false
 	}
 
-	if response != nil && util.HttpResponseStatus2XX(response) {
+	if response != nil && response.StatusCode == http.StatusCreated {
 		log.Info("Successfully sent uptime report")
 		return true
 	}

@@ -96,7 +96,7 @@ func (c *Client) Auth(email string, password string) (string, error) {
 		return "", err
 	}
 
-	if response != nil && response.StatusCode != http.StatusOK {
+	if response != nil && util.HttpResponseStatus2XX(response) {
 		return "", errors.New(fmt.Sprintf("Unable to authorize, server returned http status %s", response.Status))
 	}
 
@@ -184,7 +184,7 @@ func (r *ErrorResponse) Error() string {
 }
 
 func CheckResponse(r *http.Response) error {
-	if c := r.StatusCode; c >= 200 && c <= 299 {
+	if util.HttpResponseStatus2XX(r) {
 		return nil
 	}
 

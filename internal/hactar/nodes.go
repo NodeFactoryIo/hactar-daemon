@@ -42,8 +42,8 @@ func (ns *nodesServices) GetAllNodes() ([]NodeInfo, *http.Response, error) {
 }
 
 type UptimeReport struct {
-	IsWorking bool `json:"isWorking"`
-	Node  NodeInfo `json:"nodeInfo"`
+	IsWorking bool     `json:"isWorking"`
+	Node      NodeInfo `json:"nodeInfo"`
 }
 
 func (ns *nodesServices) SendUptimeReport(report UptimeReport) (*http.Response, error) {

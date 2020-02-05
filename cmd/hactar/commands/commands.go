@@ -95,7 +95,7 @@ var StartCommand = &cli.Command{
 					Token: token.ReadNodeTokenFromFile(),
 					Node: hactar.NodeInfo{
 						Address: actorAddress,
-						Url:    nodeUrl ,
+						Url:     nodeUrl,
 					},
 				})
 				if err != nil {
@@ -112,6 +112,7 @@ var StartCommand = &cli.Command{
 		// start stats monitoring
 		stats.StartMonitoringStats(hactarClient, lotusClient)
 		stats.StartMonitoringBlocks(hactarClient, lotusClient, currentSession)
+		stats.StartMonitoringNodeUptime(hactarClient, lotusClient, currentSession)
 		select {}
 	},
 	Argv: func() interface{} { return new(startT) },

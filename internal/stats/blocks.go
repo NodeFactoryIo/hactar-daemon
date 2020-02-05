@@ -84,7 +84,7 @@ func StartMonitoringBlocks(hactarClient *hactar.Client, lotusClient *lotus.Clien
 				return
 			case <-ticker.C:
 				log.Info("Block monitor ticked.")
-				// SubmitNewBlockReport(hactarClient, lotusClient, currentSession)
+				SubmitNewBlockReport(hactarClient, lotusClient, currentSession)
 			}
 		}
 	}()

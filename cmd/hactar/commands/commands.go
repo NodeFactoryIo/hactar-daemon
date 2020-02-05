@@ -39,9 +39,9 @@ var StartCommand = &cli.Command{
 	Text: "",
 	Fn: func(ctx *cli.Context) error {
 		argv := ctx.Argv().(*startT)
-
+		// load current session
 		currentSession := session.CurrentSession
-
+		// initialize hactar client && auth
 		hactarClient := new(hactar.Client)
 		if currentSession.GetHactarToken() != "" {
 			// create client with saved token
@@ -62,7 +62,6 @@ var StartCommand = &cli.Command{
 			}
 		}
 		log.Info("Successful authentication.")
-
 		// detect miners and allow user to choose actor address
 		lotusClient, err := lotus.NewClient(nil, nil)
 		if err != nil {
@@ -76,21 +75,27 @@ var StartCommand = &cli.Command{
 		}
 		log.Info("Actor address: ", actorAddress)
 		// display token and URL
-		token.DisplayTokens()
+		nodeUrl := url.GetUrl()
 		url.DisplayUrl()
+		token.DisplayTokens()
 		// this check for existing nodes is just placeholder
 		nodes, _, err := hactarClient.Nodes.GetAllNodes()
 		if err == nil {
-			// TMP condition
-			if nodes != nil && len(nodes) > 0 {
-				log.Info("Node already added.")
-			} else {
-				// save node to backend
+			// search if node already added
+			nodeAdded := false
+			for i := range nodes {
+				if nodes[i].Address == actorAddress && nodes[i].Url == nodeUrl {
+					nodeAdded = true
+					break
+				}
+			}
+			// save node to backend if not added
+			if !nodeAdded {
 				node, resp, err := hactarClient.Nodes.Add(hactar.Node{
 					Token: token.ReadNodeTokenFromFile(),
 					Node: hactar.NodeInfo{
 						Address: actorAddress,
-						Url:     url.GetUrl(),
+						Url:    nodeUrl ,
 					},
 				})
 				if err != nil {
@@ -99,6 +104,8 @@ var StartCommand = &cli.Command{
 				} else if resp != nil && resp.StatusCode == http.StatusCreated {
 					log.Info(fmt.Sprintf("New node added, url: %s address: %s", node.Node.Url, node.Node.Address))
 				}
+			} else {
+				log.Info("Node already added.")
 			}
 		}
 

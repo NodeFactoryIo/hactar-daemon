@@ -7,6 +7,7 @@ import (
 type NodesService interface {
 	Add(node Node) (*Node, *http.Response, error)
 	GetAllNodes() ([]NodeInfo, *http.Response, error)
+	SendUptimeReport(report UptimeReport) (*http.Response, error)
 }
 
 type nodesServices struct {
@@ -38,6 +39,27 @@ func (ns *nodesServices) GetAllNodes() ([]NodeInfo, *http.Response, error) {
 	}
 
 	return *root, response, err
+}
+
+type UptimeReport struct {
+	IsWorking bool `json:"isWorking"`
+	Node  NodeInfo `json:"nodeInfo"`
+}
+
+func (ns *nodesServices) SendUptimeReport(report UptimeReport) (*http.Response, error) {
+	request, err := ns.client.NewRequest(http.MethodPost, NodePath+"/uptime", report)
+
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := ns.client.Do(request, nil)
+
+	if err != nil {
+		return response, err
+	}
+
+	return response, err
 }
 
 func (ns *nodesServices) Add(node Node) (*Node, *http.Response, error) {

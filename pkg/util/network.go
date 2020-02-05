@@ -3,6 +3,7 @@ package util
 import (
 	log "github.com/sirupsen/logrus"
 	"net"
+	"net/http"
 )
 
 // Get preferred outbound ip of this machine
@@ -18,4 +19,8 @@ func GetOutboundIP() net.IP {
 	localAddr := conn.LocalAddr().(*net.UDPAddr)
 
 	return localAddr.IP
+}
+
+func HttpResponseStatus2XX(response *http.Response) bool {
+	return response.StatusCode >= 200 && response.StatusCode < 300
 }

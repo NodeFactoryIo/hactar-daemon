@@ -14,8 +14,11 @@ import (
 
 // Load configuration and initialize commands
 func main() {
+	// initialize logger
+	logger.SetUpLogger()
 	// start program
 	log.Info("Starting hactar")
+	fmt.Println("Starting hactar daemon app...")
 	// load config file
 	viper.SetConfigName("config") // name of config file (without extension)
 	viper.AddConfigPath(".")      // look for config in the working directory
@@ -42,12 +45,9 @@ func main() {
 		}
 		// show before credentials prompt
 		if len(os.Args) <= 2 && session.CurrentSession.GetHactarToken() == "" {
-			fmt.Println("Please enter your hactar credentials.")
+			fmt.Println("Please enter your hactar credentials:")
 		}
 	}
-
-	// initialize logger
-	logger.SetUpLogger()
 
 	// initialize commands
 	if err := cli.Root(commands.RootCommand,

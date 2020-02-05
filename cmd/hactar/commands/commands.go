@@ -50,8 +50,8 @@ var StartCommand = &cli.Command{
 			// create client with provided email and password
 			c, err := hactar.NewAuthClient(argv.Email, argv.Password)
 			if err != nil {
-				log.Error("Failed to authenticate to Hactar service.")
-				return err
+				log.Error("Failed to authenticate to Hactar service.", err)
+				return nil
 			}
 			hactarClient = c
 			// save jwt token for current session
@@ -78,20 +78,30 @@ var StartCommand = &cli.Command{
 		// display token and URL
 		token.DisplayTokens()
 		url.DisplayUrl()
-		// save node to backend
-		node, resp, err := hactarClient.Nodes.Add(hactar.Node{
-			Token: token.ReadNodeTokenFromFile(),
-			Node: hactar.NodeInfo{
-				Address: actorAddress,
-				Url:     url.GetUrl(),
-			},
-		})
-		if err != nil {
-			log.Error("Adding new node failed.", err)
-			return nil
-		} else if resp != nil && resp.StatusCode == http.StatusOK {
-			log.Info(fmt.Sprintf("New node added, url: %s address: %s", node.Node.Url, node.Node.Address))
+		// this check for existing nodes is just placeholder
+		nodes, _, err := hactarClient.Nodes.GetAllNodes()
+		if err == nil {
+			// TMP condition
+			if nodes != nil && len(nodes) > 0 {
+				log.Info("Node already added.")
+			} else {
+				// save node to backend
+				node, resp, err := hactarClient.Nodes.Add(hactar.Node{
+					Token: token.ReadNodeTokenFromFile(),
+					Node: hactar.NodeInfo{
+						Address: actorAddress,
+						Url:     url.GetUrl(),
+					},
+				})
+				if err != nil {
+					log.Error("Adding new node failed.", err)
+					return nil
+				} else if resp != nil && resp.StatusCode == http.StatusCreated {
+					log.Info(fmt.Sprintf("New node added, url: %s address: %s", node.Node.Url, node.Node.Address))
+				}
+			}
 		}
+
 		// start stats monitoring
 		stats.StartMonitoringStats(hactarClient, lotusClient)
 		stats.StartMonitoringBlocks(hactarClient, lotusClient, currentSession)

@@ -12,7 +12,7 @@ import (
 func TestSendDiskInfoStats_OkResponse(t *testing.T) {
 	// mock disk info service
 	diskInfoServiceMock := &mocks.DiskInfoService{}
-	diskInfoServiceMock.On("SendDiskInfo", mock.Anything).Return(&http.Response{StatusCode: 200}, nil)
+	diskInfoServiceMock.On("SendDiskInfo", mock.Anything).Return(&http.Response{StatusCode: 201}, nil)
 	// create hactar client with mocked service
 	mockedClient := &hactar.Client{
 		BaseURL:  nil,
@@ -20,7 +20,7 @@ func TestSendDiskInfoStats_OkResponse(t *testing.T) {
 		DiskInfo: diskInfoServiceMock,
 	}
 	assert.True(t, SendDiskInfoStats(mockedClient, "", ""))
-	assert.True(t, diskInfoServiceMock.AssertNumberOfCalls(t, "SendDiskInfo", 1))
+	diskInfoServiceMock.AssertNumberOfCalls(t, "SendDiskInfo", 1)
 }
 
 func TestSendDiskInfoStats_ErrorResponse(t *testing.T) {

@@ -17,7 +17,7 @@ func SubmitNewNodeUptimeReport(hactarClient *hactar.Client, lotusClient *lotus.C
 
 	// TODO this uptime check is not valid one! or actor address needs to be saved!
 	response, err := hactarClient.Nodes.SendUptimeReport(hactar.UptimeReport{
-		IsWorking: err != nil,
+		IsWorking: err == nil,
 		Node: hactar.NodeInfo{
 			Address: actorAddress,
 			Url:     url.GetUrl(),

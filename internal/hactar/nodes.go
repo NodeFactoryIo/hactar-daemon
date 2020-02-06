@@ -21,6 +21,7 @@ type Node struct {
 
 const (
 	NodePath = "/user/node"
+	NodeUptimePath = NodePath + "/uptime"
 )
 
 func (ns *nodesServices) GetAllNodes() ([]NodeInfo, *http.Response, error) {
@@ -47,7 +48,7 @@ type UptimeReport struct {
 }
 
 func (ns *nodesServices) SendUptimeReport(report UptimeReport) (*http.Response, error) {
-	request, err := ns.client.NewRequest(http.MethodPost, NodePath+"/uptime", report)
+	request, err := ns.client.NewRequest(http.MethodPost, NodeUptimePath, report)
 
 	if err != nil {
 		return nil, err

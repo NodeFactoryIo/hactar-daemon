@@ -40,9 +40,9 @@ func TestSendMinerInfoStats(t *testing.T) {
 
 	minerInfoRequest := &hactar.MinerInfo{
 		Version:    "test-version",
-		SectorSize: 12345678,
-		MinerPower: 100,
-		TotalPower: 200,
+		SectorSize: "12345678",
+		MinerPower: "100",
+		TotalPower: "200",
 		Node: hactar.NodeInfo{
 			Address: "t0101",
 			Url:     url.GetUrl(),

@@ -6,6 +6,7 @@ import (
 
 type NodesService interface {
 	Add(node Node) (*Node, *http.Response, error)
+	GetAllNodes() ([]NodeInfo, *http.Response, error)
 }
 
 type nodesServices struct {
@@ -20,6 +21,24 @@ type Node struct {
 const (
 	NodePath = "/user/node"
 )
+
+func (ns *nodesServices) GetAllNodes() ([]NodeInfo, *http.Response, error) {
+	request, err := ns.client.NewRequest(http.MethodGet, NodePath, nil)
+
+	if err != nil {
+		return nil, nil, err
+	}
+
+	root := new([]NodeInfo)
+
+	response, err := ns.client.Do(request, root)
+
+	if err != nil {
+		return nil, response, err
+	}
+
+	return *root, response, err
+}
 
 func (ns *nodesServices) Add(node Node) (*Node, *http.Response, error) {
 	request, err := ns.client.NewRequest(http.MethodPost, NodePath, node)

@@ -6,7 +6,6 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
 	log "github.com/sirupsen/logrus"
 	"net/http"
-	"strconv"
 )
 
 func SendMinerInfoStats(hactarClient *hactar.Client, lotusClient *lotus.Client) bool {
@@ -21,25 +20,10 @@ func SendMinerInfoStats(hactarClient *hactar.Client, lotusClient *lotus.Client) 
 		log.Error("Unable to get miner power ", err)
 		return false
 	}
-	minerPower, err := strconv.ParseInt(minerStats.MinerPower, 10, 64)
-	if err != nil {
-		log.Error("Unable to parse miner power ", err)
-		return false
-	}
-	totalPower, err := strconv.ParseInt(minerStats.TotalPower, 10, 64)
-	if err != nil {
-		log.Error("Unable to parse total power ", err)
-		return false
-	}
 
-	sectorSizeString, err := lotusClient.Sectors.GetSectorSize(minerAddress)
+	sectorSize, err := lotusClient.Sectors.GetSectorSize(minerAddress)
 	if err != nil {
 		log.Error("Unable to get sector size ", err)
-		return false
-	}
-	sectorSize, err := strconv.ParseInt(sectorSizeString, 10, 64)
-	if err != nil {
-		log.Error("Unable to parse sector size ", err)
 		return false
 	}
 
@@ -52,8 +36,8 @@ func SendMinerInfoStats(hactarClient *hactar.Client, lotusClient *lotus.Client) 
 	minerInfo := &hactar.MinerInfo{
 		Version:    clientVersion.Version,
 		SectorSize: sectorSize,
-		MinerPower: minerPower,
-		TotalPower: totalPower,
+		MinerPower: minerStats.MinerPower,
+		TotalPower: minerStats.TotalPower,
 		Node: hactar.NodeInfo{
 			Address: minerAddress,
 			Url:     url.GetUrl(),

@@ -18,14 +18,14 @@ const (
 
 type MinerInfo struct {
 	Version    string   `json:"version"`
-	SectorSize int64    `json:"sectorSize"`
-	MinerPower int64    `json:"minerPower"`
-	TotalPower int64    `json:"totalPower"`
+	SectorSize string   `json:"sectorSize"`
+	MinerPower string   `json:"minerPower"`
+	TotalPower string   `json:"totalPower"`
 	Node       NodeInfo `json:"nodeInfo"`
 }
 
 func (ms *minerService) SendMinerInfo(info MinerInfo) (*http.Response, error) {
-	request, err := ms.client.NewRequest(http.MethodPost, SendMinerInfoPath, info)
+	request, err := ms.client.NewRequest(http.MethodPut, SendMinerInfoPath, info)
 
 	if err != nil {
 		return nil, err

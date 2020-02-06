@@ -20,7 +20,7 @@ type Node struct {
 }
 
 const (
-	NodePath = "/user/node"
+	NodePath       = "/user/node"
 	NodeUptimePath = NodePath + "/uptime"
 )
 

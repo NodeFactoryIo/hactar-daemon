@@ -109,6 +109,7 @@ var StartCommand = &cli.Command{
 			}
 		}
 
+		currentSession.SetNodeMinerAddress(actorAddress)
 		// start stats monitoring
 		stats.StartMonitoringStats(hactarClient, lotusClient)
 		stats.StartMonitoringBlocks(hactarClient, lotusClient, currentSession)

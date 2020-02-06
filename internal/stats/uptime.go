@@ -13,27 +13,22 @@ import (
 )
 
 func SubmitNewNodeUptimeReport(hactarClient *hactar.Client, lotusClient *lotus.Client, currentSession session.UserSession) bool {
-	actorAddress, err := lotusClient.Miner.GetMinerAddress()
+	_, err := lotusClient.Miner.GetMinerAddress()
 
-	// TODO this uptime check is not valid one! or actor address needs to be saved!
 	response, err := hactarClient.Nodes.SendUptimeReport(hactar.UptimeReport{
 		IsWorking: err == nil,
 		Node: hactar.NodeInfo{
-			Address: actorAddress,
+			Address: currentSession.GetNodeMinerAddress(),
 			Url:     url.GetUrl(),
 		},
 	})
-
-	if err != nil {
-		log.Error("Unable to send uptime report")
-		return false
-	}
 
 	if response != nil && response.StatusCode == http.StatusCreated {
 		log.Info("Successfully sent uptime report")
 		return true
 	}
 
+	log.Error("Unable to send uptime report")
 	return false
 }
 

@@ -10,12 +10,17 @@ type UserSession interface {
 	SetHactarToken(token string)
 	GetLastCheckedHeight() int64
 	SetLastCheckedHeight(height int64)
+	GetNodeMinerAddress() string
+	SetNodeMinerAddress(address string)
 }
 
 type userSession struct {
+	// persisted values
 	hactarToken       string
 	lastCheckedHeight int64
-	viper             *viper.Viper
+	// memory values
+	nodeMinerAddress string
+	viper            *viper.Viper
 }
 
 var CurrentSession *userSession
@@ -33,6 +38,14 @@ func (session *userSession) SaveSession() error {
 	session.viper.Set("hactar.token", session.hactarToken)
 	err := session.viper.WriteConfig()
 	return err
+}
+
+func (session *userSession) GetNodeMinerAddress() string {
+	return session.nodeMinerAddress
+}
+
+func (session *userSession) SetNodeMinerAddress(address string) {
+	session.nodeMinerAddress = address
 }
 
 func (session *userSession) GetHactarToken() string {

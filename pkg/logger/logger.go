@@ -23,7 +23,7 @@ func SetUpLogger() {
 	})
 	// set log level
 	result, err := log.ParseLevel(util.String(viper.Get("log.level")))
-	log.SetLevel(util.If(err != nil).Level(log.WarnLevel, result))
+	log.SetLevel(util.If(err != nil).Level(log.InfoLevel, result))
 	// TODO make logger write to file and possibly change format of logging
 	log.SetOutput(os.Stdout)
 }

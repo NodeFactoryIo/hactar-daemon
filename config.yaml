@@ -1,7 +1,9 @@
 stats:
-  interval: 50 #second
+  interval: 10 #seconds
   blocks:
-    interval: 10 #secon
+    interval: 50 #seconds
+  uptime:
+    interval: 5 #seconds
 jsonrpc:
   lotus-miner:
     url: "http://167.172.98.186:2345/rpc/v0"

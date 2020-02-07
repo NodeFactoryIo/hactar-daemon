@@ -14,11 +14,6 @@ import (
 
 // Load configuration and initialize commands
 func main() {
-	// initialize logger
-	logger.SetUpLogger()
-	// start program
-	log.Info("Starting hactar")
-	fmt.Println("Starting hactar daemon app...")
 	// load config file
 	viper.SetConfigName("config") // name of config file (without extension)
 	viper.AddConfigPath(".")      // look for config in the working directory
@@ -29,8 +24,13 @@ func main() {
 	status.AddConfigPath(".")      // look for config in the working directory
 	status.SetConfigType("yaml")
 	util.Must(status.ReadInConfig(), "Fatal error reading status file")
-
 	session.InitSession(status)
+
+	// initialize logger
+	logger.SetUpLogger()
+	// start program
+	log.Info("Starting hactar")
+	fmt.Println("Starting hactar daemon app...")
 
 	command := os.Args[1:]
 	// special handling needed if start command called

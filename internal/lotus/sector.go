@@ -7,6 +7,7 @@ import (
 
 type SectorService interface {
 	GetSectorSize(miner string) (string, error)
+	GetNumberOfSectors(miner string) (int, error)
 }
 
 type sectorService struct {
@@ -20,4 +21,14 @@ func (ss *sectorService) GetSectorSize(miner string) (string, error) {
 	}
 
 	return util.String(response.Result), nil
+}
+
+func (ss *sectorService) GetNumberOfSectors(miner string) (int, error) {
+	response, err := ss.client.lotusNodeClient.Call(lotus.Sectors, miner, nil)
+	if err = ValidResponse(response, err, lotus.Sectors); err != nil {
+		return -1, err
+	}
+
+	sectors, _ := response.Result.([]interface{})
+	return len(sectors), nil
 }

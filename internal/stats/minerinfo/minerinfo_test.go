@@ -22,6 +22,7 @@ func TestSendMinerInfoStats(t *testing.T) {
 
 	lotusSectorServiceMock := &mocksLotus.SectorService{}
 	lotusSectorServiceMock.On("GetSectorSize", "t0101").Return("12345678", nil)
+	lotusSectorServiceMock.On("GetNumberOfSectors", "t0101").Return(4, nil)
 
 	lotusClientServiceMock := &mocksLotus.ClientService{}
 	clientVersionResponse := &lotus.ClientVersionResponse{
@@ -41,6 +42,7 @@ func TestSendMinerInfoStats(t *testing.T) {
 	minerInfoRequest := &hactar.MinerInfo{
 		Version:    "test-version",
 		SectorSize: "12345678",
+		NumberOfSectors: 4,
 		MinerPower: "100",
 		TotalPower: "200",
 		Node: hactar.NodeInfo{
@@ -69,6 +71,7 @@ func TestSendMinerInfoStats(t *testing.T) {
 	lotusMinerServiceMock.AssertNumberOfCalls(t, "GetMinerPower", 1)
 	lotusMinerServiceMock.AssertExpectations(t)
 	lotusSectorServiceMock.AssertNumberOfCalls(t, "GetSectorSize", 1)
+	lotusSectorServiceMock.AssertNumberOfCalls(t, "GetNumberOfSectors", 1)
 	lotusSectorServiceMock.AssertExpectations(t)
 	lotusClientServiceMock.AssertNumberOfCalls(t, "GetClientVersion", 1)
 	lotusClientServiceMock.AssertExpectations(t)

@@ -114,6 +114,7 @@ var StartCommand = &cli.Command{
 		stats.StartMonitoringStats(hactarClient, lotusClient)
 		stats.StartMonitoringBlocks(hactarClient, lotusClient, currentSession)
 		stats.StartMonitoringNodeUptime(hactarClient, lotusClient, currentSession)
+		stats.StartMonitoringBalance(hactarClient, lotusClient, currentSession)
 		select {}
 	},
 	Argv: func() interface{} { return new(startT) },

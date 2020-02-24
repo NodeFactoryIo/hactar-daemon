@@ -27,6 +27,12 @@ func SendMinerInfoStats(hactarClient *hactar.Client, lotusClient *lotus.Client) 
 		return false
 	}
 
+	numberOfSectors, err := lotusClient.Sectors.GetNumberOfSectors(minerAddress)
+	if err != nil {
+		log.Error("Unable to get number of sectors", err)
+		return false
+	}
+
 	clientVersion, err := lotusClient.Client.GetClientVersion()
 	if err != nil {
 		log.Error("Unable to get client version ", err)
@@ -36,6 +42,7 @@ func SendMinerInfoStats(hactarClient *hactar.Client, lotusClient *lotus.Client) 
 	minerInfo := &hactar.MinerInfo{
 		Version:    clientVersion.Version,
 		SectorSize: sectorSize,
+		NumberOfSectors: numberOfSectors,
 		MinerPower: minerStats.MinerPower,
 		TotalPower: minerStats.TotalPower,
 		Node: hactar.NodeInfo{

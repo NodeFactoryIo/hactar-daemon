@@ -19,6 +19,7 @@ const (
 type MinerInfo struct {
 	Version    string   `json:"version"`
 	SectorSize string   `json:"sectorSize"`
+	NumberOfSectors int `json:"numberOfSectors"`
 	MinerPower string   `json:"minerPower"`
 	TotalPower string   `json:"totalPower"`
 	Node       NodeInfo `json:"nodeInfo"`

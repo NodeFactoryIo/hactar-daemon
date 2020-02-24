@@ -8,6 +8,7 @@ type NodesService interface {
 	Add(node Node) (*Node, *http.Response, error)
 	GetAllNodes() ([]NodeInfo, *http.Response, error)
 	SendUptimeReport(report UptimeReport) (*http.Response, error)
+	SendBalanceReport(report BalanceReport) (*http.Response, error)
 }
 
 type nodesServices struct {
@@ -20,8 +21,9 @@ type Node struct {
 }
 
 const (
-	NodePath       = "/user/node"
-	NodeUptimePath = NodePath + "/uptime"
+	NodePath        = "/user/node"
+	NodeUptimePath  = NodePath + "/uptime"
+	NodeBalancePath = NodePath + "/balance"
 )
 
 func (ns *nodesServices) GetAllNodes() ([]NodeInfo, *http.Response, error) {
@@ -49,6 +51,27 @@ type UptimeReport struct {
 
 func (ns *nodesServices) SendUptimeReport(report UptimeReport) (*http.Response, error) {
 	request, err := ns.client.NewRequest(http.MethodPost, NodeUptimePath, report)
+
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := ns.client.Do(request, nil)
+
+	if err != nil {
+		return response, err
+	}
+
+	return response, err
+}
+
+type BalanceReport struct {
+	Balance string   `json:"balance"`
+	Node    NodeInfo `json:"nodeInfo"`
+}
+
+func (ns *nodesServices) SendBalanceReport(report BalanceReport) (*http.Response, error) {
+	request, err := ns.client.NewRequest(http.MethodPost, NodeBalancePath, report)
 
 	if err != nil {
 		return nil, err

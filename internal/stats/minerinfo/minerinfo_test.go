@@ -32,19 +32,24 @@ func TestSendMinerInfoStats(t *testing.T) {
 	}
 	lotusClientServiceMock.On("GetClientVersion").Return(clientVersionResponse, nil)
 
+	lotusWalletServiceMock := &mocksLotus.WalletService{}
+	lotusWalletServiceMock.On("GetWalletDefaultAddress").Return("test-address", nil)
+
 	lotusMockedClient := &lotus.Client{
 		Miner:   lotusMinerServiceMock,
 		Blocks:  nil,
 		Client:  lotusClientServiceMock,
 		Sectors: lotusSectorServiceMock,
+		Wallet:lotusWalletServiceMock,
 	}
 
 	minerInfoRequest := &hactar.MinerInfo{
-		Version:    "test-version",
-		SectorSize: "12345678",
+		Version:         "test-version",
+		WalletAddress: "test-address",
+		SectorSize:      "12345678",
 		NumberOfSectors: 4,
-		MinerPower: "100",
-		TotalPower: "200",
+		MinerPower:      "100",
+		TotalPower:      "200",
 		Node: hactar.NodeInfo{
 			Address: "t0101",
 			Url:     url.GetUrl(),
@@ -75,6 +80,8 @@ func TestSendMinerInfoStats(t *testing.T) {
 	lotusSectorServiceMock.AssertExpectations(t)
 	lotusClientServiceMock.AssertNumberOfCalls(t, "GetClientVersion", 1)
 	lotusClientServiceMock.AssertExpectations(t)
+	lotusWalletServiceMock.AssertNumberOfCalls(t, "GetWalletDefaultAddress", 1)
+	lotusWalletServiceMock.AssertExpectations(t)
 	hactarMinerServiceMock.AssertNumberOfCalls(t, "SendMinerInfo", 1)
 	hactarMinerServiceMock.AssertExpectations(t)
 }

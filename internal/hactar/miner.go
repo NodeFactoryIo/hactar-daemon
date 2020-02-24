@@ -17,12 +17,13 @@ const (
 )
 
 type MinerInfo struct {
-	Version    string   `json:"version"`
-	SectorSize string   `json:"sectorSize"`
-	NumberOfSectors int `json:"numberOfSectors"`
-	MinerPower string   `json:"minerPower"`
-	TotalPower string   `json:"totalPower"`
-	Node       NodeInfo `json:"nodeInfo"`
+	Version         string   `json:"version"`
+	WalletAddress   string   `json:"walletAddress"`
+	SectorSize      string   `json:"sectorSize"`
+	NumberOfSectors int      `json:"numberOfSectors"`
+	MinerPower      string   `json:"minerPower"`
+	TotalPower      string   `json:"totalPower"`
+	Node            NodeInfo `json:"nodeInfo"`
 }
 
 func (ms *minerService) SendMinerInfo(info MinerInfo) (*http.Response, error) {

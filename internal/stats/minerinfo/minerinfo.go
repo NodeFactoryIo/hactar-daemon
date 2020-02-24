@@ -21,6 +21,12 @@ func SendMinerInfoStats(hactarClient *hactar.Client, lotusClient *lotus.Client) 
 		return false
 	}
 
+	walletAddress, err := lotusClient.Wallet.GetWalletDefaultAddress()
+	if err != nil {
+		log.Error("Unable to get wallet address")
+		return false
+	}
+
 	sectorSize, err := lotusClient.Sectors.GetSectorSize(minerAddress)
 	if err != nil {
 		log.Error("Unable to get sector size ", err)
@@ -40,11 +46,12 @@ func SendMinerInfoStats(hactarClient *hactar.Client, lotusClient *lotus.Client) 
 	}
 
 	minerInfo := &hactar.MinerInfo{
-		Version:    clientVersion.Version,
-		SectorSize: sectorSize,
+		Version:         clientVersion.Version,
+		WalletAddress:   walletAddress,
+		SectorSize:      sectorSize,
 		NumberOfSectors: numberOfSectors,
-		MinerPower: minerStats.MinerPower,
-		TotalPower: minerStats.TotalPower,
+		MinerPower:      minerStats.MinerPower,
+		TotalPower:      minerStats.TotalPower,
 		Node: hactar.NodeInfo{
 			Address: minerAddress,
 			Url:     url.GetUrl(),

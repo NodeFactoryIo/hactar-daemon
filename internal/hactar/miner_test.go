@@ -13,10 +13,12 @@ func TestMinerService_SendMinerInfo(t *testing.T) {
 	defer teardown()
 
 	minerInfoRequest := &MinerInfo{
-		Version:    "test-version",
-		SectorSize: "1000",
-		MinerPower: "100",
-		TotalPower: "200",
+		Version:         "test-version",
+		WalletAddress:   "wallet-test-address",
+		SectorSize:      "1000",
+		NumberOfSectors: 5,
+		MinerPower:      "100",
+		TotalPower:      "200",
 		Node: NodeInfo{
 			Address: "test-url",
 			Url:     "test-address",

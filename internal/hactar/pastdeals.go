@@ -19,7 +19,7 @@ const (
 
 type PastDealsInfo struct {
 	Deals []lotus.PastDealResponse `json:"pastDeals"`
-	Node  NodeInfo               `json:"nodeInfo"`
+	Node  NodeInfo                 `json:"nodeInfo"`
 }
 
 func (pds *pastDealsService) SendPastDealsInfo(info PastDealsInfo) (*http.Response, error) {

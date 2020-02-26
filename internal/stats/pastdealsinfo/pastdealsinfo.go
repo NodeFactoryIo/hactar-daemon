@@ -24,7 +24,7 @@ func SendPastDealsInfo(hactarClient *hactar.Client, lotusClient *lotus.Client) b
 
 	pastDealsRequest := hactar.PastDealsInfo{
 		Deals: pastDeals,
-		Node:  hactar.NodeInfo{
+		Node: hactar.NodeInfo{
 			Address: minerAddress,
 			Url:     url.GetUrl(),
 		},

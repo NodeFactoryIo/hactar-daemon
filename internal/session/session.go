@@ -2,6 +2,7 @@ package session
 
 import (
 	"github.com/spf13/viper"
+	"os"
 )
 
 type UserSession interface {
@@ -27,13 +28,29 @@ type userSession struct {
 // instance holding information about current session
 var CurrentSession *userSession
 
-// initialization function
-func InitSession(viper *viper.Viper, filepath string) {
+func InitSession() {
+	// define file path
+	rootDir := os.TempDir()
+	if rootDir == "" {
+		rootDir = "."
+	}
+	filepath := rootDir + "/status.yaml"
+	// define status file
+	status := viper.New()
+	status.SetConfigName("status") // name of config file (without extension)
+	status.AddConfigPath(rootDir)      // look for config in the working directory
+	status.SetConfigType("yaml")
+	// set default values
+	status.SetDefault("hactar.token", "")
+	status.SetDefault("lotus.block.last-checked", "")
+	// try to read existing file
+	_ = status.ReadInConfig()
+	// save current session
 	CurrentSession = &userSession{
 		hactarToken:       viper.GetString("hactar.token"),
 		lastCheckedHeight: viper.GetInt64("lotus.block.last-checked"),
 		filepath:          filepath,
-		viper:             viper,
+		viper:             status,
 	}
 }
 

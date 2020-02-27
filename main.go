@@ -13,12 +13,8 @@ import (
 
 // Load configuration and initialize commands
 func main() {
-	// config and status setup
 	config.InitMainConfig()
-	status, filepath := config.InitStatusConfig()
-	session.InitSession(status, filepath)
-
-	// initialize logger
+	session.InitSession()
 	logger.SetUpLogger()
 
 	// start program

@@ -26,10 +26,11 @@ type Client struct {
 	// JWT token
 	Token string
 	// Services used for communicating with the API
-	Nodes    NodesService
-	DiskInfo DiskInfoService
-	Blocks   BlocksService
-	Miner    MinerService
+	Nodes     NodesService
+	DiskInfo  DiskInfoService
+	Blocks    BlocksService
+	Miner     MinerService
+	PastDeals PastDealsService
 }
 
 type NodeInfo struct {
@@ -61,6 +62,7 @@ func NewClient(token interface{}) *Client {
 	c.DiskInfo = &diskInfoService{client: c}
 	c.Blocks = &blocksService{client: c}
 	c.Miner = &minerService{client: c}
+	c.PastDeals = &pastDealsService{client: c}
 
 	if token != nil {
 		c.Token = util.String(token)

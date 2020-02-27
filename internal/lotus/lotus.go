@@ -17,6 +17,7 @@ type Client struct {
 	Sectors          SectorService
 	Client           ClientService
 	Wallet           WalletService
+	PastDeals        PastDealsService
 }
 
 func NewClient(lClient jsonrpc2client.Client, mClient jsonrpc2client.Client) (*Client, error) {
@@ -50,6 +51,7 @@ func NewClient(lClient jsonrpc2client.Client, mClient jsonrpc2client.Client) (*C
 	client.Sectors = &sectorService{client: client}
 	client.Client = &clientService{client: client}
 	client.Wallet = &walletService{client: client}
+	client.PastDeals = &pastDealsService{client: client}
 
 	return client, nil
 }

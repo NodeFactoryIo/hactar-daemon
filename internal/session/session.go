@@ -20,23 +20,29 @@ type userSession struct {
 	lastCheckedHeight int64
 	// memory values
 	nodeMinerAddress string
+	filepath         string
 	viper            *viper.Viper
 }
 
+// instance holding information about current session
 var CurrentSession *userSession
 
-func InitSession(viper *viper.Viper) {
+// initialization function
+func InitSession(viper *viper.Viper, filepath string) {
 	CurrentSession = &userSession{
 		hactarToken:       viper.GetString("hactar.token"),
 		lastCheckedHeight: viper.GetInt64("lotus.block.last-checked"),
+		filepath:          filepath,
 		viper:             viper,
 	}
 }
 
+// implementation of UserSession interface
+
 func (session *userSession) SaveSession() error {
 	session.viper.Set("lotus.block.last-checked", session.lastCheckedHeight)
 	session.viper.Set("hactar.token", session.hactarToken)
-	err := session.viper.WriteConfig()
+	err := session.viper.WriteConfigAs(session.filepath)
 	return err
 }
 

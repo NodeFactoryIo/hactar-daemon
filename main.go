@@ -15,8 +15,8 @@ import (
 func main() {
 	// config and status setup
 	config.InitMainConfig()
-	status := config.InitStatusConfig()
-	session.InitSession(status)
+	status, filepath := config.InitStatusConfig()
+	session.InitSession(status, filepath)
 
 	// initialize logger
 	logger.SetUpLogger()

@@ -96,7 +96,7 @@ func (c *Client) Auth(email string, password string) (string, error) {
 		return "", err
 	}
 
-	if response != nil && util.HttpResponseStatus2XX(response) {
+	if response != nil && !util.HttpResponseStatus2XX(response) {
 		return "", errors.New(fmt.Sprintf("Unable to authorize, server returned http status %s", response.Status))
 	}
 

@@ -40,12 +40,12 @@ func TestSendMinerInfoStats(t *testing.T) {
 		Blocks:  nil,
 		Client:  lotusClientServiceMock,
 		Sectors: lotusSectorServiceMock,
-		Wallet:lotusWalletServiceMock,
+		Wallet:  lotusWalletServiceMock,
 	}
 
 	minerInfoRequest := &hactar.MinerInfo{
 		Version:         "test-version",
-		WalletAddress: "test-address",
+		WalletAddress:   "test-address",
 		SectorSize:      "12345678",
 		NumberOfSectors: 4,
 		MinerPower:      "100",

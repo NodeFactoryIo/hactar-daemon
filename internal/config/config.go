@@ -1,7 +1,6 @@
 package config
 
 import (
-	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
 	"github.com/spf13/viper"
 	"os"
 )
@@ -14,14 +13,17 @@ func InitMainConfig() {
 	_ = viper.ReadInConfig()
 }
 
-func InitStatusConfig() *viper.Viper {
+func InitStatusConfig() (*viper.Viper, string) {
 	// load status file
 	status := viper.New()
 	status.SetConfigName("status") // name of config file (without extension)
 	status.AddConfigPath(".")      // look for config in the working directory
 	status.SetConfigType("yaml")
-	util.Must(status.ReadInConfig(), "Fatal error reading status file")
-	return status
+	// set default values
+	status.SetDefault("hactar.token", "")
+	status.SetDefault("lotus.block.last-checked", "")
+	_ = status.ReadInConfig()
+	return status, "./status.yaml"
 }
 
 func setDefaultValuesForMainConfig() {

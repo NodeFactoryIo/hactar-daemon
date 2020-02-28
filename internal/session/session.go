@@ -1,6 +1,7 @@
 package session
 
 import (
+	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
 	"github.com/spf13/viper"
 	"os"
 )
@@ -30,10 +31,7 @@ var CurrentSession *userSession
 
 func InitSession() {
 	// define file path
-	rootDir := os.TempDir()
-	if rootDir == "" {
-		rootDir = "."
-	}
+	rootDir := getHactarDir()
 	filepath := rootDir + "/status.yaml"
 	// define status file
 	status := viper.New()
@@ -52,6 +50,19 @@ func InitSession() {
 		filepath:          filepath,
 		viper:             status,
 	}
+	// creates status file if not created
+	_ = CurrentSession.SaveSession()
+}
+
+func getHactarDir() string {
+	// find user home dir
+	userHomeDir, err := os.UserHomeDir()
+	util.Must(err, "Unable to find home directory.")
+	// hactar directory
+	hactarDir := userHomeDir + "/.lotus/hactar"
+	err = os.MkdirAll(hactarDir, os.ModePerm)
+	util.Must(err, "Unable to create hactar folder.")
+	return hactarDir
 }
 
 // implementation of UserSession interface

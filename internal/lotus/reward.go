@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/util/bigint"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 	"math/big"
 )
 
@@ -16,7 +17,7 @@ type rewardService struct {
 }
 
 func (rs *rewardService) GetMiningReward() (string, error) {
-	balance, err := rs.client.Wallet.GetWalletBalance("t01") // todo add to config
+	balance, err := rs.client.Wallet.GetWalletBalance(viper.GetString("lotus.network-address"))
 	if err != nil {
 		log.Error("Unable to get balance for network address", err)
 		return "", err

@@ -24,6 +24,7 @@ func setDefaultValuesForMainConfig() {
 	viper.SetDefault("jsonrpc.lotus-node.token", "")
 	viper.SetDefault("hactar.api-url", "")
 	viper.SetDefault("log.level", "error")
+	viper.SetDefault("lotus.network-address", "t01")
 }
 
 // depending on ENV variable creates name for config file

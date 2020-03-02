@@ -1,0 +1,19 @@
+stats:
+  interval: 6 #seconds
+  blocks:
+    interval: 5 #seconds
+  uptime:
+    interval: 2 #seconds
+  balance:
+    interval: 15 #seconds
+jsonrpc:
+  lotus-miner:
+    url: "http://167.172.98.186:2345/rpc/v0"
+    token: ""
+  lotus-node:
+    url: "http://167.172.98.186:1234/rpc/v0"
+    token: ""
+hactar:
+  api-url: "http://127.0.0.1:3000/api"
+log:
+  level: "info"

@@ -2,15 +2,24 @@
 
 > Deamon application for monitoring Filecoin nodes.
 
-This repository contains deamon application for monitoring Filecoin nodes using [Hactar]().
+This repository contains daemon application for monitoring Filecoin nodes using [Hactar]().
 
 ## Installation
+You can download already built binaries for your platform from `builds` folder or get `hactar-daemon` golang package and build it locally. Find detailed instructions below.
+ 
+###Download binaries
+
+Inside the `builds` folder, you can find binaries for all supported platforms. After downloading an appropriate binary file (_in this example it is binary for Linux operating system on intel processor_) you can run daemon app with `hactar-lin-386-YYYY-MM-DD [command]`. 
+
+More about different _commands_ can be found in [Usage](#Usage).
+
+###Get `hactar-daemon` package
 1. Install [Golang](https://golang.org/doc/install) **1.13 or greater**
 2. Run the command below
 ```
 go get github.com/NodeFactoryIo/hactar-daemon
 ```
-3. Run hactar-deamon from your Go bin directory. For linux systems it will likely be:
+3. Run hactar-daemon from your Go bin directory. For linux systems it will likely be:
 ```
 ~/go/bin/hactar-daemon
 ```
@@ -56,7 +65,12 @@ $ hactar start --username=user --password=pass
 Starting hactar.....
 ```
 
-### Notice
+## Development
+Run daemon app with `go run main.go [command]`.
+
+More about different _commands_ can be found in [Usage](#Usage).
+
+Expected name of the configuration file depends on `ENV` variable. For example, if you run a daemon app with `ENV=test go run main.go start`, expected config file name is `config-test.yaml`
 
 ## License
 

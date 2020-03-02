@@ -2,7 +2,6 @@ package lotus
 
 import (
 	"errors"
-	"github.com/NodeFactoryIo/hactar-daemon/pkg/util/bigint"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"math/big"
@@ -25,8 +24,8 @@ func (rs *rewardService) GetMiningReward() (string, error) {
 	// calculate mining reward
 	if ci, ok := big.NewInt(0).SetString(balance, 10); ok == true {
 		res := ci.Mul(ci, InitialReward)
-		res = res.Div(res, FromFil(MiningRewardTotal).Int)
-		res = res.Div(res, bigint.NewInt(BlocksPerEpoch).Int)
+		res = res.Div(res, MiningRewardTotal)
+		res = res.Div(res, BlocksPerEpoch)
 		return res.String(), nil
 	} else {
 		log.Error("Unable to convert balance of network address.")

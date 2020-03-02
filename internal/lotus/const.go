@@ -5,25 +5,31 @@ import (
 	"math/big"
 )
 
+// InitialReward
+const initialRewardStr = "153856861913558700202"
 var InitialReward *big.Int
-
-const InitialRewardStr = "153856861913558700202"
-
-const MiningRewardTotal = 1_400_000_000
-const FilecoinPrecision = 1_000_000_000_000_000_000
-const BlocksPerEpoch = 5
-
-func FromFil(i uint64) bigint.BigInt {
-	return bigint.BigMul(bigint.NewInt(i), bigint.NewInt(FilecoinPrecision))
-}
+// MiningRewardTotal
+const miningRewardTotal = 1_400_000_000
+const filecoinPrecision = 1_000_000_000_000_000_000
+var MiningRewardTotal *big.Int
+// BlocksPerEpoch
+const blocksPerEpoch = 5
+var BlocksPerEpoch *big.Int
 
 func init() {
 	InitialReward = new(big.Int)
-
 	var ok bool
 	InitialReward, ok = InitialReward.
-		SetString(InitialRewardStr, 10)
+		SetString(initialRewardStr, 10)
 	if !ok {
 		panic("could not parse InitialRewardStr")
 	}
+
+	MiningRewardTotal = fromFil(miningRewardTotal).Int
+
+	BlocksPerEpoch = bigint.NewInt(blocksPerEpoch).Int
+}
+
+func fromFil(i uint64) bigint.BigInt {
+	return bigint.BigMul(bigint.NewInt(i), bigint.NewInt(filecoinPrecision))
 }

@@ -36,7 +36,7 @@ func InitSession() {
 	// define status file
 	status := viper.New()
 	status.SetConfigName("status") // name of config file (without extension)
-	status.AddConfigPath(rootDir)      // look for config in the working directory
+	status.AddConfigPath(rootDir)  // look for config in the working directory
 	status.SetConfigType("yaml")
 	// set default values
 	status.SetDefault("hactar.token", "")

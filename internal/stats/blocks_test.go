@@ -16,8 +16,9 @@ func TestSubmitNewBlockReport_OneValidTipsetWithReward_Success(t *testing.T) {
 	hactarBlockServiceMock := &mocksHactar.BlocksService{}
 	hactarBlockServiceMock.On("AddMiningReward", []hactar.Block{
 		*(&hactar.Block{
-			Cid:   "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo6jnk",
-			Miner: "t0101",
+			Cid:    "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo6jnk",
+			Miner:  "t0101",
+			Reward: "100",
 			Node: hactar.NodeInfo{
 				Address: "t0101",
 				Url:     url.GetUrl(),
@@ -34,7 +35,7 @@ func TestSubmitNewBlockReport_OneValidTipsetWithReward_Success(t *testing.T) {
 
 	lotusBlockServiceMock := &mocksLotus.BlocksService{}
 	lotusBlockServiceMock.On("GetLastHeight").Return(int64(2), nil)
-	t2 := &lotus.TipsetResponse{
+	tipsetResponse := &lotus.TipsetResponse{
 		Cids: []string{
 			"bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo6jnk",
 			"bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo7jnk",
@@ -45,12 +46,17 @@ func TestSubmitNewBlockReport_OneValidTipsetWithReward_Success(t *testing.T) {
 		},
 		Height: 2,
 	}
-	lotusBlockServiceMock.On("GetTipsetByHeight", int64(2)).Return(t2, nil)
+	lotusBlockServiceMock.On("GetTipsetByHeight", int64(2)).Return(tipsetResponse, nil)
 	lotusMinerServiceMock := &mocksLotus.MinerService{}
 	lotusMinerServiceMock.On("GetMinerAddress").Return("t0101", nil)
+
+	lotusRewardServiceMock := &mocksLotus.RewardService{}
+	lotusRewardServiceMock.On("GetMiningReward").Return("100", nil)
+
 	lotusMockedClient := &lotus.Client{
-		Blocks: lotusBlockServiceMock,
-		Miner:  lotusMinerServiceMock,
+		Blocks:  lotusBlockServiceMock,
+		Miner:   lotusMinerServiceMock,
+		Rewards: lotusRewardServiceMock,
 	}
 
 	sessionMock := new(mocks.UserSession)
@@ -80,8 +86,9 @@ func TestSubmitNewBlockReport_MultipleValidTipsetsWithRewards_Success(t *testing
 	// call for height 2
 	hactarBlockServiceMock.On("AddMiningReward", []hactar.Block{
 		*(&hactar.Block{
-			Cid:   "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo6jnk",
-			Miner: "t0101",
+			Cid:    "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo6jnk",
+			Miner:  "t0101",
+			Reward: "",
 			Node: hactar.NodeInfo{
 				Address: "t0101",
 				Url:     url.GetUrl(),
@@ -91,16 +98,18 @@ func TestSubmitNewBlockReport_MultipleValidTipsetsWithRewards_Success(t *testing
 	// call for height 3
 	hactarBlockServiceMock.On("AddMiningReward", []hactar.Block{
 		*(&hactar.Block{
-			Cid:   "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo8jnk",
-			Miner: "t0101",
+			Cid:    "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo8jnk",
+			Miner:  "t0101",
+			Reward: "",
 			Node: hactar.NodeInfo{
 				Address: "t0101",
 				Url:     url.GetUrl(),
 			},
 		}),
 		*(&hactar.Block{
-			Cid:   "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo9jnk",
-			Miner: "t0101",
+			Cid:    "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo9jnk",
+			Miner:  "t0101",
+			Reward: "",
 			Node: hactar.NodeInfo{
 				Address: "t0101",
 				Url:     url.GetUrl(),
@@ -110,8 +119,9 @@ func TestSubmitNewBlockReport_MultipleValidTipsetsWithRewards_Success(t *testing
 	// call for height 4
 	hactarBlockServiceMock.On("AddMiningReward", []hactar.Block{
 		*(&hactar.Block{
-			Cid:   "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo0jnk",
-			Miner: "t0101",
+			Cid:    "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo0jnk",
+			Miner:  "t0101",
+			Reward: "100",
 			Node: hactar.NodeInfo{
 				Address: "t0101",
 				Url:     url.GetUrl(),
@@ -168,9 +178,14 @@ func TestSubmitNewBlockReport_MultipleValidTipsetsWithRewards_Success(t *testing
 
 	lotusMinerServiceMock := &mocksLotus.MinerService{}
 	lotusMinerServiceMock.On("GetMinerAddress").Return("t0101", nil)
+
+	lotusRewardServiceMock := &mocksLotus.RewardService{}
+	lotusRewardServiceMock.On("GetMiningReward").Return("100", nil)
+
 	lotusMockedClient := &lotus.Client{
-		Blocks: lotusBlockServiceMock,
-		Miner:  lotusMinerServiceMock,
+		Blocks:  lotusBlockServiceMock,
+		Miner:   lotusMinerServiceMock,
+		Rewards: lotusRewardServiceMock,
 	}
 
 	sessionMock := new(mocks.UserSession)

@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"fmt"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/token"
 	"github.com/mkideal/cli"
 )
@@ -10,7 +11,7 @@ type TokenParams struct {
 }
 
 func RunTokenCommand(ctx *cli.Context) error {
-	ctx.String(
+	fmt.Printf(
 		"Node token:\n%s\nMiner token:\n%s\n",
 		token.ReadNodeTokenFromFile(),
 		token.ReadMinerTokenFromFile(),

@@ -26,7 +26,7 @@ var StartCommand = &cli.Command{
 
 var StatusCommand = &cli.Command{
 	Name: "status",
-	Desc: "",
+	Desc: "Show hactar daemon status",
 	Text: "",
 	Fn:   RunStatusCommand,
 	Argv: func() interface{} { return new(StatusParams) },

@@ -28,8 +28,8 @@ func RunStatusCommand(ctx *cli.Context) error {
 	}
 	defaultAddress, err := lotusClient.Wallet.GetWalletDefaultAddress()
 	if err != nil {
-		fmt.Println("Unable to get owner's address")
-		log.Error("Failed to get owner's default address")
+		fmt.Println("Unable to get owner's address")       // show to user
+		log.Error("Failed to get owner's default address") // log
 		return err
 	}
 

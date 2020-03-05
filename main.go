@@ -19,7 +19,6 @@ func main() {
 
 	// start program
 	log.Info("Starting hactar")
-	fmt.Println("Starting hactar daemon app...")
 	command := os.Args[1:]
 	// special handling needed if start command called
 	if command[0] == "start" {
@@ -42,6 +41,7 @@ func main() {
 		cli.Tree(cli.HelpCommand("Display help information")),
 		cli.Tree(commands.StartCommand),
 		cli.Tree(commands.TokenCommand),
+		cli.Tree(commands.StatusCommand),
 	).Run(command); err != nil {
 		_, _ = fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

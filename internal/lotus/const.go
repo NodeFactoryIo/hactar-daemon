@@ -7,13 +7,18 @@ import (
 
 // InitialReward
 const initialRewardStr = "153856861913558700202"
+
 var InitialReward *big.Int
+
 // MiningRewardTotal
 const miningRewardTotal = 1_400_000_000
 const filecoinPrecision = 1_000_000_000_000_000_000
+
 var MiningRewardTotal *big.Int
+
 // BlocksPerEpoch
 const blocksPerEpoch = 5
+
 var BlocksPerEpoch *big.Int
 
 func init() {

@@ -4,6 +4,7 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
 	"github.com/spf13/viper"
 	"os"
+	"time"
 )
 
 type UserSession interface {
@@ -12,14 +13,16 @@ type UserSession interface {
 	SetHactarToken(token string)
 	GetLastCheckedHeight() int64
 	SetLastCheckedHeight(height int64)
+	GetLastCheckedHeightTimestamp() string
 	GetNodeMinerAddress() string
 	SetNodeMinerAddress(address string)
 }
 
 type userSession struct {
 	// persisted values
-	hactarToken       string
-	lastCheckedHeight int64
+	hactarToken                string
+	lastCheckedHeight          int64
+	lastCheckedHeightTimestamp string
 	// memory values
 	nodeMinerAddress string
 	filepath         string
@@ -41,6 +44,7 @@ func InitSession() {
 	// set default values
 	status.SetDefault("hactar.token", "")
 	status.SetDefault("lotus.block.last-checked", "")
+	status.SetDefault("lotus.block.last-checked-timestamp", "")
 	// try to read existing file
 	_ = status.ReadInConfig()
 	// save current session
@@ -70,6 +74,7 @@ func getHactarDir() string {
 func (session *userSession) SaveSession() error {
 	session.viper.Set("lotus.block.last-checked", session.lastCheckedHeight)
 	session.viper.Set("hactar.token", session.hactarToken)
+	session.viper.Set("lotus.block.last-checked-timestamp", session.lastCheckedHeightTimestamp)
 	err := session.viper.WriteConfigAs(session.filepath)
 	return err
 }
@@ -96,4 +101,11 @@ func (session *userSession) GetLastCheckedHeight() int64 {
 
 func (session *userSession) SetLastCheckedHeight(height int64) {
 	session.lastCheckedHeight = height
+	// save timestamp
+	timestamp := time.Now().Format("2002-02-02 15:04:33")
+	session.lastCheckedHeightTimestamp = timestamp
+}
+
+func (session *userSession) GetLastCheckedHeightTimestamp() string {
+	return session.lastCheckedHeightTimestamp
 }

@@ -46,8 +46,8 @@ func RunStatusCommand(ctx *cli.Context) error {
 
 	t = tabby.New()
 	t.AddHeader("Monitoring block rewards")
-	t.AddLine("Last tipset reported at:", session.CurrentSession.GetLastCheckedHeightTimestamp())
 	t.AddLine("Last reported tipset height:", session.CurrentSession.GetLastCheckedHeight())
+	t.AddLine("Last tipset reported at:", session.CurrentSession.GetLastCheckedHeightTimestamp())
 	t.AddLine("")
 	t.Print()
 

@@ -18,7 +18,7 @@ type StartParams struct {
 	cli.Helper
 	Email    string `cli:"e,email" usage:"hactar account email" prompt:"Enter your email address"`
 	Password string `pw:"p,password" usage:"hactar account password" prompt:"Enter your password"`
-	Debug    bool `cli:"d,debug" usage:"turn debug mode, showing all application logs"`
+	Debug    bool   `cli:"d,debug" usage:"turn debug mode, showing all application logs"`
 }
 
 func RunStartCommand(ctx *cli.Context) error {

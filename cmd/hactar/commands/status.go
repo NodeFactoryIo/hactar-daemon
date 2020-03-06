@@ -13,13 +13,13 @@ import (
 
 type StatusParams struct {
 	cli.Helper
-	Debug    bool `cli:"d,debug" usage:"turn debug mode, showing all application logs"`
+	Debug bool `cli:"d,debug" usage:"turn debug mode, showing all application logs"`
 }
 
 func RunStatusCommand(ctx *cli.Context) error {
 	lotusClient, err := lotus.NewClient(nil, nil)
 	if err != nil {
-		fmt.Println("Unable to detect lotus client")    // show to user
+		fmt.Println("Unable to detect lotus client")        // show to user
 		log.Error("Failed to initialize lotus client", err) // log
 		return err
 	}

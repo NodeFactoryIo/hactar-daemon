@@ -8,7 +8,7 @@ import (
 
 type TokenParams struct {
 	cli.Helper
-	Debug    bool `cli:"d,debug" usage:"turn debug mode, showing all application logs"`
+	Debug bool `cli:"d,debug" usage:"turn debug mode, showing all application logs"`
 }
 
 func RunTokenCommand(ctx *cli.Context) error {

@@ -8,6 +8,7 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/stats"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/token"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
+	"github.com/cheynewallace/tabby"
 	"github.com/mkideal/cli"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -17,6 +18,7 @@ type StartParams struct {
 	cli.Helper
 	Email    string `cli:"e,email" usage:"hactar account email" prompt:"Enter your email address"`
 	Password string `pw:"p,password" usage:"hactar account password" prompt:"Enter your password"`
+	Debug    bool `cli:"d,debug" usage:"turn debug mode, showing all application logs"`
 }
 
 func RunStartCommand(ctx *cli.Context) error {
@@ -58,8 +60,12 @@ func RunStartCommand(ctx *cli.Context) error {
 	log.Info("Actor address: ", actorAddress)
 	// display token and URL
 	nodeUrl := url.GetUrl()
-	url.DisplayUrl()
-	token.DisplayTokens()
+	t := tabby.New()
+	t.AddLine("Actor address:", actorAddress)
+	t.AddLine("Node url:", nodeUrl)
+	t.AddLine("Node token:", token.ReadNodeTokenFromFile())
+	t.AddLine("Miner token:", token.ReadMinerTokenFromFile())
+	t.Print()
 	// this check for existing nodes is just placeholder
 	nodes, _, err := hactarClient.Nodes.GetAllNodes()
 	if err == nil {

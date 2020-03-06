@@ -10,8 +10,16 @@ import (
 	"strings"
 )
 
-func SetUpLogger() {
-	// init formatter
+func SetUpLogger(logLevel log.Level) {
+	setUpLogger(logLevel)
+}
+
+func SetUpDefaultLogger() {
+	result, err := log.ParseLevel(util.String(viper.GetString("log.level")))
+	setUpLogger(util.If(err != nil).Level(log.ErrorLevel, result))
+}
+
+func setUpLogger(level log.Level) {
 	log.SetFormatter(&log.TextFormatter{
 		FullTimestamp: true,
 		CallerPrettyfier: func(f *runtime.Frame) (string, string) {
@@ -21,9 +29,6 @@ func SetUpLogger() {
 			return funcname, filename
 		},
 	})
-	// set log level
-	result, err := log.ParseLevel(util.String(viper.GetString("log.level")))
-	log.SetLevel(util.If(err != nil).Level(log.WarnLevel, result))
-	// TODO make logger write to file and possibly change format of logging
+	log.SetLevel(level)
 	log.SetOutput(os.Stdout)
 }

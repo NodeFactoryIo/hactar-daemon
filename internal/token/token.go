@@ -41,8 +41,3 @@ func readTokenFromFile(tokenFile string, defaultPath string) string {
 	}
 	return strings.TrimSpace(string(data))
 }
-
-func DisplayTokens() {
-	fmt.Printf("Node token:\n%s\n", ReadNodeTokenFromFile())
-	fmt.Printf("Miner token:\n%s\n", ReadMinerTokenFromFile())
-}

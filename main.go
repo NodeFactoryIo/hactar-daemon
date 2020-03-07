@@ -5,9 +5,7 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/cmd/hactar/commands"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/config"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/session"
-	"github.com/NodeFactoryIo/hactar-daemon/pkg/logger"
 	"github.com/mkideal/cli"
-	log "github.com/sirupsen/logrus"
 	"os"
 )
 
@@ -15,11 +13,7 @@ import (
 func main() {
 	config.InitMainConfig()
 	session.InitSession()
-	logger.SetUpLogger()
 
-	// start program
-	log.Info("Starting hactar")
-	fmt.Println("Starting hactar daemon app...")
 	command := os.Args[1:]
 	// special handling needed if start command called
 	if command[0] == "start" {
@@ -42,6 +36,7 @@ func main() {
 		cli.Tree(cli.HelpCommand("Display help information")),
 		cli.Tree(commands.StartCommand),
 		cli.Tree(commands.TokenCommand),
+		cli.Tree(commands.StatusCommand),
 	).Run(command); err != nil {
 		_, _ = fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

@@ -2,18 +2,12 @@ package commands
 
 import (
 	"fmt"
-	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
-	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
-	"github.com/NodeFactoryIo/hactar-daemon/internal/session"
-	"github.com/NodeFactoryIo/hactar-daemon/internal/stats"
-	"github.com/NodeFactoryIo/hactar-daemon/internal/token"
-	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
+	"github.com/NodeFactoryIo/hactar-daemon/pkg/logger"
 	"github.com/mkideal/cli"
 	log "github.com/sirupsen/logrus"
-	"net/http"
+	"strings"
 )
 
-// root command
 type rootT struct {
 	cli.Helper
 }
@@ -24,118 +18,39 @@ var RootCommand = &cli.Command{
 	Fn: func(ctx *cli.Context) error {
 		return nil
 	},
-}
-
-// start command
-type startT struct {
-	cli.Helper
-	Email    string `cli:"e,email" usage:"hactar account email" prompt:"Enter your email address"`
-	Password string `pw:"p,password" usage:"hactar account password" prompt:"Enter your password"`
+	Text: "Debug flag [-d][--debug] can be used with any command to show app logs",
+	OnRootBefore: func(context *cli.Context) error {
+		isDebug := context.IsSet("-d", "-debug")
+		if isDebug {
+			logger.SetUpLogger(log.InfoLevel)
+		} else {
+			logger.SetUpDefaultLogger()
+		}
+		log.Info(fmt.Sprintf("Set logger level: %s", strings.ToUpper(log.GetLevel().String())))
+		return nil
+	},
 }
 
 var StartCommand = &cli.Command{
 	Name: "start",
 	Desc: "Start hactar daemon application",
 	Text: "",
-	Fn: func(ctx *cli.Context) error {
-		argv := ctx.Argv().(*startT)
-		// load current session
-		currentSession := session.CurrentSession
-		// initialize hactar client && auth
-		hactarClient := new(hactar.Client)
-		if currentSession.GetHactarToken() != "" {
-			// create client with saved token
-			hactarClient = hactar.NewClient(currentSession.GetHactarToken())
-		} else {
-			// create client with provided email and password
-			c, err := hactar.NewAuthClient(argv.Email, argv.Password)
-			if err != nil {
-				log.Error("Failed to authenticate to Hactar service.", err)
-				return nil
-			}
-			hactarClient = c
-			// save jwt token for current session
-			currentSession.SetHactarToken(hactarClient.Token)
-			err = currentSession.SaveSession()
-			if err != nil {
-				log.Error("Unable to save hactar token.", err)
-			}
-		}
-		log.Info("Successful authentication.")
-		// detect miners and allow user to choose actor address
-		lotusClient, err := lotus.NewClient(nil, nil)
-		if err != nil {
-			log.Error("Failed to initialize lotus service")
-			return nil
-		}
-		actorAddress, err := lotusClient.Miner.GetMinerAddress()
-		if err != nil {
-			log.Error("Worker down!")
-			return nil
-		}
-		log.Info("Actor address: ", actorAddress)
-		// display token and URL
-		nodeUrl := url.GetUrl()
-		url.DisplayUrl()
-		token.DisplayTokens()
-		// this check for existing nodes is just placeholder
-		nodes, _, err := hactarClient.Nodes.GetAllNodes()
-		if err == nil {
-			// search if node already added
-			nodeAdded := false
-			for i := range nodes {
-				if nodes[i].Address == actorAddress && nodes[i].Url == nodeUrl {
-					nodeAdded = true
-					break
-				}
-			}
-			// save node to backend if not added
-			if !nodeAdded {
-				node, resp, err := hactarClient.Nodes.Add(hactar.Node{
-					Token: token.ReadNodeTokenFromFile(),
-					Node: hactar.NodeInfo{
-						Address: actorAddress,
-						Url:     nodeUrl,
-					},
-				})
-				if err != nil {
-					log.Error("Adding new node failed.", err)
-					return nil
-				} else if resp != nil && resp.StatusCode == http.StatusCreated {
-					log.Info(fmt.Sprintf("New node added, url: %s address: %s", node.Node.Url, node.Node.Address))
-				}
-			} else {
-				log.Info("Node already added.")
-			}
-		}
-
-		currentSession.SetNodeMinerAddress(actorAddress)
-		// start stats monitoring
-		stats.StartMonitoringStats(hactarClient, lotusClient)
-		stats.StartMonitoringBlocks(hactarClient, lotusClient, currentSession)
-		stats.StartMonitoringNodeUptime(hactarClient, lotusClient, currentSession)
-		stats.StartMonitoringBalance(hactarClient, lotusClient, currentSession)
-		select {}
-	},
-	Argv: func() interface{} { return new(startT) },
+	Fn:   RunStartCommand,
+	Argv: func() interface{} { return new(StartParams) },
 }
 
-// token command
-type tokenT struct {
-	cli.Helper
+var StatusCommand = &cli.Command{
+	Name: "status",
+	Desc: "Show hactar daemon status",
+	Text: "",
+	Fn:   RunStatusCommand,
+	Argv: func() interface{} { return new(StatusParams) },
 }
 
 var TokenCommand = &cli.Command{
 	Name: "token",
-	Desc: "Show lotus token",
+	Desc: "Show lotus-node and lotus-miner tokens",
 	Text: "",
-	Fn: func(ctx *cli.Context) error {
-		ctx.String(
-			"Node token:\n%s\nMiner token:\n%s\n",
-			token.ReadNodeTokenFromFile(),
-			token.ReadMinerTokenFromFile(),
-		)
-		return nil
-	},
-	Argv: func() interface{} { return new(tokenT) },
+	Fn:   RunTokenCommand,
+	Argv: func() interface{} { return new(TokenParams) },
 }

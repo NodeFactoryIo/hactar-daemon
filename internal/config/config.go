@@ -45,15 +45,15 @@ func getMainConfigName() string {
 }
 
 func setupSentry() {
-	key := viper.GetString("sentry.key")
-	project := viper.GetString("sentry.project")
-	if key != "" && project != "" {
-		sentry.Init(sentry.ClientOptions{
-			Dsn: "https://" + key + "@sentry.io/" + project,
-			Debug: true,
-		})
+	viper.SetConfigFile(".env")
+	viper.MergeInConfig()
 
-		// Flush buffered events before the program terminates.
-		defer sentry.Flush(2 * time.Second)
-	}
+	dsn := viper.GetString("SENTRY_DSN")
+	sentry.Init(sentry.ClientOptions{
+		Dsn: dsn,
+		Debug: true,
+	})
+
+	// Flush buffered events before the program terminates.
+	defer sentry.Flush(2 * time.Second)
 }

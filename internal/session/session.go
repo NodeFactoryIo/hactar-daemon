@@ -49,8 +49,8 @@ func InitSession() {
 	_ = status.ReadInConfig()
 	// save current session
 	CurrentSession = &userSession{
-		hactarToken:       viper.GetString("hactar.token"),
-		lastCheckedHeight: viper.GetInt64("lotus.block.last-checked"),
+		hactarToken:       status.GetString("hactar.token"),
+		lastCheckedHeight: status.GetInt64("lotus.block.last-checked"),
 		filepath:          filepath,
 		viper:             status,
 	}

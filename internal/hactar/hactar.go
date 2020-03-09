@@ -6,10 +6,12 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"io"
 	"net/http"
 	"net/url"
+	"os"
 )
 
 const (
@@ -188,7 +190,14 @@ func CheckResponse(r *http.Response) error {
 	if util.HttpResponseStatus2XX(r) {
 		return nil
 	}
+	// read error response
 	errorBody := util.ReaderToString(r.Body)
 	errorResponse := &ErrorResponse{Response: r, Message: errorBody}
+	// stop daemon app
+	if r.StatusCode == http.StatusNotFound {
+		log.Error(errorResponse)
+		fmt.Print("You unsubscribed from hactar service.")
+		os.Exit(1)
+	}
 	return errorResponse
 }

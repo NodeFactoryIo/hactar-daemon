@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"github.com/spf13/viper"
 	"os"
 )
@@ -11,10 +10,7 @@ func InitMainConfig() {
 	// load config file
 	viper.SetConfigName(getMainConfigName()) // name of config file (without extension)
 	viper.AddConfigPath(".")                 // look for config in the working directory
-	err := viper.ReadInConfig()
-	if err != nil {
-		fmt.Println(err)
-	}
+	_ = viper.ReadInConfig()
 }
 
 func setDefaultValuesForMainConfig() {

@@ -15,5 +15,8 @@ jsonrpc:
     token: ""
 hactar:
   api-url: "http://127.0.0.1:3000/api"
+sentry:
+  key: ""
+  project: ""
 log:
   level: "error"

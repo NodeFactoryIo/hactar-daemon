@@ -7,13 +7,13 @@ This repository contains daemon application for monitoring Filecoin nodes using 
 ## Installation
 You can download already built binaries for your platform from `builds` folder or get `hactar-daemon` golang package and build it locally. Find detailed instructions below.
  
-###Download binaries
+###  Download binaries
 
 Inside the `builds` folder, you can find binaries for all supported platforms. After downloading an appropriate binary file (_in this example it is binary for Linux operating system on intel processor_) you can run daemon app with `hactar-lin-386-YYYY-MM-DD [command]`. 
 
 More about different _commands_ can be found in [Usage](#Usage).
 
-###Get `hactar-daemon` package
+### Get `hactar-daemon` package
 1. Install [Golang](https://golang.org/doc/install) **1.13 or greater**
 2. Run the command below
 ```
@@ -46,7 +46,7 @@ Available Commands:
 Use "hactar [command] --help" for more information about a command.
 ```
 
-####Example
+#### Example
 Starting hactar without using flags.
 ```
 $ hactar start
@@ -59,7 +59,7 @@ Starting hactar.....
 
 Starting hactar with flags.
 ```
-$ hactar start --username=user --password=pass
+$ hactar start --email=user --password=pass
 ```
 ```
 Starting hactar.....

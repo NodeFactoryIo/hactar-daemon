@@ -50,7 +50,6 @@ func SubmitNewBlockReport(hactarClient *hactar.Client, lotusClient *lotus.Client
 				// create new block reward
 				block := &hactar.Block{
 					Cid:    tipset.Cids[i],
-					Miner:  block.Miner,
 					Reward: reward,
 					Node: hactar.NodeInfo{
 						Address: miner,

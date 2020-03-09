@@ -23,7 +23,7 @@ type PastDealsInfo struct {
 }
 
 func (pds *pastDealsService) SendPastDealsInfo(info PastDealsInfo) (*http.Response, error) {
-	request, err := pds.client.NewRequest(http.MethodPost, SendPastDealsInfoPath, info)
+	request, err := pds.client.NewRequest(http.MethodPut, SendPastDealsInfoPath, info)
 
 	if err != nil {
 		return nil, err

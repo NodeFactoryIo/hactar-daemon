@@ -17,7 +17,6 @@ func TestSubmitNewBlockReport_OneValidTipsetWithReward_Success(t *testing.T) {
 	hactarBlockServiceMock.On("AddMiningReward", []hactar.Block{
 		*(&hactar.Block{
 			Cid:    "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo6jnk",
-			Miner:  "t0101",
 			Reward: "100",
 			Node: hactar.NodeInfo{
 				Address: "t0101",
@@ -87,7 +86,6 @@ func TestSubmitNewBlockReport_MultipleValidTipsetsWithRewards_Success(t *testing
 	hactarBlockServiceMock.On("AddMiningReward", []hactar.Block{
 		*(&hactar.Block{
 			Cid:    "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo6jnk",
-			Miner:  "t0101",
 			Reward: "",
 			Node: hactar.NodeInfo{
 				Address: "t0101",
@@ -99,7 +97,6 @@ func TestSubmitNewBlockReport_MultipleValidTipsetsWithRewards_Success(t *testing
 	hactarBlockServiceMock.On("AddMiningReward", []hactar.Block{
 		*(&hactar.Block{
 			Cid:    "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo8jnk",
-			Miner:  "t0101",
 			Reward: "",
 			Node: hactar.NodeInfo{
 				Address: "t0101",
@@ -108,7 +105,6 @@ func TestSubmitNewBlockReport_MultipleValidTipsetsWithRewards_Success(t *testing
 		}),
 		*(&hactar.Block{
 			Cid:    "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo9jnk",
-			Miner:  "t0101",
 			Reward: "",
 			Node: hactar.NodeInfo{
 				Address: "t0101",
@@ -120,7 +116,6 @@ func TestSubmitNewBlockReport_MultipleValidTipsetsWithRewards_Success(t *testing
 	hactarBlockServiceMock.On("AddMiningReward", []hactar.Block{
 		*(&hactar.Block{
 			Cid:    "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo0jnk",
-			Miner:  "t0101",
 			Reward: "100",
 			Node: hactar.NodeInfo{
 				Address: "t0101",

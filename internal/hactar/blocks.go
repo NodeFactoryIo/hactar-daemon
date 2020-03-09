@@ -11,12 +11,11 @@ type blocksService struct {
 }
 
 const (
-	AddBlockRewardPath = "/user/block/reward"
+	AddBlockRewardPath = "/user/node/miningrewards"
 )
 
 type Block struct {
 	Cid    string   `json:"cid"`
-	Miner  string   `json:"miner"`
 	Reward string   `json:"reward"`
 	Node   NodeInfo `json:"nodeInfo"`
 }

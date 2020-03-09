@@ -43,7 +43,7 @@ func TestPastDealsService_SendPastDealsInfo(t *testing.T) {
 		err := json.NewDecoder(r.Body).Decode(v)
 		// assert valid request
 		assert.Nil(t, err)
-		assert.Equal(t, http.MethodPost, r.Method)
+		assert.Equal(t, http.MethodPut, r.Method)
 		assert.Equal(t, addRequest, *v)
 
 		resp, _ := json.Marshal(addRequest)

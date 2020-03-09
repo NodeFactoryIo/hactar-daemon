@@ -15,7 +15,6 @@ func TestBlocksService_AddMiningReward(t *testing.T) {
 	addRequest := []Block{
 		*(&Block{
 			Cid:   "test-cid-1",
-			Miner: "t0101",
 			Node: NodeInfo{
 				Address: "test-url",
 				Url:     "test-address",
@@ -23,7 +22,6 @@ func TestBlocksService_AddMiningReward(t *testing.T) {
 		}),
 		*(&Block{
 			Cid:   "test-cid-2",
-			Miner: "t0101",
 			Node: NodeInfo{
 				Address: "test-url",
 				Url:     "test-address",

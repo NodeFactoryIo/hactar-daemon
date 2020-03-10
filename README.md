@@ -9,7 +9,7 @@ You can download already built binaries for your platform from `builds` folder o
  
 ###  Download binaries
 
-Inside the `builds` folder, you can find binaries for all supported platforms. After downloading an appropriate binary file (_in this example it is binary for Linux operating system on intel processor_) you can run daemon app with `hactar-lin-386-YYYY-MM-DD [command]`. 
+Inside the `builds` folder, you can find binaries for all supported platforms. After downloading an appropriate binary file (_in this example it is binary for Linux operating system on intel processor_) you can run daemon app with `hactar-lin-386 [command]`. 
 
 More about different _commands_ can be found in [Usage](#Usage).
 

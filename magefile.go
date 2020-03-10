@@ -71,7 +71,8 @@ func Install() error {
 
 // mage test
 func Test() error {
-	mg.Deps(Lint)
+	// Disabled lint
+	//mg.Deps(Lint)
 
 	fmt.Println("Run tests:")
 	env := map[string]string{"GOFLAGS": testGoFlags()}

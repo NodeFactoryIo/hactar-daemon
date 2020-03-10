@@ -35,7 +35,7 @@ jobs:
           prerelease: false
 
       - name: Upload Linux 386
-        id: hactar-lin-64bit
+        id: hactar-lin-32bit
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

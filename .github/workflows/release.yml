@@ -57,7 +57,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .builds/linux/hactar-lin-386
+          asset_path: ${{ github.workspace }}/go/src/github.com/${{ github.repository }}/builds/linux/hactar-lin-386
           asset_name: hactar-lin-386
           asset_content_type: application/x-binary
 
@@ -68,6 +68,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .builds/linux/hactar-lin-amd64
+          asset_path: ${{ github.workspace }}/go/src/github.com/${{ github.repository }}/builds/linux/hactar-lin-amd64
           asset_name: hactar-lin-amd64
           asset_content_type: application/x-binary

@@ -20,10 +20,10 @@ jobs:
       - name: Install Mage and build
         shell: bash
         run: |
-          go get -u -d github.com/magefile/mage
-          cd $GOPATH/src/github.com/magefile/mage
+          git clone https://github.com/magefile/mage
+          cd mage
           go run bootstrap.go
-          cd /
+          cd ..
           ls
           mage buildall
 

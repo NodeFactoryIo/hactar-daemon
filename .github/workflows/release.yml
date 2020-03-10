@@ -20,7 +20,7 @@ jobs:
         shell: bash
 
       - name: Install Go
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2-beta
         with:
           go-version: 1.13.x
 
@@ -33,10 +33,10 @@ jobs:
         shell: bash
         run: |
           echo $GOPATH
+          go get -u -d github.com/magefile/mage
           ls $GOPATH
           echo SRC
           ls $GOPATH/src
-          go get -u -d github.com/magefile/mage
           echo GITHUB
           ls $GOPATH/src/github.com
           cd $GOPATH/src/github.com/magefile/mage

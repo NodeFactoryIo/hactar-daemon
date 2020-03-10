@@ -35,6 +35,10 @@ jobs:
           go get -u -d github.com/magefile/mage
           cd $GOPATH/src/github.com/magefile/mage
           go run bootstrap.go
+          echo WORKSPACE
+          ls ${{ github.workspace }}
+          echo GO
+          ls ${{ github.workspace }}/go
           cd ${{ github.workspace }}/go/src/github.com/${{ github.repository }}
           mage buildall
 

@@ -34,15 +34,9 @@ jobs:
         run: |
           export PATH=$PATH:$(go env GOPATH)/bin
           go get -u -d github.com/magefile/mage
-          echo $GOPATH
-          ls $GOPATH
           cd $GOPATH/src/github.com/magefile/mage
-          ls
           go run bootstrap.go
-          cd /
-          ls
-          cd /home/runner/work/hactar-daemon/hactar-daemon
-          ls
+          cd $GOPATH/src/github.com/${{ github.repository }}
           mage buildall
 
       - name: Create Release

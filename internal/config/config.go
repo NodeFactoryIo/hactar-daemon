@@ -2,8 +2,9 @@ package config
 
 import (
 	"github.com/spf13/viper"
-	"os"
 	"github.com/getsentry/sentry-go"
+	"github.com/subosito/gotenv"
+	"os"
 	"time"
 )
 
@@ -13,6 +14,9 @@ func InitMainConfig() {
 	viper.SetConfigName(getMainConfigName()) // name of config file (without extension)
 	viper.AddConfigPath(".")                 // look for config in the working directory
 	_ = viper.ReadInConfig()
+
+	// Load env variables from .env
+	gotenv.Load()
 
 	if os.Getenv("ENV") != "test" {
 		setupSentry()
@@ -45,10 +49,7 @@ func getMainConfigName() string {
 }
 
 func setupSentry() {
-	viper.SetConfigFile(".env")
-	viper.MergeInConfig()
-
-	dsn := viper.GetString("SENTRY_DSN")
+	dsn := os.Getenv("SENTRY_DSN")
 	sentry.Init(sentry.ClientOptions{
 		Dsn: dsn,
 		Debug: true,

@@ -23,12 +23,12 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v1
 
-      - name: Run Mage
-        working-directory: .
-        uses: crazy-max/ghaction-mage@v1
-        with:
-          version: 1.9.0
-          args: buildall
+      - name: Install Mage and build
+        shell: bash
+          run: |
+            wget https://github.com/magefile/mage/releases/download/v1.9.0/mage_1.9.0_Linux-64bit.tar.gz
+            tar xf mage_1.9.0_Linux-64bit.tar.gz
+            mage buildall
 
       - name: Create Release
         id: create_release

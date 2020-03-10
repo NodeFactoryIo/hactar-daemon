@@ -10,8 +10,6 @@ jobs:
   build:
     name: Upload Release Asset
     runs-on: ubuntu-latest
-    env:
-      GOPATH: ${{ github.workspace }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -22,10 +20,14 @@ jobs:
       - name: Install Mage and build
         shell: bash
         run: |
-          git clone https://github.com/magefile/mage
-          cd mage
+          export PATH=$PATH:$(go env GOPATH)/bin
+          go get -u -d github.com/magefile/mage
+          cd $GOPATH/src/github.com/magefile/mage
+          ls
           go run bootstrap.go
-          cd ..
+          cd /
+          ls
+          cd /home/runner/work/hactar-daemon/hactar-daemon
           ls
           mage buildall
 

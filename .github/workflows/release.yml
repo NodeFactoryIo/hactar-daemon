@@ -33,8 +33,11 @@ jobs:
         shell: bash
         run: |
           go get -u -d github.com/magefile/mage
-          ls $GOPATH
-          cd $GOPATH/pkg/src/github.com/magefile/mage
+          echo SRC
+          ls $GOPATH/src
+          echo PKG
+          ls $GOPATH/pkg
+          cd $GOPATH/src/github.com/magefile/mage
           go run bootstrap.go
           cd $GOPATH/src/github.com/${{ github.repository }}
           mage buildall

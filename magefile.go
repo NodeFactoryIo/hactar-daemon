@@ -12,7 +12,6 @@ import (
 	"runtime"
 	"strings"
 	"sync"
-	"time"
 )
 
 const (
@@ -60,8 +59,7 @@ func build(os string, arch string) error {
 		"GOOS":   os,
 		"GOARCH": arch,
 	}
-	timeStamp := time.Now().Format("2006-01-02")
-	fileName := fmt.Sprintf("./builds/%s/hactar-%s-%s-%s", os, os[:3], arch, timeStamp)
+	fileName := fmt.Sprintf("./builds/%s/hactar-%s-%s", os, os[:3], arch)
 
 	return sh.RunWith(env, goexe, "build", "-o", fileName)
 }

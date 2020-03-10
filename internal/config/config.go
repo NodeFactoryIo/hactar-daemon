@@ -35,8 +35,6 @@ func setDefaultValuesForMainConfig() {
 	viper.SetDefault("hactar.api-url", "")
 	viper.SetDefault("log.level", "error")
 	viper.SetDefault("lotus.network-address", "t01")
-	viper.SetDefault("sentry.key", "")
-	viper.SetDefault("sentry.project", "")
 }
 
 // depending on ENV variable creates name for config file

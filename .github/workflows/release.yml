@@ -25,10 +25,10 @@ jobs:
 
       - name: Install Mage and build
         shell: bash
-          run: |
-            wget https://github.com/magefile/mage/releases/download/v1.9.0/mage_1.9.0_Linux-64bit.tar.gz
-            tar xf mage_1.9.0_Linux-64bit.tar.gz
-            mage buildall
+        run: |
+          wget https://github.com/magefile/mage/releases/download/v1.9.0/mage_1.9.0_Linux-64bit.tar.gz
+          tar xf mage_1.9.0_Linux-64bit.tar.gz
+          mage buildall
 
       - name: Create Release
         id: create_release

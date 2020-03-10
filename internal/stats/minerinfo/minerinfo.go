@@ -4,6 +4,7 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
+	"github.com/getsentry/sentry-go"
 	log "github.com/sirupsen/logrus"
 	"net/http"
 )
@@ -30,12 +31,14 @@ func SendMinerInfoStats(hactarClient *hactar.Client, lotusClient *lotus.Client) 
 	sectorSize, err := lotusClient.Sectors.GetSectorSize(minerAddress)
 	if err != nil {
 		log.Error("Unable to get sector size ", err)
+		sentry.CaptureException(err)
 		return false
 	}
 
 	numberOfSectors, err := lotusClient.Sectors.GetNumberOfSectors(minerAddress)
 	if err != nil {
 		log.Error("Unable to get number of sectors", err)
+		sentry.CaptureException(err)
 		return false
 	}
 
@@ -65,5 +68,6 @@ func SendMinerInfoStats(hactarClient *hactar.Client, lotusClient *lotus.Client) 
 	}
 
 	log.Error("Unable to send miner information statistics ", err)
+	sentry.CaptureException(err)
 	return false
 }

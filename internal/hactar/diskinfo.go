@@ -1,6 +1,9 @@
 package hactar
 
-import "net/http"
+import (
+	"github.com/getsentry/sentry-go"
+	"net/http"
+)
 
 type DiskInfoService interface {
 	SendDiskInfo(diskInfo DiskInfo) (*http.Response, error)
@@ -30,6 +33,7 @@ func (dis *diskInfoService) SendDiskInfo(diskInfo DiskInfo) (*http.Response, err
 	response, err := dis.client.Do(request, nil)
 
 	if err != nil {
+		sentry.CaptureException(err)
 		return nil, err
 	}
 

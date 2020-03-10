@@ -5,6 +5,7 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/session"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
+	"github.com/getsentry/sentry-go"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"net/http"
@@ -28,7 +29,8 @@ func SubmitNewNodeUptimeReport(hactarClient *hactar.Client, lotusClient *lotus.C
 		return true
 	}
 
-	log.Error("Unable to send uptime report")
+	log.Error("Unable to send uptime report to hactar")
+	sentry.CaptureException(err)
 	return false
 }
 

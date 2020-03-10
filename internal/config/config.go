@@ -2,7 +2,10 @@ package config
 
 import (
 	"github.com/spf13/viper"
+	"github.com/getsentry/sentry-go"
+	"github.com/subosito/gotenv"
 	"os"
+	"time"
 )
 
 func InitMainConfig() {
@@ -11,6 +14,13 @@ func InitMainConfig() {
 	viper.SetConfigName(getMainConfigName()) // name of config file (without extension)
 	viper.AddConfigPath(".")                 // look for config in the working directory
 	_ = viper.ReadInConfig()
+
+	// Load env variables from .env
+	gotenv.Load()
+
+	if os.Getenv("ENV") != "test" {
+		setupSentry()
+	}
 }
 
 func setDefaultValuesForMainConfig() {
@@ -34,4 +44,15 @@ func getMainConfigName() string {
 		configFileName = configFileName + "-" + env
 	}
 	return configFileName
+}
+
+func setupSentry() {
+	dsn := os.Getenv("SENTRY_DSN")
+	sentry.Init(sentry.ClientOptions{
+		Dsn: dsn,
+		Debug: true,
+	})
+
+	// Flush buffered events before the program terminates.
+	defer sentry.Flush(2 * time.Second)
 }

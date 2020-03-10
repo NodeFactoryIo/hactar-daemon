@@ -72,6 +72,10 @@ More about different _commands_ can be found in [Usage](#Usage).
 
 Expected name of the configuration file depends on `ENV` variable. For example, if you run a daemon app with `ENV=test go run main.go start`, expected config file name is `config-test.yaml`
 
+### Using remote lotus node
+
+`config.yaml` allows the use of remote API lotus node and miner worker. In that case paste their tokens in the config, default value is using `$HOMEDIR/.lotus/token` and `$HOMEDIR/.lotusstorage/token`.
+
 ## License
 
 This project is dual-licensed under Apache 2.0 and MIT terms:

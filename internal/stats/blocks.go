@@ -7,6 +7,7 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/session"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
+	"github.com/getsentry/sentry-go"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"net/http"
@@ -44,6 +45,7 @@ func SubmitNewBlockReport(hactarClient *hactar.Client, lotusClient *lotus.Client
 				if h == lastHeight {
 					reward, err = lotusClient.Rewards.GetMiningReward()
 					if err != nil {
+						sentry.CaptureException(err)
 						log.Error("Unable to get mining reward")
 					}
 				}
@@ -64,6 +66,7 @@ func SubmitNewBlockReport(hactarClient *hactar.Client, lotusClient *lotus.Client
 			// send mining reward for this tipset
 			response, err := hactarClient.Blocks.AddMiningReward(blocks)
 			if err != nil {
+				sentry.CaptureException(err)
 				log.Error(
 					fmt.Sprintf("Unable to send miner reward status for tipset of height %d", tipset.Height),
 					err,

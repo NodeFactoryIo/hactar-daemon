@@ -54,7 +54,7 @@ func RunStartCommand(ctx *cli.Context) error {
 	}
 	actorAddress, err := lotusClient.Miner.GetMinerAddress()
 	if err != nil {
-		log.Error("Worker down!")
+		log.Error("Lotus miner worker is down!")
 		return nil
 	}
 	log.Info("Actor address: ", actorAddress)

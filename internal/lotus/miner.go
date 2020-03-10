@@ -10,6 +10,7 @@ import (
 type MinerService interface {
 	GetMinerAddress() (string, error)
 	GetMinerPower(miner string) (*MinerPowerResponse, error)
+	GetActor(miner string, tipSetKey string) (*ActorResponse, error)
 }
 
 type minerService struct {
@@ -41,6 +42,34 @@ func (ms *minerService) GetMinerPower(miner string) (*MinerPowerResponse, error)
 
 	if err != nil {
 		log.Error("Unable to parse response for rpc method: ", lotus.MinerPower, err)
+		return nil, err
+	}
+
+	return responseObject, nil
+}
+
+type ActorResponse struct {
+	Code    interface{} `json:"Code"`
+	Head    interface{} `json:"Head"`
+	Nonce   int64       `json:"Nonce"`
+	Balance string      `json:"Balance"`
+}
+
+type TipSetKey struct {
+	Cid string `json:"/"`
+}
+
+func (ms *minerService) GetActor(miner string, tipSetKey string) (*ActorResponse, error) {
+	response, err := ms.client.lotusNodeClient.Call(lotus.Actor, miner, []TipSetKey{{Cid: tipSetKey}})
+	if err = ValidResponse(response, err, lotus.Actor); err != nil {
+		return nil, err
+	}
+
+	var responseObject *ActorResponse
+	err = response.GetObject(&responseObject)
+
+	if err != nil {
+		log.Error()
 		return nil, err
 	}
 

@@ -13,10 +13,26 @@ import (
 )
 
 func SubmitNewNodeUptimeReport(hactarClient *hactar.Client, lotusClient *lotus.Client, currentSession session.UserSession) bool {
-	_, err := lotusClient.Miner.GetMinerAddress()
-
+	isWorking := true
+	// check for miner address
+	miner, err := lotusClient.Miner.GetMinerAddress()
+	if err != nil {
+		isWorking = false
+	} else {
+		// check for last tipset
+		tipset, err := lotusClient.Blocks.GetLastTipset()
+		if err != nil {
+			isWorking = false
+		}
+		// get actor
+		if err == nil {
+			actor, _ := lotusClient.Miner.GetActor(miner, tipset.Cids[0])
+			isWorking = actor != nil
+		}
+	}
+	// send uptime report
 	response, err := hactarClient.Nodes.SendUptimeReport(hactar.UptimeReport{
-		IsWorking: err == nil,
+		IsWorking: isWorking,
 		Node: hactar.NodeInfo{
 			Address: currentSession.GetNodeMinerAddress(),
 			Url:     url.GetUrl(),

@@ -37,6 +37,8 @@ jobs:
           echo SRC
           ls $GOPATH/src
           go get -u -d github.com/magefile/mage
+          echo GITHUB
+          ls $GOPATH/src/github.com
           cd $GOPATH/src/github.com/magefile/mage
           go run bootstrap.go
           echo WORKSPACE

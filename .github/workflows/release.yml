@@ -13,26 +13,25 @@ jobs:
     env:
       GO111MODULE: "on"
     steps:
-      - name: Set up Go
+      - name: Setup env
+        run: |
+          echo "::set-env name=GOPATH::${{ github.workspace }}/go"
+          echo "::add-path::${{ github.workspace }}/go/bin"
+        shell: bash
+
+      - name: Install Go
         uses: actions/setup-go@v1
         with:
           go-version: 1.13.x
 
-      - name: Setup env
-        run: |
-          echo "::set-env name=GOPATH::$(dirname $GITHUB_WORKSPACE)"
-          echo "::add-path::$(dirname $GITHUB_WORKSPACE)/bin"
-        shell: bash
-
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          path: src/github.com/${{ github.repository }}
+          path: go/src/github.com/${{ github.repository }}
 
       - name: Install Mage and build
         shell: bash
         run: |
-          export PATH=$PATH:$(go env GOPATH)/bin
           go get -u -d github.com/magefile/mage
           cd $GOPATH/src/github.com/magefile/mage
           go run bootstrap.go

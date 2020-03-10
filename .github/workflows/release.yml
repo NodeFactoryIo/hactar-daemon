@@ -32,6 +32,10 @@ jobs:
       - name: Install Mage and build
         shell: bash
         run: |
+          echo $GOPATH
+          ls $GOPATH
+          echo SRC
+          ls $GOPATH/src
           go get -u -d github.com/magefile/mage
           cd $GOPATH/src/github.com/magefile/mage
           go run bootstrap.go

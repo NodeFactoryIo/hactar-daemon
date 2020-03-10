@@ -11,22 +11,39 @@ jobs:
     name: Upload Release Asset
     runs-on: ubuntu-latest
     env:
-      GOPATH: ${{ github.workspace }}
-      GO111MODULE: off
+      GO111MODULE: "on"
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Set up Go
         uses: actions/setup-go@v1
         with:
-          path: ./src/github.com/${{ github.repository }}
+          go-version: 1.13.x
 
-      - name: Run Mage
-        uses: crazy-max/ghaction-mage@v1
+      - name: Setup env
+        run: |
+          echo "::set-env name=GOPATH::$(dirname $GITHUB_WORKSPACE)"
+          echo "::add-path::$(dirname $GITHUB_WORKSPACE)/bin"
+        shell: bash
+
+      - name: Checkout code
+        uses: actions/checkout@v2
         with:
-          version: 1.9.0
-          args: buildall -d /home/runner/work/hactar-daemon/hactar-daemon
+          path: src/github.com/${{ github.repository }}
+
+      - name: Install Mage and build
+        shell: bash
+        run: |
+          export PATH=$PATH:$(go env GOPATH)/bin
+          go get -u -d github.com/magefile/mage
+          echo $GOPATH
+          ls $GOPATH
+          cd $GOPATH/src/github.com/magefile/mage
+          ls
+          go run bootstrap.go
+          cd /
+          ls
+          cd /home/runner/work/hactar-daemon/hactar-daemon
+          ls
+          mage buildall
 
       - name: Create Release
         id: create_release

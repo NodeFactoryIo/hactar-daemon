@@ -61,7 +61,6 @@ func (ns *nodesServices) SendUptimeReport(report UptimeReport) (*http.Response, 
 	response, err := ns.client.Do(request, nil)
 
 	if err != nil {
-		sentry.CaptureException(err)
 		return response, err
 	}
 

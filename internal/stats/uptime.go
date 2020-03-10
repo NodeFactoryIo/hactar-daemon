@@ -29,8 +29,8 @@ func SubmitNewNodeUptimeReport(hactarClient *hactar.Client, lotusClient *lotus.C
 		return true
 	}
 
+	log.Error("Unable to send uptime report to hactar")
 	sentry.CaptureException(err)
-	log.Error("Unable to send uptime report")
 	return false
 }
 

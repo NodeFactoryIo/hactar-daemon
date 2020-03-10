@@ -3,7 +3,7 @@ package lotus
 import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/requests/lotus"
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
-	log "github.com/sirupsen/logrus"
+	"github.com/getsentry/sentry-go"
 )
 
 type BlocksService interface {
@@ -35,7 +35,7 @@ type rawTipsetResponse struct {
 func (bs *blocksService) GetLastTipset() (*TipsetResponse, error) {
 	tipsetRaw, err := bs.getLastTipsetRaw()
 	if err != nil {
-		log.Error()
+		sentry.CaptureException(err)
 		return nil, err
 	}
 	return convertFromRawTipset(tipsetRaw)
@@ -44,7 +44,7 @@ func (bs *blocksService) GetLastTipset() (*TipsetResponse, error) {
 func (bs *blocksService) GetLastHeight() (int64, error) {
 	tipsetRaw, err := bs.getLastTipsetRaw()
 	if err != nil {
-		log.Error()
+		sentry.CaptureException(err)
 		return -1, err
 	}
 	return tipsetRaw.Height, nil

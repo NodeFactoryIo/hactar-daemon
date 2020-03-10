@@ -2,6 +2,7 @@ package hactar
 
 import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
+	"github.com/getsentry/sentry-go"
 	"net/http"
 )
 
@@ -32,6 +33,7 @@ func (pds *pastDealsService) SendPastDealsInfo(info PastDealsInfo) (*http.Respon
 	response, err := pds.client.Do(request, nil)
 
 	if err != nil {
+		sentry.CaptureException(err)
 		return nil, err
 	}
 

@@ -1,6 +1,9 @@
 package hactar
 
-import "net/http"
+import (
+	"github.com/getsentry/sentry-go"
+	"net/http"
+)
 
 type BlocksService interface {
 	AddMiningReward(blocks []Block) (*http.Response, error)
@@ -30,6 +33,7 @@ func (bs *blocksService) AddMiningReward(blocks []Block) (*http.Response, error)
 	response, err := bs.client.Do(request, nil)
 
 	if err != nil {
+		sentry.CaptureException(err)
 		return nil, err
 	}
 

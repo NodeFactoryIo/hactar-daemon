@@ -1,6 +1,7 @@
 package hactar
 
 import (
+	"github.com/getsentry/sentry-go"
 	"net/http"
 )
 
@@ -38,6 +39,7 @@ func (ns *nodesServices) GetAllNodes() ([]NodeInfo, *http.Response, error) {
 	response, err := ns.client.Do(request, root)
 
 	if err != nil {
+		sentry.CaptureException(err)
 		return nil, response, err
 	}
 
@@ -59,6 +61,7 @@ func (ns *nodesServices) SendUptimeReport(report UptimeReport) (*http.Response, 
 	response, err := ns.client.Do(request, nil)
 
 	if err != nil {
+		sentry.CaptureException(err)
 		return response, err
 	}
 
@@ -80,6 +83,7 @@ func (ns *nodesServices) SendBalanceReport(report BalanceReport) (*http.Response
 	response, err := ns.client.Do(request, nil)
 
 	if err != nil {
+		sentry.CaptureException(err)
 		return response, err
 	}
 
@@ -90,6 +94,7 @@ func (ns *nodesServices) Add(node Node) (*Node, *http.Response, error) {
 	request, err := ns.client.NewRequest(http.MethodPost, NodePath, node)
 
 	if err != nil {
+		sentry.CaptureException(err)
 		return nil, nil, err
 	}
 
@@ -102,6 +107,7 @@ func sendSingleNodeRequest(request *http.Request, ns *nodesServices) (*Node, *ht
 	response, err := ns.client.Do(request, root)
 
 	if err != nil {
+		sentry.CaptureException(err)
 		return nil, response, err
 	}
 

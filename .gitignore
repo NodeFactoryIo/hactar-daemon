@@ -1,4 +1,6 @@
 .env
+/builds
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -17,6 +19,3 @@
 
 # Binary files
 /bin
-
-
-/mocks

@@ -14,10 +14,6 @@ type walletService struct {
 	client *Client
 }
 
-type MinerBalanceResponse struct {
-	Balance string `json:"Balance"`
-}
-
 func (ws *walletService) GetWalletDefaultAddress() (string, error) {
 	response, err := ws.client.lotusNodeClient.Call(lotus.WalletDefaultAddress)
 	if err = ValidResponse(response, err, lotus.WalletDefaultAddress); err != nil {

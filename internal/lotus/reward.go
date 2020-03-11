@@ -16,13 +16,13 @@ type rewardService struct {
 }
 
 func (rs *rewardService) GetMiningReward(cids []string) (string, error) {
-	balance, err := rs.client.Wallet.GetMinerBalance(viper.GetString("lotus.network-address"), cids)
+	actor, err := rs.client.Miner.GetActor(viper.GetString("lotus.network-address"), cids[0])
 	if err != nil {
 		log.Error("Unable to get balance for network address", err)
 		return "", err
 	}
 	// calculate mining reward
-	if ci, ok := big.NewInt(0).SetString(balance, 10); ok == true {
+	if ci, ok := big.NewInt(0).SetString(actor.Balance, 10); ok == true {
 		res := ci.Mul(ci, InitialReward)
 		res = res.Div(res, MiningRewardTotal)
 		res = res.Div(res, BlocksPerEpoch)

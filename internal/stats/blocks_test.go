@@ -8,6 +8,7 @@ import (
 	mocksLotus "github.com/NodeFactoryIo/hactar-daemon/mocks/lotus"
 	mocks "github.com/NodeFactoryIo/hactar-daemon/mocks/session"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"net/http"
 	"testing"
 )
@@ -50,7 +51,7 @@ func TestSubmitNewBlockReport_OneValidTipsetWithReward_Success(t *testing.T) {
 	lotusMinerServiceMock.On("GetMinerAddress").Return("t0101", nil)
 
 	lotusRewardServiceMock := &mocksLotus.RewardService{}
-	lotusRewardServiceMock.On("GetMiningReward").Return("100", nil)
+	lotusRewardServiceMock.On("GetMiningReward", tipsetResponse.Cids).Return("100", nil)
 
 	lotusMockedClient := &lotus.Client{
 		Blocks:  lotusBlockServiceMock,
@@ -86,7 +87,7 @@ func TestSubmitNewBlockReport_MultipleValidTipsetsWithRewards_Success(t *testing
 	hactarBlockServiceMock.On("AddMiningReward", []hactar.Block{
 		*(&hactar.Block{
 			Cid:    "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo6jnk",
-			Reward: "",
+			Reward: "100",
 			Node: hactar.NodeInfo{
 				Address: "t0101",
 				Url:     url.GetUrl(),
@@ -97,7 +98,7 @@ func TestSubmitNewBlockReport_MultipleValidTipsetsWithRewards_Success(t *testing
 	hactarBlockServiceMock.On("AddMiningReward", []hactar.Block{
 		*(&hactar.Block{
 			Cid:    "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo8jnk",
-			Reward: "",
+			Reward: "100",
 			Node: hactar.NodeInfo{
 				Address: "t0101",
 				Url:     url.GetUrl(),
@@ -105,7 +106,7 @@ func TestSubmitNewBlockReport_MultipleValidTipsetsWithRewards_Success(t *testing
 		}),
 		*(&hactar.Block{
 			Cid:    "bafy2bzaceawp7zcx74biecfl3axvoulh4lgdnnwzvgaza2cdhmxx75ymo9jnk",
-			Reward: "",
+			Reward: "100",
 			Node: hactar.NodeInfo{
 				Address: "t0101",
 				Url:     url.GetUrl(),
@@ -175,7 +176,7 @@ func TestSubmitNewBlockReport_MultipleValidTipsetsWithRewards_Success(t *testing
 	lotusMinerServiceMock.On("GetMinerAddress").Return("t0101", nil)
 
 	lotusRewardServiceMock := &mocksLotus.RewardService{}
-	lotusRewardServiceMock.On("GetMiningReward").Return("100", nil)
+	lotusRewardServiceMock.On("GetMiningReward", mock.AnythingOfType("[]string")).Return("100", nil)
 
 	lotusMockedClient := &lotus.Client{
 		Blocks:  lotusBlockServiceMock,

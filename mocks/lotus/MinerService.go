@@ -10,6 +10,52 @@ type MinerService struct {
 	mock.Mock
 }
 
+// GetActor provides a mock function with given fields: miner, tipSetKey
+func (_m *MinerService) GetActor(miner string, tipSetKey string) (*lotus.ActorResponse, error) {
+	ret := _m.Called(miner, tipSetKey)
+
+	var r0 *lotus.ActorResponse
+	if rf, ok := ret.Get(0).(func(string, string) *lotus.ActorResponse); ok {
+		r0 = rf(miner, tipSetKey)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*lotus.ActorResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string, string) error); ok {
+		r1 = rf(miner, tipSetKey)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetLatestActor provides a mock function with given fields: miner
+func (_m *MinerService) GetLatestActor(miner string) (*lotus.ActorResponse, error) {
+	ret := _m.Called(miner)
+
+	var r0 *lotus.ActorResponse
+	if rf, ok := ret.Get(0).(func(string) *lotus.ActorResponse); ok {
+		r0 = rf(miner)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*lotus.ActorResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(miner)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetMinerAddress provides a mock function with given fields:
 func (_m *MinerService) GetMinerAddress() (string, error) {
 	ret := _m.Called()

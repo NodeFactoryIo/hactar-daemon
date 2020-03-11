@@ -8,7 +8,6 @@ import (
 type WalletService interface {
 	GetWalletDefaultAddress() (string, error)
 	GetWalletBalance(walletAddress string) (string, error)
-	GetMinerBalance(minerAddress string, cids []string) (string, error)
 }
 
 type walletService struct {
@@ -35,22 +34,4 @@ func (ws *walletService) GetWalletBalance(walletAddress string) (string, error) 
 	}
 
 	return util.String(response.Result), nil
-}
-
-func (ws *walletService) GetMinerBalance(miner string, cids []string) (string, error) {
-	var serializedCids []interface{}
-	for i := 0; i < len(cids); i++ {
-		c := [string]interface{"/": cids[i]}
-		serializedCids = append(serializedCids, c)
-	}
-
-	response, err := ws.client.lotusNodeClient.Call(lotus.MinerBalance, miner, cids)
-	if err = ValidResponse(response, err, lotus.MinerBalance); err != nil {
-		return "", err
-	}
-
-	var responseObject *MinerBalanceResponse
-	err = response.GetObject(&responseObject)
-
-	return responseObject.Balance, nil
 }

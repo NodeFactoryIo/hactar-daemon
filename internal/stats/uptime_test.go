@@ -16,17 +16,9 @@ import (
 func TestSubmitNewNodeUptimeReport_NodeUp(t *testing.T) {
 	lotusMinerServiceMock := &mocksLotus.MinerService{}
 	lotusMinerServiceMock.On("GetMinerAddress").Return("t0101", nil)
-	lotusMinerServiceMock.On("GetActor", "t0101", "cid-test").Return(&lotus.ActorResponse{}, nil)
-
-	lotusBlockServiceMocke := &mocksLotus.BlocksService{}
-	lotusBlockServiceMocke.On("GetLastTipset").Return(&lotus.TipsetResponse{
-		Cids:   []string{"cid-test"},
-		Blocks: nil,
-		Height: 0,
-	}, nil)
+	lotusMinerServiceMock.On("GetLatestActor", "t0101").Return(&lotus.ActorResponse{}, nil)
 
 	lotusMockedClient := &lotus.Client{
-		Blocks: lotusBlockServiceMocke,
 		Miner:  lotusMinerServiceMock,
 	}
 
@@ -57,6 +49,7 @@ func TestSubmitNewNodeUptimeReport_NodeUp(t *testing.T) {
 	// assertions
 	assert.True(t, success)
 	lotusMinerServiceMock.AssertNumberOfCalls(t, "GetMinerAddress", 1)
+	lotusMinerServiceMock.AssertNumberOfCalls(t, "GetLatestActor", 1)
 	lotusMinerServiceMock.AssertExpectations(t)
 	hactarNodeServiceMock.AssertNumberOfCalls(t, "SendUptimeReport", 1)
 	hactarNodeServiceMock.AssertExpectations(t)
@@ -110,17 +103,9 @@ func TestSubmitNewNodeUptimeReport_FailingMinerAddress_NodeDown(t *testing.T) {
 func TestSubmitNewNodeUptimeReport_FailingActor_NodeDown(t *testing.T) {
 	lotusMinerServiceMock := &mocksLotus.MinerService{}
 	lotusMinerServiceMock.On("GetMinerAddress").Return("t0101", nil)
-	lotusMinerServiceMock.On("GetActor", "t0101", "cid-test").Return(nil, errors.New(""))
-
-	lotusBlockServiceMocke := &mocksLotus.BlocksService{}
-	lotusBlockServiceMocke.On("GetLastTipset").Return(&lotus.TipsetResponse{
-		Cids:   []string{"cid-test"},
-		Blocks: nil,
-		Height: 0,
-	}, nil)
+	lotusMinerServiceMock.On("GetLatestActor", "t0101").Return(nil, errors.New(""))
 
 	lotusMockedClient := &lotus.Client{
-		Blocks: lotusBlockServiceMocke,
 		Miner:  lotusMinerServiceMock,
 	}
 

@@ -5,12 +5,14 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/requests/miner"
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
 	log "github.com/sirupsen/logrus"
+	"github.com/ybbus/jsonrpc"
 )
 
 type MinerService interface {
 	GetMinerAddress() (string, error)
 	GetMinerPower(miner string) (*MinerPowerResponse, error)
 	GetActor(miner string, tipSetKey string) (*ActorResponse, error)
+	GetLatestActor(miner string) (*ActorResponse, error)
 }
 
 type minerService struct {
@@ -61,6 +63,15 @@ type TipSetKey struct {
 
 func (ms *minerService) GetActor(miner string, tipSetKey string) (*ActorResponse, error) {
 	response, err := ms.client.lotusNodeClient.Call(lotus.Actor, miner, []TipSetKey{{Cid: tipSetKey}})
+	return getActor(response, err)
+}
+
+func (ms *minerService) GetLatestActor(miner string) (*ActorResponse, error) {
+	response, err := ms.client.lotusNodeClient.Call(lotus.Actor, miner, nil)
+	return getActor(response, err)
+}
+
+func getActor(response *jsonrpc.RPCResponse, err error) (*ActorResponse, error) {
 	if err = ValidResponse(response, err, lotus.Actor); err != nil {
 		return nil, err
 	}

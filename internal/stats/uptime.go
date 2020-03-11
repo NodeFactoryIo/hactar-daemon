@@ -19,16 +19,8 @@ func SubmitNewNodeUptimeReport(hactarClient *hactar.Client, lotusClient *lotus.C
 	if err != nil {
 		isWorking = false
 	} else {
-		// check for last tipset
-		tipset, err := lotusClient.Blocks.GetLastTipset()
-		if err != nil {
-			isWorking = false
-		}
-		// get actor
-		if err == nil {
-			actor, _ := lotusClient.Miner.GetActor(miner, tipset.Cids[0])
-			isWorking = actor != nil
-		}
+		actor, _ := lotusClient.Miner.GetLatestActor(miner)
+		isWorking = actor != nil
 	}
 	// send uptime report
 	response, err := hactarClient.Nodes.SendUptimeReport(hactar.UptimeReport{

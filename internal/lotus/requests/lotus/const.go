@@ -7,6 +7,7 @@ const (
 	ActorAddress         = "Filecoin.ActorAddress"
 	WalletBalance        = "Filecoin.WalletBalance"
 	WalletDefaultAddress = "Filecoin.WalletDefaultAddress"
+	Actor                = "Filecoin.StateGetActor"
 	MinerBalance         = "Filecoin.StateGetActor"
 	Sectors              = "Filecoin.StateMinerSectors"
 	SectorSize           = "Filecoin.StateMinerSectorSize"

@@ -2,6 +2,7 @@ package token
 
 import (
 	"fmt"
+	"github.com/getsentry/sentry-go"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"io/ioutil"
@@ -37,6 +38,7 @@ func readTokenFromFile(tokenFile string, defaultPath string) string {
 	data, err := ioutil.ReadFile(tokenFile)
 	if err != nil {
 		log.Error(fmt.Sprintf("Error reading token from file: %s", tokenFile))
+		sentry.CaptureException(err)
 		return ""
 	}
 	return strings.TrimSpace(string(data))

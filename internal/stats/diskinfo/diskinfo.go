@@ -2,6 +2,7 @@ package diskinfo
 
 import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
+	"github.com/getsentry/sentry-go"
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
@@ -31,5 +32,6 @@ func SendDiskInfoStats(client *hactar.Client, actorAddress string, nodeUrl strin
 	}
 
 	log.Error("Unable to send disk information statistics ", err)
+	sentry.CaptureException(err)
 	return false
 }

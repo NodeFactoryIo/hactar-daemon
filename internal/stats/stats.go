@@ -9,6 +9,7 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"os"
 	"strconv"
 	"time"
 )
@@ -18,6 +19,8 @@ func SubmitNewStatsReport(hactarClient *hactar.Client, lotusClient *lotus.Client
 	actorAddress, err := lotusClient.Miner.GetMinerAddress()
 	if err != nil {
 		log.Error("Unable to send stats report because worker is down.")
+		log.Info("Shutting down hactar reporting...")
+		os.Exit(2)
 		return false
 	}
 

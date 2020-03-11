@@ -16,13 +16,58 @@ import (
 func TestSubmitNewNodeUptimeReport_NodeUp(t *testing.T) {
 	lotusMinerServiceMock := &mocksLotus.MinerService{}
 	lotusMinerServiceMock.On("GetMinerAddress").Return("t0101", nil)
+	lotusMinerServiceMock.On("GetLatestActor", "t0101").Return(&lotus.ActorResponse{}, nil)
+
+	lotusMockedClient := &lotus.Client{
+		Miner:  lotusMinerServiceMock,
+	}
+
+	uptimeReportRequest := &hactar.UptimeReport{
+		IsWorking: true,
+		Node: hactar.NodeInfo{
+			Address: "t0101",
+			Url:     url.GetUrl(),
+		},
+	}
+
+	hactarNodeServiceMock := &mocksHactar.NodesService{}
+	hactarNodeServiceMock.On("SendUptimeReport", *uptimeReportRequest).Return(&http.Response{StatusCode: 201}, nil)
+
+	hactarMockedClient := &hactar.Client{
+		BaseURL:  nil,
+		Token:    "",
+		Nodes:    hactarNodeServiceMock,
+		DiskInfo: nil,
+		Blocks:   nil,
+		Miner:    nil,
+	}
+
+	sessionMock := new(mocks.UserSession)
+	sessionMock.On("GetNodeMinerAddress").Return("t0101")
+
+	success := SubmitNewNodeUptimeReport(hactarMockedClient, lotusMockedClient, sessionMock)
+	// assertions
+	assert.True(t, success)
+	lotusMinerServiceMock.AssertNumberOfCalls(t, "GetMinerAddress", 1)
+	lotusMinerServiceMock.AssertNumberOfCalls(t, "GetLatestActor", 1)
+	lotusMinerServiceMock.AssertExpectations(t)
+	hactarNodeServiceMock.AssertNumberOfCalls(t, "SendUptimeReport", 1)
+	hactarNodeServiceMock.AssertExpectations(t)
+	sessionMock.AssertNumberOfCalls(t, "GetNodeMinerAddress", 1)
+	sessionMock.AssertExpectations(t)
+}
+
+func TestSubmitNewNodeUptimeReport_FailingMinerAddress_NodeDown(t *testing.T) {
+	lotusMinerServiceMock := &mocksLotus.MinerService{}
+	lotusMinerServiceMock.On("GetMinerAddress").Return("", errors.New("unable to call lotus api"))
+
 	lotusMockedClient := &lotus.Client{
 		Blocks: nil,
 		Miner:  lotusMinerServiceMock,
 	}
 
 	uptimeReportRequest := &hactar.UptimeReport{
-		IsWorking: true,
+		IsWorking: false,
 		Node: hactar.NodeInfo{
 			Address: "t0101",
 			Url:     url.GetUrl(),
@@ -55,11 +100,12 @@ func TestSubmitNewNodeUptimeReport_NodeUp(t *testing.T) {
 	sessionMock.AssertExpectations(t)
 }
 
-func TestSubmitNewNodeUptimeReport_NodeDown(t *testing.T) {
+func TestSubmitNewNodeUptimeReport_FailingActor_NodeDown(t *testing.T) {
 	lotusMinerServiceMock := &mocksLotus.MinerService{}
-	lotusMinerServiceMock.On("GetMinerAddress").Return("", errors.New("unable to call lotus api"))
+	lotusMinerServiceMock.On("GetMinerAddress").Return("t0101", nil)
+	lotusMinerServiceMock.On("GetLatestActor", "t0101").Return(nil, errors.New(""))
+
 	lotusMockedClient := &lotus.Client{
-		Blocks: nil,
 		Miner:  lotusMinerServiceMock,
 	}
 

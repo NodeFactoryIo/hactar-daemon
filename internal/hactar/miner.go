@@ -1,6 +1,7 @@
 package hactar
 
 import (
+	"github.com/getsentry/sentry-go"
 	"net/http"
 )
 
@@ -36,6 +37,7 @@ func (ms *minerService) SendMinerInfo(info MinerInfo) (*http.Response, error) {
 	response, err := ms.client.Do(request, nil)
 
 	if err != nil {
+		sentry.CaptureException(err)
 		return nil, err
 	}
 

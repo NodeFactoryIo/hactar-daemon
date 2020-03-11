@@ -1,0 +1,95 @@
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+name: Release
+
+jobs:
+  build:
+    name: Build and release
+    runs-on: ubuntu-latest
+    env:
+      GO111MODULE: "on"
+    steps:
+      - name: Setup env
+        run: |
+          echo "::set-env name=GOPATH::${{ github.workspace }}/go"
+          echo "::add-path::${{ github.workspace }}/go/bin"
+        shell: bash
+
+      - name: Install Go
+        uses: actions/setup-go@v2-beta
+        with:
+          go-version: 1.13.x
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: go/src/github.com/${{ github.repository }}
+
+      - name: Install Mage and build
+        shell: bash
+        run: |
+          cd $GOPATH
+          git clone https://github.com/magefile/mage
+          cd mage
+          go run bootstrap.go
+          cd ${{ github.workspace }}/go/src/github.com/${{ github.repository }}
+          mage buildall
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Linux 32bit
+        id: hactar-lin-386
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/go/src/github.com/${{ github.repository }}/builds/linux/hactar-lin-386
+          asset_name: hactar-linux-32bit
+          asset_content_type: application/x-binary
+
+      - name: Upload Linux 64bit
+        id: hactar-lin-amd64
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/go/src/github.com/${{ github.repository }}/builds/linux/hactar-lin-amd64
+          asset_name: hactar-linux-64bit
+          asset_content_type: application/x-binary
+
+      - name: Upload Darwin 32bit
+        id: hactar-dar-386
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/go/src/github.com/${{ github.repository }}/builds/darwin/hactar-dar-386
+          asset_name: hactar-mac-os-32bit
+          asset_content_type: application/x-binary
+
+      - name: Upload Darwin 64bit
+        id: hactar-dar-amd64
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/go/src/github.com/${{ github.repository }}/builds/darwin/hactar-dar-amd64
+          asset_name: hactar-mac-os-64bit
+          asset_content_type: application/x-binary

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/token"
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/jsonrpc2client"
+	"github.com/getsentry/sentry-go"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"github.com/ybbus/jsonrpc"
@@ -72,6 +73,7 @@ func ValidResponse(response *jsonrpc.RPCResponse, err error, method string) erro
 	}
 	if response != nil {
 		if response.Error != nil {
+			sentry.CaptureException(response.Error)
 			log.Error(response.Error)
 			return errors.New(response.Error.Message)
 		} else {

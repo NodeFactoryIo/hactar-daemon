@@ -5,6 +5,7 @@ import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/hactar"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus"
 	"github.com/NodeFactoryIo/hactar-daemon/internal/url"
+	"github.com/getsentry/sentry-go"
 	log "github.com/sirupsen/logrus"
 	"net/http"
 )
@@ -18,6 +19,7 @@ func SendPastDealsInfo(hactarClient *hactar.Client, lotusClient *lotus.Client) b
 
 	pastDeals, err := lotusClient.PastDeals.GetAllPastDeals()
 	if err != nil {
+		sentry.CaptureException(err)
 		log.Error("Unable to get past deals ", err)
 		return false
 	}
@@ -37,6 +39,7 @@ func SendPastDealsInfo(hactarClient *hactar.Client, lotusClient *lotus.Client) b
 			fmt.Sprintf("Unable to send past deals for node: %s", minerAddress),
 			err,
 		)
+		sentry.CaptureException(err)
 		return false
 	}
 	if response != nil && response.StatusCode == http.StatusOK {

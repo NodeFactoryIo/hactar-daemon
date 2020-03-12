@@ -40,14 +40,11 @@ func SubmitNewBlockReport(hactarClient *hactar.Client, lotusClient *lotus.Client
 		var blocks []hactar.Block
 		for i, block := range tipset.Blocks {
 			if miner == block.Miner {
-				// determine reward if latest block
-				reward := ""
-				if h == lastHeight {
-					reward, err = lotusClient.Rewards.GetMiningReward()
-					if err != nil {
-						sentry.CaptureException(err)
-						log.Error("Unable to get mining reward")
-					}
+				// determine reward amount
+				reward, err := lotusClient.Rewards.GetMiningReward(tipset.Cids)
+				if err != nil {
+					sentry.CaptureException(err)
+					log.Error("Unable to get mining reward")
 				}
 				// create new block reward
 				block := &hactar.Block{

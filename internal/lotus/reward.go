@@ -8,21 +8,21 @@ import (
 )
 
 type RewardService interface {
-	GetMiningReward() (string, error)
+	GetMiningReward([]string) (string, error)
 }
 
 type rewardService struct {
 	client *Client
 }
 
-func (rs *rewardService) GetMiningReward() (string, error) {
-	balance, err := rs.client.Wallet.GetWalletBalance(viper.GetString("lotus.network-address"))
+func (rs *rewardService) GetMiningReward(cids []string) (string, error) {
+	actor, err := rs.client.Miner.GetActor(viper.GetString("lotus.network-address"), cids[0])
 	if err != nil {
 		log.Error("Unable to get balance for network address", err)
 		return "", err
 	}
 	// calculate mining reward
-	if ci, ok := big.NewInt(0).SetString(balance, 10); ok == true {
+	if ci, ok := big.NewInt(0).SetString(actor.Balance, 10); ok == true {
 		res := ci.Mul(ci, InitialReward)
 		res = res.Div(res, MiningRewardTotal)
 		res = res.Div(res, BlocksPerEpoch)

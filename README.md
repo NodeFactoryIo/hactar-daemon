@@ -58,11 +58,12 @@ Starting hactar.....
 ```
 
 Starting hactar with flags.
+
+You can use `--debug` flag for more detailed information.
+
+Login without prompt:
 ```
 $ hactar start --email=user --password=pass
-```
-```
-Starting hactar.....
 ```
 
 ## Development

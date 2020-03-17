@@ -19,9 +19,9 @@ func TestInitMainConfig_getMainConfigName(t *testing.T) {
 
 func TestInitMainConfig_testDefaultValues(t *testing.T) {
 	InitMainConfig()
-	assert.Equal(t, viper.GetInt("stats.interval"), 60)
-	assert.Equal(t, viper.GetInt("stats.blocks.interval"), 50)
-	assert.Equal(t, viper.GetInt("stats.uptime.interval"), 10)
-	assert.Equal(t, viper.GetInt("stats.balance.interval"), 150)
+	assert.Equal(t, viper.GetInt("stats.interval"), 3600)
+	assert.Equal(t, viper.GetInt("stats.blocks.interval"), 900)
+	assert.Equal(t, viper.GetInt("stats.uptime.interval"), 3600)
+	assert.Equal(t, viper.GetInt("stats.balance.interval"), 900)
 	assert.Equal(t, viper.GetString("log.level"), "error")
 }

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/spf13/viper"
 	"github.com/getsentry/sentry-go"
 	"github.com/subosito/gotenv"
@@ -12,8 +13,17 @@ func InitMainConfig() {
 	setDefaultValuesForMainConfig()
 	// load config file
 	viper.SetConfigName(getMainConfigName()) // name of config file (without extension)
-	viper.AddConfigPath(".")                 // look for config in the working directory
-	_ = viper.ReadInConfig()
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath("../../")                 // look for config in the working directory
+	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			viper.AddConfigPath(".")
+			_ = viper.ReadInConfig()
+
+		} else {
+			fmt.Printf("Error while loading config: %s \n", err)
+		}
+	}
 
 	// Load env variables from .env
 	gotenv.Load()

@@ -25,10 +25,10 @@ func InitMainConfig() {
 }
 
 func setDefaultValuesForMainConfig() {
-	viper.SetDefault("stats.interval", 60)
-	viper.SetDefault("stats.blocks.interval", 50)
-	viper.SetDefault("stats.uptime.interval", 10)
-	viper.SetDefault("stats.balance.interval", 150)
+	viper.SetDefault("stats.interval", 3600)
+	viper.SetDefault("stats.blocks.interval", 900)
+	viper.SetDefault("stats.uptime.interval", 3600)
+	viper.SetDefault("stats.balance.interval", 900)
 	viper.SetDefault("jsonrpc.lotus-miner.url", "http://localhost:2345/rpc/v0")
 	viper.SetDefault("jsonrpc.lotus-miner.token", "")
 	viper.SetDefault("jsonrpc.lotus-node.url", "http://localhost:1234/rpc/v0")

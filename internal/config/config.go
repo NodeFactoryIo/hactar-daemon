@@ -14,9 +14,10 @@ func InitMainConfig() {
 	// load config file
 	viper.SetConfigName(getMainConfigName()) // name of config file (without extension)
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath("../../")                 // look for config in the working directory
+	viper.AddConfigPath("../../")
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			// alternatively look for config in the working directory
 			viper.AddConfigPath(".")
 			_ = viper.ReadInConfig()
 

@@ -8,12 +8,12 @@ stats:
     interval: 150 #seconds
 jsonrpc:
   lotus-miner:
-    url: "http://167.172.98.186:2345/rpc/v0"
+    url: "http://localhost:2345/rpc/v0"
     token: ""
   lotus-node:
-    url: "http://167.172.98.186:1234/rpc/v0"
+    url: "http://localhost:1234/rpc/v0"
     token: ""
 hactar:
-  api-url: "http://127.0.0.1:3000/api"
+  api-url: "https://api.hactar.app/api"
 log:
   level: "error"

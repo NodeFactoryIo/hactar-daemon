@@ -14,13 +14,10 @@ func InitMainConfig() {
 	// load config file
 	viper.SetConfigName(getMainConfigName()) // name of config file (without extension)
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath("../../")
+	viper.AddConfigPath(".")
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			// alternatively look for config in the working directory
-			viper.AddConfigPath(".")
-			_ = viper.ReadInConfig()
-
+			fmt.Printf("Config file not found.")
 		} else {
 			fmt.Printf("Error while loading config: %s \n", err)
 		}
@@ -39,11 +36,11 @@ func setDefaultValuesForMainConfig() {
 	viper.SetDefault("stats.blocks.interval", 50)
 	viper.SetDefault("stats.uptime.interval", 10)
 	viper.SetDefault("stats.balance.interval", 150)
-	viper.SetDefault("jsonrpc.lotus-miner.url", "")
+	viper.SetDefault("jsonrpc.lotus-miner.url", "http://localhost:2345/rpc/v0")
 	viper.SetDefault("jsonrpc.lotus-miner.token", "")
-	viper.SetDefault("jsonrpc.lotus-node.url", "")
+	viper.SetDefault("jsonrpc.lotus-node.url", "http://localhost:1234/rpc/v0")
 	viper.SetDefault("jsonrpc.lotus-node.token", "")
-	viper.SetDefault("hactar.api-url", "")
+	viper.SetDefault("hactar.api-url", "https://api.hactar.app/api")
 	viper.SetDefault("log.level", "error")
 	viper.SetDefault("lotus.network-address", "t01")
 }

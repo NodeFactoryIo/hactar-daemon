@@ -18,9 +18,9 @@ func InitMainConfig() {
 	// Load env variables from .env
 	gotenv.Load()
 
-	if os.Getenv("ENV") != "test" {
+	//if os.Getenv("ENV") != "test" {
 		setupSentry()
-	}
+	//}
 }
 
 func setDefaultValuesForMainConfig() {

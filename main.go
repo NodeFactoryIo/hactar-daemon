@@ -16,7 +16,9 @@ func main() {
 
 	command := os.Args[1:]
 	// special handling needed if start command called
-	if command[0] == "start" {
+	if len(os.Args) <= 1 {
+		command = append(command, "help")
+	} else if command[0] == "start" {
 		// if new username and password are not provided
 		if len(os.Args) != 6 {
 			// check for token in status file

@@ -61,7 +61,7 @@ func setupSentry() {
 	dsn := os.Getenv("SENTRY_DSN")
 	sentry.Init(sentry.ClientOptions{
 		Dsn: dsn,
-		Debug: true,
+		Debug: false,
 	})
 
 	// Flush buffered events before the program terminates.

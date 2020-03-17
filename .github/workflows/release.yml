@@ -39,6 +39,7 @@ jobs:
           cd mage
           go run bootstrap.go
           cd ${{ github.workspace }}/go/src/github.com/${{ github.repository }}
+          echo "SENTRY_DSN=$SENTRY_DSN" > .env
           mage buildall
 
       - name: Create Release

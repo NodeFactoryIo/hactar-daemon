@@ -31,6 +31,8 @@ jobs:
 
       - name: Install Mage and build
         shell: bash
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: |
           cd $GOPATH
           git clone https://github.com/magefile/mage

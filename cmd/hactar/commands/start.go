@@ -61,10 +61,10 @@ func RunStartCommand(ctx *cli.Context) error {
 	// display token and URL
 	nodeUrl := url.GetUrl()
 	t := tabby.New()
-	t.AddLine("Actor address:", actorAddress)
-	t.AddLine("Node url:", nodeUrl)
-	t.AddLine("Node token:", token.ReadNodeTokenFromFile())
-	t.AddLine("Miner token:", token.ReadMinerTokenFromFile())
+	t.AddLine("Actor address: ", actorAddress)
+	t.AddLine("Node url: ", nodeUrl)
+	//t.AddLine("Node token:", token.ReadNodeTokenFromFile())
+	//t.AddLine("Miner token:", token.ReadMinerTokenFromFile())
 	t.Print()
 	// this check for existing nodes is just placeholder
 	nodes, _, err := hactarClient.Nodes.GetAllNodes()

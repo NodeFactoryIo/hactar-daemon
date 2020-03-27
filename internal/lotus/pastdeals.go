@@ -48,7 +48,7 @@ func convertFromRawPastDeals(rawPastDealResponses []rawPastDealResponse) ([]Past
 	deals := make([]PastDealResponse, len(rawPastDealResponses))
 	for i := 0; i < len(rawPastDealResponses); i++ {
 		deals[i] = PastDealResponse{
-			Cid:      util.String(rawPastDealResponses[i].ProposalCid),
+			Cid:      util.String(rawPastDealResponses[i].ProposalCid.(map[string]interface{})["/"]),
 			State:    rawPastDealResponses[i].State,
 			Size:     util.String(rawPastDealResponses[i].Size),
 			Provider: rawPastDealResponses[i].Provider,

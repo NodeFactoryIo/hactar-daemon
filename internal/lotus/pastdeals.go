@@ -3,7 +3,6 @@ package lotus
 import (
 	"github.com/NodeFactoryIo/hactar-daemon/internal/lotus/requests/lotus"
 	"github.com/NodeFactoryIo/hactar-daemon/pkg/util"
-	log "github.com/sirupsen/logrus"
 )
 
 type PastDealsService interface {
@@ -28,7 +27,7 @@ type rawPastDealResponse struct {
 	State         int         `json:"State"`
 	Provider      string      `json:"Provider"`
 	PieceRef      string      `json:"PieceRef"`
-	Size          string      `json:"Size"`
+	Size          int      	  `json:"Size"`
 	PricePerEpoch string      `json:"PricePerEpoch"`
 	Duration      int         `json:"Duration"`
 }
@@ -42,11 +41,6 @@ func (pds *pastDealsService) GetAllPastDeals() ([]PastDealResponse, error) {
 	var responseObject []rawPastDealResponse
 	err = response.GetObject(&responseObject)
 
-	if err != nil {
-		log.Error()
-		return nil, err
-	}
-
 	return convertFromRawPastDeals(responseObject)
 }
 
@@ -56,7 +50,7 @@ func convertFromRawPastDeals(rawPastDealResponses []rawPastDealResponse) ([]Past
 		deals[i] = PastDealResponse{
 			Cid:      util.String(rawPastDealResponses[i].ProposalCid),
 			State:    rawPastDealResponses[i].State,
-			Size:     rawPastDealResponses[i].Size,
+			Size:     util.String(rawPastDealResponses[i].Size),
 			Provider: rawPastDealResponses[i].Provider,
 			Price:    rawPastDealResponses[i].PricePerEpoch,
 			Duration: rawPastDealResponses[i].Duration,

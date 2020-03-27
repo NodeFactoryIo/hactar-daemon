@@ -98,6 +98,9 @@ func RunStartCommand(ctx *cli.Context) error {
 	}
 
 	currentSession.SetNodeMinerAddress(actorAddress)
+
+	fmt.Println("Everything is initialized. Starting with monitoring...")
+
 	// start stats monitoring
 	stats.StartMonitoringStats(hactarClient, lotusClient)
 	stats.StartMonitoringBlocks(hactarClient, lotusClient, currentSession)

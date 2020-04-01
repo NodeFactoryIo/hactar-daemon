@@ -86,6 +86,10 @@ func StartMonitoringBlocks(hactarClient *hactar.Client, lotusClient *lotus.Clien
 	ticker := time.NewTicker(time.Duration(interval) * time.Second)
 	done := make(chan bool)
 
+	// Tick once immediately
+	// Note: this could take long
+	SubmitNewBlockReport(hactarClient, lotusClient, currentSession)
+
 	go func() {
 		for {
 			select {

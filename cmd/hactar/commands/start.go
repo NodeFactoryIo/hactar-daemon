@@ -61,10 +61,10 @@ func RunStartCommand(ctx *cli.Context) error {
 	// display token and URL
 	nodeUrl := url.GetUrl()
 	t := tabby.New()
-	t.AddLine("Actor address:", actorAddress)
-	t.AddLine("Node url:", nodeUrl)
-	t.AddLine("Node token:", token.ReadNodeTokenFromFile())
-	t.AddLine("Miner token:", token.ReadMinerTokenFromFile())
+	t.AddLine("Actor address: ", actorAddress)
+	t.AddLine("Node url: ", nodeUrl)
+	//t.AddLine("Node token:", token.ReadNodeTokenFromFile())
+	//t.AddLine("Miner token:", token.ReadMinerTokenFromFile())
 	t.Print()
 	// this check for existing nodes is just placeholder
 	nodes, _, err := hactarClient.Nodes.GetAllNodes()
@@ -103,8 +103,8 @@ func RunStartCommand(ctx *cli.Context) error {
 
 	// start stats monitoring
 	stats.StartMonitoringStats(hactarClient, lotusClient)
-	stats.StartMonitoringBlocks(hactarClient, lotusClient, currentSession)
 	stats.StartMonitoringNodeUptime(hactarClient, lotusClient, currentSession)
 	stats.StartMonitoringBalance(hactarClient, lotusClient, currentSession)
+	stats.StartMonitoringBlocks(hactarClient, lotusClient, currentSession)
 	select {}
 }

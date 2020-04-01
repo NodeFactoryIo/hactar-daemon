@@ -37,6 +37,9 @@ func StartMonitoringStats(hactarClient *hactar.Client, lotusClient *lotus.Client
 	ticker := time.NewTicker(time.Duration(interval) * time.Second)
 	done := make(chan bool)
 
+	// Tick once immediately
+	SubmitNewStatsReport(hactarClient, lotusClient)
+
 	go func() {
 		for {
 			select {

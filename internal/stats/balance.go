@@ -50,6 +50,9 @@ func StartMonitoringBalance(hactarClient *hactar.Client, lotusClient *lotus.Clie
 	ticker := time.NewTicker(time.Duration(interval) * time.Second)
 	done := make(chan bool)
 
+	// Tick once immediately
+	SubmitNewBalanceReport(hactarClient, lotusClient, currentSession)
+
 	go func() {
 		for {
 			select {

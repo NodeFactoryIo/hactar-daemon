@@ -103,8 +103,8 @@ func RunStartCommand(ctx *cli.Context) error {
 
 	// start stats monitoring
 	stats.StartMonitoringStats(hactarClient, lotusClient)
-	stats.StartMonitoringBlocks(hactarClient, lotusClient, currentSession)
 	stats.StartMonitoringNodeUptime(hactarClient, lotusClient, currentSession)
 	stats.StartMonitoringBalance(hactarClient, lotusClient, currentSession)
+	stats.StartMonitoringBlocks(hactarClient, lotusClient, currentSession)
 	select {}
 }

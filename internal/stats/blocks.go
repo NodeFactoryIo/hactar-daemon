@@ -87,6 +87,7 @@ func StartMonitoringBlocks(hactarClient *hactar.Client, lotusClient *lotus.Clien
 	done := make(chan bool)
 
 	// Tick once immediately
+	// Note: this could take long
 	SubmitNewBlockReport(hactarClient, lotusClient, currentSession)
 
 	go func() {

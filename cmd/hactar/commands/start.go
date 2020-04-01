@@ -102,9 +102,9 @@ func RunStartCommand(ctx *cli.Context) error {
 	fmt.Println("Everything is initialized. Starting with monitoring...")
 
 	// start stats monitoring
-	stats.StartMonitoringNodeUptime(hactarClient, lotusClient, currentSession)
 	stats.StartMonitoringStats(hactarClient, lotusClient)
-	stats.StartMonitoringBlocks(hactarClient, lotusClient, currentSession)
+	stats.StartMonitoringNodeUptime(hactarClient, lotusClient, currentSession)
 	stats.StartMonitoringBalance(hactarClient, lotusClient, currentSession)
+	stats.StartMonitoringBlocks(hactarClient, lotusClient, currentSession)
 	select {}
 }

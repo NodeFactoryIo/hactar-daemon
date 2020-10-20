@@ -50,7 +50,7 @@ func getMainConfigName() string {
 func setupSentry() {
 	dsn := os.Getenv("SENTRY_DSN")
 	sentry.Init(sentry.ClientOptions{
-		Dsn: dsn,
+		Dsn:   dsn,
 		Debug: false,
 	})
 

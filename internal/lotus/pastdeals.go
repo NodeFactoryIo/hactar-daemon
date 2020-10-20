@@ -27,7 +27,7 @@ type rawPastDealResponse struct {
 	State         int         `json:"State"`
 	Provider      string      `json:"Provider"`
 	PieceRef      string      `json:"PieceRef"`
-	Size          int      	  `json:"Size"`
+	Size          int         `json:"Size"`
 	PricePerEpoch string      `json:"PricePerEpoch"`
 	Duration      int         `json:"Duration"`
 }

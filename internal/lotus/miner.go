@@ -29,8 +29,16 @@ func (ms *minerService) GetMinerAddress() (string, error) {
 }
 
 type MinerPowerResponse struct {
-	MinerPower string `json:"MinerPower"`
-	TotalPower string `json:"TotalPower"`
+	MinerPower  Claim `json:"MinerPower"`
+	TotalPower  Claim `json:"TotalPower"`
+	HasMinPower bool  `json:"HasMinPower"`
+}
+
+type Claim struct {
+	// Sum of raw byte power for a miner's sectors.
+	RawBytePower string `json:"RawBytePower"`
+	// Sum of quality adjusted power for a miner's sectors.
+	QualityAdjPower string `json:"QualityAdjPower"`
 }
 
 func (ms *minerService) GetMinerPower(miner string) (*MinerPowerResponse, error) {

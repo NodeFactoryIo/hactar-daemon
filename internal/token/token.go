@@ -12,7 +12,7 @@ import (
 
 const (
 	DefaultPathNodeTokenFile  = "/.lotus/token"
-	DefaultPathMinerTokenFile = "/.lotusstorage/token"
+	DefaultPathMinerTokenFile = "/.lotusminer/token"
 )
 
 // Read lotus node token from file

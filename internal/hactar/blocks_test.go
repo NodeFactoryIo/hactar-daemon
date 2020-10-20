@@ -14,14 +14,14 @@ func TestBlocksService_AddMiningReward(t *testing.T) {
 
 	addRequest := []Block{
 		*(&Block{
-			Cid:   "test-cid-1",
+			Cid: "test-cid-1",
 			Node: NodeInfo{
 				Address: "test-url",
 				Url:     "test-address",
 			},
 		}),
 		*(&Block{
-			Cid:   "test-cid-2",
+			Cid: "test-cid-2",
 			Node: NodeInfo{
 				Address: "test-url",
 				Url:     "test-address",

@@ -19,7 +19,7 @@ func TestSubmitNewNodeUptimeReport_NodeUp(t *testing.T) {
 	lotusMinerServiceMock.On("GetLatestActor", "t0101").Return(&lotus.ActorResponse{}, nil)
 
 	lotusMockedClient := &lotus.Client{
-		Miner:  lotusMinerServiceMock,
+		Miner: lotusMinerServiceMock,
 	}
 
 	uptimeReportRequest := &hactar.UptimeReport{
@@ -106,7 +106,7 @@ func TestSubmitNewNodeUptimeReport_FailingActor_NodeDown(t *testing.T) {
 	lotusMinerServiceMock.On("GetLatestActor", "t0101").Return(nil, errors.New(""))
 
 	lotusMockedClient := &lotus.Client{
-		Miner:  lotusMinerServiceMock,
+		Miner: lotusMinerServiceMock,
 	}
 
 	uptimeReportRequest := &hactar.UptimeReport{

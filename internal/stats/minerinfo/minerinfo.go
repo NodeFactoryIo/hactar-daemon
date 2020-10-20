@@ -53,8 +53,8 @@ func SendMinerInfoStats(hactarClient *hactar.Client, lotusClient *lotus.Client) 
 		WalletAddress:   walletAddress,
 		SectorSize:      sectorSize,
 		NumberOfSectors: numberOfSectors,
-		MinerPower:      minerStats.MinerPower,
-		TotalPower:      minerStats.TotalPower,
+		MinerPower:      minerStats.MinerPower.QualityAdjPower,
+		TotalPower:      minerStats.TotalPower.QualityAdjPower,
 		Node: hactar.NodeInfo{
 			Address: minerAddress,
 			Url:     url.GetUrl(),

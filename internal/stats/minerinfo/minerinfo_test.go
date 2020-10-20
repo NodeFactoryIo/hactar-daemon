@@ -15,8 +15,14 @@ func TestSendMinerInfoStats(t *testing.T) {
 	lotusMinerServiceMock := &mocksLotus.MinerService{}
 	lotusMinerServiceMock.On("GetMinerAddress").Return("t0101", nil)
 	minerPowerResponse := &lotus.MinerPowerResponse{
-		MinerPower: "100",
-		TotalPower: "200",
+		MinerPower: lotus.Claim{
+			RawBytePower:    100,
+			QualityAdjPower: 80,
+		},
+		TotalPower: lotus.Claim{
+			RawBytePower:    100,
+			QualityAdjPower: 80,
+		},
 	}
 	lotusMinerServiceMock.On("GetMinerPower", "t0101").Return(minerPowerResponse, nil)
 
@@ -48,8 +54,8 @@ func TestSendMinerInfoStats(t *testing.T) {
 		WalletAddress:   "test-address",
 		SectorSize:      "12345678",
 		NumberOfSectors: 4,
-		MinerPower:      "100",
-		TotalPower:      "200",
+		MinerPower:      "80",
+		TotalPower:      "80",
 		Node: hactar.NodeInfo{
 			Address: "t0101",
 			Url:     url.GetUrl(),

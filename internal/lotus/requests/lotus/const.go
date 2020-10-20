@@ -9,7 +9,7 @@ const (
 	WalletDefaultAddress = "Filecoin.WalletDefaultAddress"
 	Actor                = "Filecoin.StateGetActor"
 	NumberOfSectors      = "Filecoin.StateMinerSectorCount"
-	SectorSize           = "Filecoin.StateMinerSectors"
+	Sectors              = "Filecoin.StateMinerSectors"
 	MinerInfo            = "Filecoin.StateMinerInfo"
 	MinerPower           = "Filecoin.StateMinerPower"
 	PastDeals            = "Filecoin.ClientListDeals"

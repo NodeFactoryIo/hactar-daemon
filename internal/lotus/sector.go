@@ -47,8 +47,8 @@ func (ss *sectorService) GetSectorSize(miner string) (string, error) {
 }
 
 func (ss *sectorService) GetNumberOfSectors(miner string) (int, error) {
-	response, err := ss.client.lotusNodeClient.Call(lotus.SectorSize, miner, nil, nil)
-	if err = ValidResponse(response, err, lotus.SectorSize); err != nil {
+	response, err := ss.client.lotusNodeClient.Call(lotus.Sectors, miner, nil, nil)
+	if err = ValidResponse(response, err, lotus.Sectors); err != nil {
 		return -1, err
 	}
 

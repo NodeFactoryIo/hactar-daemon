@@ -28,16 +28,16 @@ func SendMinerInfoStats(hactarClient *hactar.Client, lotusClient *lotus.Client) 
 		return false
 	}
 
-	numberOfSectors, err := lotusClient.Sectors.GetNumberOfSectors(minerAddress)
+	sectorSize, err := lotusClient.Sectors.GetSectorSize(minerAddress)
 	if err != nil {
-		log.Error("Unable to get number of sectors", err)
+		log.Error("Unable to get sector size ", err)
 		sentry.CaptureException(err)
 		return false
 	}
 
-	sectorSize, err := lotusClient.Sectors.GetSectorSize(minerAddress)
+	numberOfSectors, err := lotusClient.Sectors.GetNumberOfSectors(minerAddress)
 	if err != nil {
-		log.Error("Unable to get sector size ", err)
+		log.Error("Unable to get number of sectors", err)
 		sentry.CaptureException(err)
 		return false
 	}

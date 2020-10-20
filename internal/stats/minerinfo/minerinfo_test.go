@@ -16,12 +16,12 @@ func TestSendMinerInfoStats(t *testing.T) {
 	lotusMinerServiceMock.On("GetMinerAddress").Return("t0101", nil)
 	minerPowerResponse := &lotus.MinerPowerResponse{
 		MinerPower: lotus.Claim{
-			RawBytePower:    100,
-			QualityAdjPower: 80,
+			RawBytePower:    "100",
+			QualityAdjPower: "80",
 		},
 		TotalPower: lotus.Claim{
-			RawBytePower:    100,
-			QualityAdjPower: 80,
+			RawBytePower:    "100",
+			QualityAdjPower: "80",
 		},
 	}
 	lotusMinerServiceMock.On("GetMinerPower", "t0101").Return(minerPowerResponse, nil)
